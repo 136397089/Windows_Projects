@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{591AA5F1-69CE-420B-AEB3-DAF632D5BBD1}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>CreatAllParameter</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>true</SDLCheck>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CDP.h" />
+    <ClInclude Include="CommonFunction.h" />
+    <ClInclude Include="DMI.h" />
+    <ClInclude Include="glog\logging.h" />
+    <ClInclude Include="glog\log_severity.h" />
+    <ClInclude Include="glog\raw_logging.h" />
+    <ClInclude Include="glog\stl_logging.h" />
+    <ClInclude Include="glog\vlog_is_on.h" />
+    <ClInclude Include="Locker.h" />
+    <ClInclude Include="Log.h" />
+    <ClInclude Include="Number\ASI.h" />
+    <ClInclude Include="Number\commonfunction.h" />
+    <ClInclude Include="Number\NumberAll.h" />
+    <ClInclude Include="Number\Right.h" />
+    <ClInclude Include="Number\StateRecords.h" />
+    <ClInclude Include="Number\TRIX.h" />
+    <ClInclude Include="Number\_DMA.h" />
+    <ClInclude Include="Number\IndexNumber.h" />
+    <ClInclude Include="Number\KDJ.h" />
+    <ClInclude Include="Number\Macd.h" />
+    <ClInclude Include="StatisticsStock.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="StockAccountNum.h" />
+    <ClInclude Include="targetver.h" />
+    <ClInclude Include="TrendAnal.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CDP.cpp" />
+    <ClCompile Include="CreatAllParameter.cpp" />
+    <ClCompile Include="DMI.cpp" />
+    <ClCompile Include="Locker.cpp" />
+    <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Number\ASI.cpp" />
+    <ClCompile Include="Number\CommonFunction.cpp" />
+    <ClCompile Include="Number\NumberAll.cpp" />
+    <ClCompile Include="Number\Right.cpp" />
+    <ClCompile Include="Number\StateRecords.cpp" />
+    <ClCompile Include="Number\TRIX.cpp" />
+    <ClCompile Include="Number\_DMA.cpp" />
+    <ClCompile Include="Number\IndexNumber.cpp" />
+    <ClCompile Include="Number\KDJ.cpp" />
+    <ClCompile Include="Number\Macd.cpp" />
+    <ClCompile Include="StatisticsStock.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="StockAccountNum.cpp" />
+    <ClCompile Include="TrendAnal.cpp" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

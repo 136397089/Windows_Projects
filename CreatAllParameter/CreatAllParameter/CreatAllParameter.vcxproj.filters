@@ -1,0 +1,165 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Namber">
+      <UniqueIdentifier>{51ea24fd-ae0c-4d39-8871-b27601847746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="glog">
+      <UniqueIdentifier>{24706687-14f9-49e6-a0f6-2eeccfde2c56}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Locker">
+      <UniqueIdentifier>{b418f81a-809d-4538-b4be-08a39e4c3d09}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="stdafx.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="targetver.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\IndexNumber.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\KDJ.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\Macd.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\commonfunction.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\_DMA.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\Right.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\NumberAll.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\TRIX.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="StockAccountNum.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CommonFunction.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="TrendAnal.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\StateRecords.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\ASI.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="Log.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="glog\log_severity.h">
+      <Filter>glog</Filter>
+    </ClInclude>
+    <ClInclude Include="glog\logging.h">
+      <Filter>glog</Filter>
+    </ClInclude>
+    <ClInclude Include="glog\raw_logging.h">
+      <Filter>glog</Filter>
+    </ClInclude>
+    <ClInclude Include="glog\stl_logging.h">
+      <Filter>glog</Filter>
+    </ClInclude>
+    <ClInclude Include="glog\vlog_is_on.h">
+      <Filter>glog</Filter>
+    </ClInclude>
+    <ClInclude Include="Locker.h">
+      <Filter>Locker</Filter>
+    </ClInclude>
+    <ClInclude Include="StatisticsStock.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="CDP.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+    <ClInclude Include="DMI.h">
+      <Filter>Namber</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CreatAllParameter.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\IndexNumber.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\KDJ.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\Macd.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\CommonFunction.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\_DMA.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\Right.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\NumberAll.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\TRIX.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="StockAccountNum.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="TrendAnal.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\StateRecords.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\ASI.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="Log.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Locker.cpp">
+      <Filter>Locker</Filter>
+    </ClCompile>
+    <ClCompile Include="StatisticsStock.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CDP.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="DMI.cpp">
+      <Filter>Namber</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
