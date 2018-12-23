@@ -1,0 +1,13 @@
+﻿生成启动时间为 2017/11/29 19:57:29。
+     1>项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\logging_unittest\logging_unittest.vcxproj”在节点 2 上(Build 个目标)。
+     1>Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Documents\Downloads\glog-0.3.3\Release\logging_unittest.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Documents\Downloads\glog-0.3.3\Release\logging_unittest.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Documents\Downloads\glog-0.3.3\Release\logging_unittest.lib" /MACHINE:X86 /SAFESEH Release\logging_unittest.obj
+         "D:\Documents\Downloads\glog-0.3.3\Release\libglog.lib"
+         正在生成代码
+         已完成代码的生成
+         logging_unittest.vcxproj -> D:\Documents\Downloads\glog-0.3.3\Release\logging_unittest.exe
+     1>已完成生成项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\logging_unittest\logging_unittest.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.93

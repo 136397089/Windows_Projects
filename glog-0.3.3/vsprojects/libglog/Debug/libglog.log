@@ -1,0 +1,29 @@
+﻿生成启动时间为 2017/11/29 19:40:53。
+     1>项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\libglog\libglog.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\CL.exe /c /I..\..\src\windows /ZI /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _WINDOWS /D _USRDLL /D LIBGLOG_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\logging.cc ..\..\src\raw_logging.cc ..\..\src\utilities.cc ..\..\src\vlog_is_on.cc ..\..\src\windows\port.cc
+         port.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 d:\program files\vc\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         vlog_is_on.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 d:\program files\vc\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         utilities.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 d:\program files\vc\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         raw_logging.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 d:\program files\vc\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         logging.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 d:\program files\vc\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+     1>d:\documents\downloads\glog-0.3.3\src\logging.cc(75): error C2039: “min”: 不是“std”的成员
+     1>d:\documents\downloads\glog-0.3.3\src\logging.cc(75): error C2873: “min”: 符号不能用在 using 声明中
+     1>d:\documents\downloads\glog-0.3.3\src\logging.cc(1386): error C2065: “min”: 未声明的标识符
+     1>d:\documents\downloads\glog-0.3.3\src\logging.cc(1386): error C2062: 意外的类型“int”
+         正在生成代码...
+     1>已完成生成项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\libglog\libglog.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:03.38

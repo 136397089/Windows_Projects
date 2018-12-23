@@ -1,0 +1,26 @@
+﻿生成启动时间为 2017/11/7 21:11:29。
+     1>项目“D:\MyProjects\win_project\DataFrameTool\DataFrameTool\DataFrameTool.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D DATAFRAMETOOL_EXPORTS /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Release\DataFrameTool.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt Number\KDJ.cpp
+         KDJ.cpp
+       Link:
+         D:\Program Files\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.lib" /MACHINE:X64 /DLL x64\Release\CcomputValueByMACD.obj
+         x64\Release\CGroupDataByBAR.obj
+         x64\Release\CommonFunction.obj
+         x64\Release\DataFrameTool.obj
+         x64\Release\dllmain.obj
+         x64\Release\GroupByMACD.obj
+         x64\Release\IndexNumber.obj
+         x64\Release\KDJ.obj
+         x64\Release\Macd.obj
+         x64\Release\Operator.obj
+         x64\Release\stdafx.obj
+            正在创建库 D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.lib 和对象 D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.exp
+         正在生成代码
+         已完成代码的生成
+         DataFrameTool.vcxproj -> D:\MyProjects\win_project\DataFrameTool\x64\Release\DataFrameTool.dll
+     1>已完成生成项目“D:\MyProjects\win_project\DataFrameTool\DataFrameTool\DataFrameTool.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:01.21

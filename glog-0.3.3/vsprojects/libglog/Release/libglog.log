@@ -1,0 +1,35 @@
+﻿生成启动时间为 2017/11/29 19:57:22。
+     1>项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\libglog\libglog.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\CL.exe /c /I..\..\src\windows /Zi /nologo /W3 /WX- /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D LIBGLOG_EXPORTS /D _WINDLL /D _UNICODE /D UNICODE /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ..\..\src\logging.cc ..\..\src\raw_logging.cc ..\..\src\utilities.cc ..\..\src\vlog_is_on.cc ..\..\src\windows\port.cc
+         logging.cc
+     1>D:\Documents\Downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 D:\Program Files\VC\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         raw_logging.cc
+     1>D:\Documents\Downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 D:\Program Files\VC\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         utilities.cc
+     1>D:\Documents\Downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 D:\Program Files\VC\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         vlog_is_on.cc
+     1>D:\Documents\Downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 D:\Program Files\VC\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+         port.cc
+     1>d:\documents\downloads\glog-0.3.3\src\windows\port.h(117): warning C4005: “va_copy”: 宏重定义
+                 D:\Program Files\VC\include\stdarg.h(37) : 参见“va_copy”的前一个定义
+       Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\Documents\Downloads\glog-0.3.3\Release\libglog.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Documents\Downloads\glog-0.3.3\Release\libglog.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Documents\Downloads\glog-0.3.3\Release\libglog.lib" /MACHINE:X86 /SAFESEH /DLL Release\logging.obj
+         Release\raw_logging.obj
+         Release\utilities.obj
+         Release\vlog_is_on.obj
+         Release\port.obj
+            正在创建库 D:\Documents\Downloads\glog-0.3.3\Release\libglog.lib 和对象 D:\Documents\Downloads\glog-0.3.3\Release\libglog.exp
+         正在生成代码
+     1>d:\documents\downloads\glog-0.3.3\src\windows\glog\logging.h(1573): warning C4722: “google::NullStreamFatal::~NullStreamFatal”: 析构函数永远不会返回，可能会发生内存泄漏
+         已完成代码的生成
+         libglog.vcxproj -> D:\Documents\Downloads\glog-0.3.3\Release\libglog.dll
+     1>已完成生成项目“D:\Documents\Downloads\glog-0.3.3\vsprojects\libglog\libglog.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:03.07
