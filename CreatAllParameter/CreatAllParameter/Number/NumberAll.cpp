@@ -202,21 +202,21 @@ bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 
 bool CNumberAll::SaveDataToFile(const string& strFilePath)
 {
-// 	ReSavefileRanks(strFilePath, _vAsi, "ASI");
-// 	ReSavefileRanks(strFilePath, _vAsit, "ASIT");
-// 	ReSavefileRanks(strFilePath, _vDEA, MACD_DEA);
-// 	ReSavefileRanks(strFilePath, _vDiff, MACD_DIFF);
+ 	ReSavefileRanks(strFilePath, _vAsi, "ASI");
+ 	ReSavefileRanks(strFilePath, _vAsit, "ASIT");
+ 	ReSavefileRanks(strFilePath, _vDEA, MACD_DEA);
+ 	ReSavefileRanks(strFilePath, _vDiff, MACD_DIFF);
 	ReSavefileRanks(strFilePath, _vMACDValue, MACD_BAR);
 	ReSavefileRanks(strFilePath, _vDMAValue, DMA_D);
 	ReSavefileRanks(strFilePath, _vAMAValue, DMA_A);
-// 	ReSavefileRanks(strFilePath, _vTRIX, TRIX_TRIX);
-// 	ReSavefileRanks(strFilePath, _vTRMA, TRIX_MA);
 	ReSavefileRanks(strFilePath, _vK, KDJ_K);
 	ReSavefileRanks(strFilePath, _vD, KDJ_D);
 	ReSavefileRanks(strFilePath, _vJ, KDJ_J);
-// 	ReSavefileRanks(strFilePath, vtr, TRIX_VTR);
-// 	ReSavefileRanks(strFilePath, vtb, TRIX_VTB);
-// 	ReSavefileRanks(strFilePath, vta, TRIX_VTA);
+ 	ReSavefileRanks(strFilePath, _vTRIX, TRIX_TRIX);
+ 	ReSavefileRanks(strFilePath, _vTRMA, TRIX_MA);
+// 	ReSavefileRanks(strFilePath, _vtr, TRIX_VTR);
+// 	ReSavefileRanks(strFilePath, _vtb, TRIX_VTB);
+// 	ReSavefileRanks(strFilePath, _vta, TRIX_VTA);
 	return true;
 }
 
@@ -333,7 +333,7 @@ void CNumberAll::ProcessingTransverseData(const StringBlock& AllString)
 			{
 				_vTimeDay.push_back(*iteL);
 			}
-			reverse(_vTimeDay.begin(), _vTimeDay.end());
+			//reverse(_vTimeDay.begin(), _vTimeDay.end());//反转顺序
 			continue;
 		}
 
@@ -344,8 +344,8 @@ void CNumberAll::ProcessingTransverseData(const StringBlock& AllString)
 				plist->push_back((float)atof(iteL->c_str()));
 			}
 		}
-		if (plist != nullptr)
-			reverse(plist->begin(), plist->end());
+		//if (plist != nullptr)
+			//reverse(plist->begin(), plist->end());//反转顺序
 	}
 }
 
