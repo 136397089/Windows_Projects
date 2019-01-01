@@ -5,12 +5,15 @@
 #include "number/NumberAll.h"
 #include "Log.h"
 #include "StockAccountNum.h"
+#include "MainLoop.h"
+
+
+
 int _tmain(int argc, _TCHAR* argv[])
 {
 	CLog initionLog;
-	CNumberAll tempna;
-
-	tempna.RunProg("D:\\StockFile\\test");
+	CMainLoop mainloop;
+	mainloop.RunLoop("D:\\StockFile\\test");
 	return 0;
 }
 

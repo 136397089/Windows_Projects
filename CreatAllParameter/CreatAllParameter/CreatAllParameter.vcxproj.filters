@@ -102,6 +102,9 @@
     <ClInclude Include="DMI.h">
       <Filter>Namber</Filter>
     </ClInclude>
+    <ClInclude Include="MainLoop.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -160,6 +163,9 @@
     </ClCompile>
     <ClCompile Include="DMI.cpp">
       <Filter>Namber</Filter>
+    </ClCompile>
+    <ClCompile Include="MainLoop.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

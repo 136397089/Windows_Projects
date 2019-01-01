@@ -11,20 +11,20 @@ CCDP::~CCDP()
 {
 }
 
-void CCDP::UpdateFileColumn(string strFolderPath)
-{
-
-}
-
-void CCDP::UpdatePathFilesRanks(string strPath)
-{
-
-}
-
-void CCDP::UpdateFileRanks(string strfilename)
-{
-
-}
+// void CCDP::UpdateFileColumn(string strFolderPath)
+// {
+// 
+// }
+// 
+// void CCDP::UpdatePathFilesRanks(string strPath)
+// {
+// 
+// }
+// 
+// void CCDP::UpdateFileRanks(string strfilename)
+// {
+// 
+// }
 
 bool CCDP::GetNextCDP(const DatePriceData& TodayDayData, CDP& mCdp)
 {

@@ -19,8 +19,7 @@ struct TRIX /*: public IndexBaseType*/
 // 		return *this;
 // 	}
 };
-class CTRIX :
-	public CNumberManager
+class CTRIX// :public CNumberManager
 {
 public:
 	CTRIX();

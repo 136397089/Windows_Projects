@@ -13,70 +13,70 @@ CDMA::~CDMA()
 {
 }
 
-void CDMA::UpdateFileColumn(string strFolderPath)
-{
-	WIN32_FIND_DATA p;
-	string mFilePath = strFolderPath + "\\*.csv";
-	//LPCWSTR findPath = mFilePath.c_str();
-	HANDLE h = FindFirstFile(mFilePath.c_str(), &p);
-	//统计文件夹下的文件数
-	int FileNumber = 0;
-	while (FindNextFile(h, &p))
-	{
-		FileNumber++;
-	}
-
-	h = FindFirstFile(mFilePath.c_str(), &p);
-	if (NULL == h)
-	{
-		return;
-	}
-
-	float FileIndex = 0;
-	do
-	{
-		string filename(p.cFileName);
-		VStockData datas, vVolume;
-		VStockData vDMAValue, vAMAValue;
-		datas = ReadColumnStringFormFile(strFolderPath + "\\" + filename, File_Close_INDEX);
-		vVolume = ReadColumnStringFormFile(strFolderPath + "\\" + filename, File_Volume_INDEX);
-		// 		reverse(datas.begin(),datas.end()); // 反转数据顺序
-		DMA_DATA mDMAData;
-		VStockData::iterator vVolumeite = vVolume.begin();
-		for (VStockData::iterator ite = datas.begin(); ite != datas.end(); ite++)
-		{
-			DatePriceData OneDayData;
-			OneDayData._Close = *ite;
-			if (*vVolumeite != 0)
-			{
-				GetNextDMA(OneDayData, mDMAData);
-				vDMAValue.push_back(mDMAData._DDD);
-				vAMAValue.push_back(mDMAData._AMA);
-			}
-			else
-			{
-				vDMAValue.push_back(mDMAData._DDD);
-				vAMAValue.push_back(mDMAData._AMA);
-			}
-			vVolumeite++;
-		}
-		ReSavefileColumn(strFolderPath + "\\" + filename, vDMAValue, DMA_D);
-		ReSavefileColumn(strFolderPath + "\\" + filename, vAMAValue, DMA_A);
-		FileIndex++;
-		system("cls");
-		cout << strFolderPath << ":" << FileIndex * 100 / FileNumber << "%" << endl;
-	} while (FindNextFile(h, &p));
-}
-
-void CDMA::UpdatePathFilesRanks(string strPath)
-{
-
-}
-
-void CDMA::UpdateFileRanks(string strfilename)
-{
-
-}
+// void CDMA::UpdateFileColumn(string strFolderPath)
+// {
+// 	WIN32_FIND_DATA p;
+// 	string mFilePath = strFolderPath + "\\*.csv";
+// 	//LPCWSTR findPath = mFilePath.c_str();
+// 	HANDLE h = FindFirstFile(mFilePath.c_str(), &p);
+// 	//统计文件夹下的文件数
+// 	int FileNumber = 0;
+// 	while (FindNextFile(h, &p))
+// 	{
+// 		FileNumber++;
+// 	}
+// 
+// 	h = FindFirstFile(mFilePath.c_str(), &p);
+// 	if (NULL == h)
+// 	{
+// 		return;
+// 	}
+// 
+// 	float FileIndex = 0;
+// 	do
+// 	{
+// 		string filename(p.cFileName);
+// 		VStockData datas, vVolume;
+// 		VStockData vDMAValue, vAMAValue;
+// 		datas = ReadColumnStringFormFile(strFolderPath + "\\" + filename, File_Close_INDEX);
+// 		vVolume = ReadColumnStringFormFile(strFolderPath + "\\" + filename, File_Volume_INDEX);
+// 		// 		reverse(datas.begin(),datas.end()); // 反转数据顺序
+// 		DMA_DATA mDMAData;
+// 		VStockData::iterator vVolumeite = vVolume.begin();
+// 		for (VStockData::iterator ite = datas.begin(); ite != datas.end(); ite++)
+// 		{
+// 			DatePriceData OneDayData;
+// 			OneDayData._Close = *ite;
+// 			if (*vVolumeite != 0)
+// 			{
+// 				GetNextDMA(OneDayData, mDMAData);
+// 				vDMAValue.push_back(mDMAData._DDD);
+// 				vAMAValue.push_back(mDMAData._AMA);
+// 			}
+// 			else
+// 			{
+// 				vDMAValue.push_back(mDMAData._DDD);
+// 				vAMAValue.push_back(mDMAData._AMA);
+// 			}
+// 			vVolumeite++;
+// 		}
+// 		ReSavefileColumn(strFolderPath + "\\" + filename, vDMAValue, DMA_D);
+// 		ReSavefileColumn(strFolderPath + "\\" + filename, vAMAValue, DMA_A);
+// 		FileIndex++;
+// 		system("cls");
+// 		cout << strFolderPath << ":" << FileIndex * 100 / FileNumber << "%" << endl;
+// 	} while (FindNextFile(h, &p));
+// }
+// 
+// void CDMA::UpdatePathFilesRanks(string strPath)
+// {
+// 
+// }
+// 
+// void CDMA::UpdateFileRanks(string strfilename)
+// {
+// 
+// }
 
 void CDMA::GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& Dma)
 {

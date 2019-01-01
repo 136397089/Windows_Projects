@@ -15,20 +15,20 @@ CDMI::~CDMI()
 {
 }
 
-void CDMI::UpdateFileColumn(string strFolderPath)
-{
-
-}
-
-void CDMI::UpdatePathFilesRanks(string strPath)
-{
-
-}
-
-void CDMI::UpdateFileRanks(string strfilename)
-{
-
-}
+// void CDMI::UpdateFileColumn(string strFolderPath)
+// {
+// 
+// }
+// 
+// void CDMI::UpdatePathFilesRanks(string strPath)
+// {
+// 
+// }
+// 
+// void CDMI::UpdateFileRanks(string strfilename)
+// {
+// 
+// }
 
 bool CDMI::GetNextDMI(const DatePriceData& TodayDayData, Dmi& mDmi)
 {

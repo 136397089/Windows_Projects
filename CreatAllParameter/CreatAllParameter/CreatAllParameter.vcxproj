@@ -89,6 +89,7 @@
     <ClInclude Include="glog\vlog_is_on.h" />
     <ClInclude Include="Locker.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="MainLoop.h" />
     <ClInclude Include="Number\ASI.h" />
     <ClInclude Include="Number\commonfunction.h" />
     <ClInclude Include="Number\NumberAll.h" />
@@ -111,6 +112,7 @@
     <ClCompile Include="DMI.cpp" />
     <ClCompile Include="Locker.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="MainLoop.cpp" />
     <ClCompile Include="Number\ASI.cpp" />
     <ClCompile Include="Number\CommonFunction.cpp" />
     <ClCompile Include="Number\NumberAll.cpp" />

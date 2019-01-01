@@ -6,86 +6,37 @@
 
 CNumberAll::CNumberAll()
 {
-	FileNumber = 0;
+	//FileNumber = 0;
 }
 
 
 CNumberAll::~CNumberAll()
 {
 }
-bool CNumberAll::RunProg(string strFolderPath)
-{
-	WIN32_FIND_DATA p;
-	string mFilePath = strFolderPath + "\\*.csv";
-	//LPCWSTR findPath = mFilePath.c_str();
-	HANDLE h = FindFirstFile(mFilePath.c_str(), &p);
-	//统计文件夹下的文件数
-	FileNumber = 0;
-	FileIndex = 0;
-	while (FindNextFile(h, &p))
-	{
-		FileNumber++;
-	}
-	h = FindFirstFile(mFilePath.c_str(), &p);
-	if (NULL == h)
-	{
-		return false;
-	}
 
-	//resultFile.open("D:\\StockFile\\resultfile.txt", fstream::out);
-	resultFileCsv.open("D:\\StockFile\\resultfile.csv", fstream::out);
-	if (! resultFileCsv)
-		return false;
-	beginIndex = 100;
-	vector<string> checkStockFileNames;
-	checkStockFileNames.clear();
-	//遍历所有文件
-	do
-	{ 
-// 		srand((unsigned)time(NULL));
-// 		int a = rand() % 2;
-// 		cout << a << endl;
-// 		if (a < 5)
-			AnalyseTheFile(p.cFileName, strFolderPath);
-// 		else
-// 			Sleep(100);
-// 			checkStockFileNames.push_back(p.cFileName);
-	} while (FindNextFile(h, &p));
-// 	for (vector<string>::iterator ite = checkStockFileNames.begin(); ite != checkStockFileNames.end(); ++ite)
-// 		AnalyseTheFile(*ite, strFolderPath);
 
-	resultFileCsv.close();
-	return true;
-}
 
-void CNumberAll::UpdateFileColumn(string strFolderPath)
-{
-	RunProg(strFolderPath);
-}
 
-void CNumberAll::UpdatePathFilesRanks(string strPath)
-{
-	RunProg(strPath);
-}
 
-void CNumberAll::UpdateFileRanks(string strfilename)
-{
-}
-
+////////////////////////////////////////////////////////////////////////
+//
+//
+////////////////////////////////////////////////////////////////////////
 void CNumberAll::RaedDateFromFile(const string& strFilePath)
 {
 	bool IsLongitudinal  = false;//标志数据是否横向排列
+	CNumberManager mCSVFileTool;
 
-	_vCloseData.clear();
-	_vHigh.clear();
-	_vLow.clear();
-	_vOpenData.clear();
-	_vTimeDay.clear();
-	_vVolume.clear();
-	_vMa5.clear();
-	_vMa10.clear();
-	_vMa20.clear();
-	StringList lineString = ReadDataFromCSVFileRanks(strFilePath);
+	mAll._vCloseData.clear();
+	mAll._vHigh.clear();
+	mAll._vLow.clear();
+	mAll._vOpenData.clear();
+	mAll._vTimeDay.clear();
+	mAll._vVolume.clear();
+	mAll._vMa5.clear();
+	mAll._vMa10.clear();
+	mAll._vMa20.clear();
+	StringList lineString = mCSVFileTool.ReadDataFromCSVFileRanks(strFilePath);
 	StringBlock AllString;
 	if (lineString.size() < 3)
 	{
@@ -115,6 +66,8 @@ void CNumberAll::RaedDateFromFile(const string& strFilePath)
 
 bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 {
+	//清除上次分析的文件所有指标数据
+	mAll.clear();
 	//从文件中读出需要的数据
 	RaedDateFromFile(FilePath + "\\" + filename);
 	if (!ChackDataSizeRaedFromFile())
@@ -139,8 +92,6 @@ bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 	//状态记录
 	StateRecords hStateRecode;
 	hStateRecode.Inition();
-	//清除上次分析的文件所有指标数据
-	ClearAllIndex();
 	//一天的价格
 	DatePriceData OneDayPrice;
 	//账号
@@ -149,13 +100,13 @@ bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 	//用于标记是否可以卖出，刚开始没有买入任何股票，所以不可以卖出
 	_IsInSale = false;
 	//要遍历的所有数据
-	vector<string>::const_iterator dayIte = _vTimeDay.begin();
-	VStockData::const_iterator closeite = _vCloseData.begin();
-	VStockData::const_iterator highite = _vHigh.begin();
-	VStockData::const_iterator lowite = _vLow.begin();
-	VStockData::const_iterator openite = _vOpenData.begin();
+	vector<string>::const_iterator dayIte = mAll._vTimeDay.begin();
+	VStockData::const_iterator closeite = mAll._vCloseData.begin();
+	VStockData::const_iterator highite = mAll._vHigh.begin();
+	VStockData::const_iterator lowite = mAll._vLow.begin();
+	VStockData::const_iterator openite = mAll._vOpenData.begin();
 	//1.1计算指标
-	while (closeite != _vCloseData.end() && lowite != _vLow.end() && highite != _vHigh.end())
+	while (closeite != mAll._vCloseData.end() && lowite != mAll._vLow.end() && highite != mAll._vHigh.end())
 	{
 		OneDayPrice._Close = *closeite;
 		OneDayPrice._High = *highite;
@@ -169,13 +120,13 @@ bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 		hAsi.GetNextASI(OneDayPrice, AllIndex._Asi);
 		hCdp.GetNextCDP(OneDayPrice, AllIndex._Cdp);
 		hDmi.GetNextDMI(OneDayPrice, AllIndex._Dmi);
-		//保存数据
+		//保存计算完的各类指标数据到对应的Vector当中
 		PushBackIndex(AllIndex);
 		//对每日的状态进行判断
-		hStateRecode.DailyStateRecord(AllIndex, OneDayPrice);
-		//
-		if (index > 200)
-			ToSimulationSL1(OneDayPrice, hStateRecode, hAccount);
+// 		hStateRecode.DailyStateRecord(AllIndex, OneDayPrice);
+// 		//
+// 		if (index > 200)
+// 			ToSimulationSL1(OneDayPrice, hStateRecode, hAccount);
 		//迭代器后移
 		++index;
 		++dayIte;
@@ -185,48 +136,30 @@ bool CNumberAll::AnalyseTheFile(const string& filename, const string& FilePath)
 		++openite;
 	}
 
-	StockDataPointer dataPointer = GetDataPointers();
-	hStateRecode.ResultPrint();
-	hStateRecode.GetFinalTrend(dataPointer);
+	//所有指标都已经计算完成
+	//下面只有分析
+// 	StockDataPointer dataPointer = GetDataPointers();
+// 	hStateRecode.ResultPrint();
+// 	hStateRecode.GetFinalTrend(dataPointer);
+// 
+// 	CheckAndPrintKDJMin(filename);
+// 	
+// 	resultFileCsv << filename <<","<< hAccount.GetProceedsRate(*_vCloseData.rbegin()) << endl;
+// 	FileIndex++;
+// 	cout << FilePath << ":" << FileIndex * 100 / FileNumber << "%" << endl;
+// 	hAccount.PrintAllBusiness("D:\\StockFile\\Log\\Allbusiness.txt");
 
-	CheckAndPrintKDJMin(filename);
-	//
-	resultFileCsv << filename <<","<< hAccount.GetProceedsRate(*_vCloseData.rbegin()) << endl;
-	FileIndex++;
-	cout << FilePath << ":" << FileIndex * 100 / FileNumber << "%" << endl;
-	hAccount.PrintAllBusiness("D:\\StockFile\\Log\\Allbusiness.txt");
-	//保存到文件
-	SaveDataToFile(FilePath + "\\" + filename);
 	return true;
 }
 
-bool CNumberAll::SaveDataToFile(const string& strFilePath)
-{
- 	ReSavefileRanks(strFilePath, _vAsi, "ASI");
- 	ReSavefileRanks(strFilePath, _vAsit, "ASIT");
- 	ReSavefileRanks(strFilePath, _vDEA, MACD_DEA);
- 	ReSavefileRanks(strFilePath, _vDiff, MACD_DIFF);
-	ReSavefileRanks(strFilePath, _vMACDValue, MACD_BAR);
-	ReSavefileRanks(strFilePath, _vDMAValue, DMA_D);
-	ReSavefileRanks(strFilePath, _vAMAValue, DMA_A);
-	ReSavefileRanks(strFilePath, _vK, KDJ_K);
-	ReSavefileRanks(strFilePath, _vD, KDJ_D);
-	ReSavefileRanks(strFilePath, _vJ, KDJ_J);
- 	ReSavefileRanks(strFilePath, _vTRIX, TRIX_TRIX);
- 	ReSavefileRanks(strFilePath, _vTRMA, TRIX_MA);
-// 	ReSavefileRanks(strFilePath, _vtr, TRIX_VTR);
-// 	ReSavefileRanks(strFilePath, _vtb, TRIX_VTB);
-// 	ReSavefileRanks(strFilePath, _vta, TRIX_VTA);
-	return true;
-}
 
 void CNumberAll::ToSimulationSL1(const DatePriceData& data, StateRecords& hStateRecode, CStockAccount& _Account)
 {
-	VStockData::reverse_iterator iteKDJ1 = _vJ.rbegin();
+	VStockData::reverse_iterator iteKDJ1 = mAll._vJ.rbegin();
 	VStockData::reverse_iterator iteKDJ2 = iteKDJ1 + 1;
-	VStockData::reverse_iterator iteMACD1 = _vMACDValue.rbegin();
+	VStockData::reverse_iterator iteMACD1 = mAll._vMACDValue.rbegin();
 	VStockData::reverse_iterator iteMACD2 = iteMACD1 + 1;
-	VStockData::reverse_iterator iteASI1 = _vAsi.rbegin();
+	VStockData::reverse_iterator iteASI1 = mAll._vAsi.rbegin();
 	VStockData::reverse_iterator iteASI2 = iteASI1 + 1;
 	static double tempmax = 0.0f;
 	double nowProceedsRate = 0.0f;
@@ -248,11 +181,7 @@ void CNumberAll::ToSimulationSL1(const DatePriceData& data, StateRecords& hState
 		_Account.ChangeStockPosition(data._Close, data.mDate.dateTime, 1);
 		return;
 	}
-// 	if (*iteMACD1 < *iteMACD2 && *iteASI1 < *iteASI2)
-// 	{
-// 		_Account.SellOutAll(data._Close, data.mDate.dateTime);
-// 		return;
-// 	}
+
 	if (_Account.GetPosition() > 0.0f && nowProceedsRate < -0.1)
 	{
 		_Account.SellOutAll(data._Close, data.mDate.dateTime);
@@ -264,25 +193,25 @@ void CNumberAll::ToSimulationSL1(const DatePriceData& data, StateRecords& hState
 StockDataPointer CNumberAll::GetDataPointers()
 {
 	StockDataPointer allDataPointer;
-	allDataPointer._pDay = &_vTimeDay;
-	allDataPointer._pCloseData = &_vCloseData;
-	allDataPointer._pOpenData = &_vOpenData;
-	allDataPointer._pHigh = &_vHigh;
-	allDataPointer._pLow = &_vLow;
-	allDataPointer._pAMAValue = &_vAMAValue;
-	allDataPointer._pMa12 = &_vMa12;
-	allDataPointer._pMa26 = &_vMa26;
-	allDataPointer._pDiff = &_vDiff;
-	allDataPointer._pDEA = &_vDEA;
-	allDataPointer._pDMAValue = &_vDMAValue;
-	allDataPointer._pAMAValue = &_vAMAValue;
-	allDataPointer._pTRIX = &_vTRIX;
-	allDataPointer._pTRMA = &_vTRMA;
-	allDataPointer._pK = &_vK;
-	allDataPointer._pD = &_vD;
-	allDataPointer._pJ = &_vJ;
-	allDataPointer._pAsi = &_vAsi;
-	allDataPointer._pAsit = &_vAsit;
+	allDataPointer._pDay = &mAll._vTimeDay;
+	allDataPointer._pCloseData = &mAll._vCloseData;
+	allDataPointer._pOpenData = &mAll._vOpenData;
+	allDataPointer._pHigh = &mAll._vHigh;
+	allDataPointer._pLow = &mAll._vLow;
+	allDataPointer._pAMAValue = &mAll._vAMAValue;
+	allDataPointer._pMa12 = &mAll._vMa12;
+	allDataPointer._pMa26 = &mAll._vMa26;
+	allDataPointer._pDiff = &mAll._vDiff;
+	allDataPointer._pDEA = &mAll._vDEA;
+	allDataPointer._pDMAValue = &mAll._vDMAValue;
+	allDataPointer._pAMAValue = &mAll._vAMAValue;
+	allDataPointer._pTRIX = &mAll._vTRIX;
+	allDataPointer._pTRMA = &mAll._vTRMA;
+	allDataPointer._pK = &mAll._vK;
+	allDataPointer._pD = &mAll._vD;
+	allDataPointer._pJ = &mAll._vJ;
+	allDataPointer._pAsi = &mAll._vAsi;
+	allDataPointer._pAsit = &mAll._vAsit;
 	return allDataPointer;
 }
 
@@ -293,13 +222,13 @@ void CNumberAll::ToSimulationSL2(const float close, const string& date, StateRec
 
 void CNumberAll::CheckAndPrintKDJMin(const string& filename)
 {
-	VStockData::reverse_iterator iteKDJ1 = _vJ.rbegin();
+	VStockData::reverse_iterator iteKDJ1 = mAll._vJ.rbegin();
 	VStockData::reverse_iterator iteKDJ2 = iteKDJ1 + 1;
-	VStockData::reverse_iterator iteMACD1 = _vMACDValue.rbegin();
+	VStockData::reverse_iterator iteMACD1 = mAll._vMACDValue.rbegin();
 	VStockData::reverse_iterator iteMACD2 = iteMACD1 + 1;
-	VStockData::reverse_iterator iteASI1 = _vAsi.rbegin();
+	VStockData::reverse_iterator iteASI1 = mAll._vAsi.rbegin();
 	VStockData::reverse_iterator iteASI2 = iteASI1 + 1;
-	if (*iteKDJ1 <= 0 && *iteKDJ2 <= 0 && *iteMACD1 > *iteMACD2 && *iteASI1 > *iteASI2)
+	if (*iteKDJ1 <= 0 && *iteKDJ2 <= 0)
 		resultFile.get() << filename << "  KDJMin" << endl;
 }
 
@@ -315,23 +244,23 @@ void CNumberAll::ProcessingTransverseData(const StringBlock& AllString)
 			continue;
 		plist = nullptr;
 		if (*(iteB->begin()) == "open")
-			plist = &_vOpenData;
+			plist = &mAll._vOpenData;
 		if (*(iteB->begin()) == "close")
-			plist = &_vCloseData;
+			plist = &mAll._vCloseData;
 		if (*(iteB->begin()) == "high")
-			plist = &_vHigh;
+			plist = &mAll._vHigh;
 		if (*(iteB->begin()) == "low")
-			plist = &_vLow;
+			plist = &mAll._vLow;
 		if (*(iteB->begin()) == "volume")
-			plist = &_vVolume;
+			plist = &mAll._vVolume;
 		if (*(iteB->begin()) == "v_ma5")
-			plist = &_vMa5;
+			plist = &mAll._vMa5;
 
 		if (*(iteB->begin()) == "")//开头是空字符串的为日期行
 		{
 			for (StringList::const_iterator iteL = (++iteB->begin()); iteL != iteB->end(); iteL++)
 			{
-				_vTimeDay.push_back(*iteL);
+				mAll._vTimeDay.push_back(*iteL);
 			}
 			//reverse(_vTimeDay.begin(), _vTimeDay.end());//反转顺序
 			continue;
@@ -349,52 +278,34 @@ void CNumberAll::ProcessingTransverseData(const StringBlock& AllString)
 	}
 }
 
-void CNumberAll::ClearAllIndex()
-{
-	//清理上次的数据
-	_vMACDValue.clear();//MACD
-	_vMa12.clear();
-	_vMa26.clear();
-	_vDiff.clear();
-	_vDEA.clear();
-	_vDMAValue.clear();//DMA
-	_vAMAValue.clear();
-	_vTRIX.clear();//TRIX
-	_vTRMA.clear();
-	_vK.clear();//KDJ
-	_vD.clear();
-	_vJ.clear();
-	_vAsi.clear();
-	_vAsit.clear();
-}
 
 void CNumberAll::PushBackIndex(const SigDayTechIndex& AllIndex)
 {
-	_vMACDValue.push_back(AllIndex._MacdData.bar);//MACD
-	_vMa12.push_back(AllIndex._MacdData.m12);
-	_vMa26.push_back(AllIndex._MacdData.m26);
-	_vDiff.push_back(AllIndex._MacdData.diff);
-	_vDEA.push_back(AllIndex._MacdData.dea);
-	_vDMAValue.push_back(AllIndex._DMAData._DDD);//DMA
-	_vAMAValue.push_back(AllIndex._DMAData._AMA);
-	_vTRIX.push_back(AllIndex._TrixData._TRIX);//TRIX
-	_vTRMA.push_back(AllIndex._TrixData._TRMA);
-	_vK.push_back(AllIndex._Kdj.K_OF_KDJ);//KDJ
-	_vD.push_back(AllIndex._Kdj.D_OF_KDJ);
-	_vJ.push_back(AllIndex._Kdj.J_OF_KDJ);
-	_vAsi.push_back(AllIndex._Asi._asi);
-	_vAsit.push_back(AllIndex._Asi._asit);
+	mAll._vMACDValue.push_back(AllIndex._MacdData.bar);//MACD
+	mAll._vMa12.push_back(AllIndex._MacdData.m12);
+	mAll._vMa26.push_back(AllIndex._MacdData.m26);
+	mAll._vDiff.push_back(AllIndex._MacdData.diff);
+	mAll._vDEA.push_back(AllIndex._MacdData.dea);
+	mAll._vDMAValue.push_back(AllIndex._DMAData._DDD);//DMA
+	mAll._vAMAValue.push_back(AllIndex._DMAData._AMA);
+	mAll._vTRIX.push_back(AllIndex._TrixData._TRIX);//TRIX
+	mAll._vTRMA.push_back(AllIndex._TrixData._TRMA);
+	mAll._vK.push_back(AllIndex._Kdj.K_OF_KDJ);//KDJ
+	mAll._vD.push_back(AllIndex._Kdj.D_OF_KDJ);
+	mAll._vJ.push_back(AllIndex._Kdj.J_OF_KDJ);
+	mAll._vAsi.push_back(AllIndex._Asi._asi);
+	mAll._vAsit.push_back(AllIndex._Asi._asit);
 }
 
 bool CNumberAll::ChackDataSizeRaedFromFile()
 {
 	if (
-		_vCloseData.size() != _vOpenData.size()
-		|| _vCloseData.size() != _vHigh.size()
-		|| _vCloseData.size() != _vLow.size()
-		|| _vCloseData.size() != _vTimeDay.size()
-		|| _vCloseData.size() != _vVolume.size()
-		|| _vCloseData.size() != _vMa5.size())
+		mAll._vCloseData.size() != mAll._vOpenData.size()
+		|| mAll._vCloseData.size() != mAll._vHigh.size()
+		|| mAll._vCloseData.size() != mAll._vLow.size()
+		|| mAll._vCloseData.size() != mAll._vTimeDay.size()
+		|| mAll._vCloseData.size() != mAll._vVolume.size()
+		|| mAll._vCloseData.size() != mAll._vMa5.size())
 	{
 		return false;
 	}
@@ -402,4 +313,45 @@ bool CNumberAll::ChackDataSizeRaedFromFile()
 	{
 		return true;
 	}
+}
+
+const AllStockData& CNumberAll::GetAllValue()
+{
+	return mAll;
+}
+
+
+void AllStockData::clear()
+{
+	_vOpenData.clear();
+	_vCloseData.clear();
+	_vHigh.clear();
+	_vLow.clear();
+	_vVolume.clear();
+	_vMa5.clear();
+	_vMa10.clear();
+	_vMa20.clear();
+	_vTimeDay.clear();
+
+	_vMACDValue.clear();
+	_vMa12.clear();
+	_vMa26.clear();
+	_vDiff.clear();
+	_vDEA.clear();
+	_vDMAValue.clear();
+	_vAMAValue.clear();
+	_vTRIX.clear();
+	_vTRMA.clear();
+	_vtr.clear();
+	_vtb.clear();
+	_vta.clear();
+	_vK.clear();
+	_vD.clear();
+	_vJ.clear();
+	_vAsi.clear();
+	_vAsit.clear();
+
+
+
+
 }

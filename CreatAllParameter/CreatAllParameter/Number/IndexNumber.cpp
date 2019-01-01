@@ -378,20 +378,7 @@ void CNumberManager::RunTread(string filePath)
 	}
 }
 
-void CNumberManager::UpdatePathFilesRanks(string strPath)
-{
-	ShowDebugInformationInCon("Error:In BaseClass UpdatePathFilesRanks.");
-}
 
-void CNumberManager::UpdateFileRanks(string strfilename)
-{
-	ShowDebugInformationInCon("Error:In BaseClass UpdatePathFilesRanks.");
-}
-
-void CNumberManager::UpdateFileColumn(string strPath)
-{
-	ShowDebugInformationInCon("Error:In BaseClass UpdatePathFilesRanks.");
-}
 
 
 StringList CNumberManager::ReadDataFromCSVFileRanks(const string& fullFilePath)
@@ -461,7 +448,6 @@ DWORD WINAPI ThreadToUpdatefile(PVOID pvParam)
 	NumberTreadPara* para = (NumberTreadPara*)pvParam;
 	CNumberManager& macd = *para->pmacd_;
 
-	macd.UpdateFileRanks(para->filename_);
 	delete pvParam;
 	macd._TreadNum--;
 	return 0;

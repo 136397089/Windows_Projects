@@ -14,8 +14,7 @@ struct ASI/*:public IndexBaseType*/
 // 		return *this;
 // 	}
 };
-class CAsi :
-	public CNumberManager
+class CAsi// :public CNumberManager
 {
 public:
 	CAsi();

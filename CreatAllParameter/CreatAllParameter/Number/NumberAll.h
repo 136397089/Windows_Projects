@@ -14,33 +14,43 @@
 #include "StateRecords.h"
 #include "../log.h"
 
+
+struct AllStockData
+{
+	void clear();
+	//读取的股票成交信息
+	VStockData _vOpenData;
+	VStockData _vCloseData;
+	VStockData _vHigh;
+	VStockData _vLow;
+	VStockData _vVolume;
+	VStockData _vMa5;
+	VStockData _vMa10;
+	VStockData _vMa20;
+	vector<string> _vTimeDay;
+	//指标结果保存
+	VStockData _vMACDValue, _vMa12, _vMa26, _vDiff, _vDEA;
+	VStockData _vDMAValue, _vAMAValue;
+	VStockData _vTRIX, _vTRMA, _vtr, _vtb, _vta;
+	VStockData _vK, _vD, _vJ;
+	VStockData _vAsi, _vAsit;
+};
+
+
 class StateRecords;
-class CNumberAll :
-	protected CNumberManager
+class CNumberAll //:protected CNumberManager
 {
 public:
 	CNumberAll();
 	~CNumberAll();
 	//////////////////////////////////////////////////////////////////////////
-	//更新目录下所有CSV文件里的值
+	//分析目标文件中的数据
 	//////////////////////////////////////////////////////////////////////////
-	bool RunProg(string strFolderPath);
-protected:
-	//////////////////////////////////////////////////////////////////////////
-	//更新目录下所有CSV文件里的值(数据按列排)
-	//strPath:目录路径
-	//////////////////////////////////////////////////////////////////////////
-	virtual void UpdateFileColumn(string strFolderPath);
-	//////////////////////////////////////////////////////////////////////////
-	//更新目录下所有CSV文件里的值(天数按行排)
-	//strPath:目录路径
-	//////////////////////////////////////////////////////////////////////////
-	virtual void UpdatePathFilesRanks(string strPath);
-	//////////////////////////////////////////////////////////////////////////
-	//更新单个CSV文件里的值(天数按行排)
-	//strPath:文件路径
-	//////////////////////////////////////////////////////////////////////////
-	virtual void UpdateFileRanks(string strfilename);
+	bool AnalyseTheFile(const string& filename ,const string& FilePath);
+
+
+	const AllStockData& GetAllValue();
+
 private:
 	//////////////////////////////////////////////////////////////////////////
 	//从文件中读出所有的数据
@@ -50,10 +60,6 @@ private:
 	//读横向排列的数据
 	//////////////////////////////////////////////////////////////////////////
 	void ProcessingTransverseData(const StringBlock& AllString);
-	//////////////////////////////////////////////////////////////////////////
-	//分析目标文件中的数据
-	//////////////////////////////////////////////////////////////////////////
-	bool AnalyseTheFile(const string& filename ,const string& FilePath);
 	//////////////////////////////////////////////////////////////////////////
 	//将计算完的数据保存到文件当中
 	//////////////////////////////////////////////////////////////////////////
@@ -73,36 +79,37 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
-	inline void ClearAllIndex();
 	inline void PushBackIndex(const SigDayTechIndex& AllIndex);
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
 	inline bool ChackDataSizeRaedFromFile();
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
 	void CheckAndPrintKDJMin(const string& filename);
 	bool _IsInSale;
-	int FileNumber;
-	float FileIndex;
 	int index;
-	int beginIndex;
 	CLog resultFile;
-	fstream resultFileCsv;
+	//fstream resultFileCsv;
 	double startTime;
-	VStockData _vOpenData;
-	VStockData _vCloseData;
-	VStockData _vHigh;
-	VStockData _vLow;
-	VStockData _vVolume;
-	VStockData _vMa5;
-	VStockData _vMa10;
-	VStockData _vMa20;
-	vector<string> _vTimeDay;
-	//结果保存
-	VStockData _vMACDValue, _vMa12, _vMa26, _vDiff, _vDEA;
-	VStockData _vDMAValue, _vAMAValue;
-	VStockData _vTRIX, _vTRMA,_vtr,_vtb,_vta;
-	VStockData _vK, _vD, _vJ;
-	VStockData _vAsi, _vAsit;
+	AllStockData mAll;
+	//读取的股票成交信息
+// 	VStockData _vOpenData;
+// 	VStockData _vCloseData;
+// 	VStockData _vHigh;
+// 	VStockData _vLow;
+// 	VStockData _vVolume;
+// 	VStockData _vMa5;
+// 	VStockData _vMa10;
+// 	VStockData _vMa20;
+// 	vector<string> _vTimeDay;
+// 	//指标结果保存
+// 	VStockData _vMACDValue, _vMa12, _vMa26, _vDiff, _vDEA;
+// 	VStockData _vDMAValue, _vAMAValue;
+// 	VStockData _vTRIX, _vTRMA,_vtr,_vtb,_vta;
+// 	VStockData _vK, _vD, _vJ;
+// 	VStockData _vAsi, _vAsit;
 	/*VStockData vMa5, vMa10, vMa20, vMa40;*/
 };
 
