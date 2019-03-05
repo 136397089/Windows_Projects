@@ -41,9 +41,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\ProgramData\Anaconda3\include;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);D:\ProgramData\Anaconda3\libs;</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
+    <IncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);D:\ProgramData\Anaconda3\include;</IncludePath>
+    <LibraryPath>$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);D:\ProgramData\Anaconda3\libs;</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -52,10 +56,12 @@
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\eigen3</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);python36.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -67,68 +73,102 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\eigen3</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);python36.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BullMarkBearMark.h" />
     <ClInclude Include="CDP.h" />
     <ClInclude Include="CommonFunction.h" />
+    <ClInclude Include="DateTool.h" />
     <ClInclude Include="DMI.h" />
+    <ClInclude Include="FreqStat.h" />
     <ClInclude Include="glog\logging.h" />
     <ClInclude Include="glog\log_severity.h" />
     <ClInclude Include="glog\raw_logging.h" />
     <ClInclude Include="glog\stl_logging.h" />
     <ClInclude Include="glog\vlog_is_on.h" />
+    <ClInclude Include="CLocalRecordTool.h" />
     <ClInclude Include="Locker.h" />
     <ClInclude Include="Log.h" />
+    <ClInclude Include="Ma.h" />
     <ClInclude Include="MainLoop.h" />
+    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Number\ASI.h" />
     <ClInclude Include="Number\commonfunction.h" />
-    <ClInclude Include="Number\NumberAll.h" />
-    <ClInclude Include="Number\Right.h" />
-    <ClInclude Include="Number\StateRecords.h" />
+    <ClInclude Include="Number\NumberInter.h" />
+    <ClInclude Include="Number\StatusRecords.h" />
     <ClInclude Include="Number\TRIX.h" />
     <ClInclude Include="Number\_DMA.h" />
     <ClInclude Include="Number\IndexNumber.h" />
     <ClInclude Include="Number\KDJ.h" />
     <ClInclude Include="Number\Macd.h" />
-    <ClInclude Include="StatisticsStock.h" />
+    <ClInclude Include="PriceRate.h" />
+    <ClInclude Include="PriChag.h" />
+    <ClInclude Include="PythonInterface.h" />
+    <ClInclude Include="StaticIntegral.h" />
+    <ClInclude Include="StaticRecord.h" />
+    <ClInclude Include="StatisticeInter.h" />
+    <ClInclude Include="StatusB.h" />
+    <ClInclude Include="StatusInter.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="StockAccountNum.h" />
     <ClInclude Include="targetver.h" />
+    <ClInclude Include="tinyxml\tinystr.h" />
+    <ClInclude Include="tinyxml\tinyxml.h" />
+    <ClInclude Include="TrandRecord.h" />
     <ClInclude Include="TrendAnal.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BullMarkBearMark.cpp" />
     <ClCompile Include="CDP.cpp" />
     <ClCompile Include="CreatAllParameter.cpp" />
+    <ClCompile Include="DateTool.cpp" />
     <ClCompile Include="DMI.cpp" />
+    <ClCompile Include="CLocalRecordTool.cpp" />
+    <ClCompile Include="FreqStat.cpp" />
     <ClCompile Include="Locker.cpp" />
     <ClCompile Include="Log.cpp" />
+    <ClCompile Include="Ma.cpp" />
     <ClCompile Include="MainLoop.cpp" />
+    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Number\ASI.cpp" />
     <ClCompile Include="Number\CommonFunction.cpp" />
-    <ClCompile Include="Number\NumberAll.cpp" />
-    <ClCompile Include="Number\Right.cpp" />
-    <ClCompile Include="Number\StateRecords.cpp" />
+    <ClCompile Include="Number\NumberInter.cpp" />
+    <ClCompile Include="Number\StatusRecords.cpp" />
     <ClCompile Include="Number\TRIX.cpp" />
     <ClCompile Include="Number\_DMA.cpp" />
     <ClCompile Include="Number\IndexNumber.cpp" />
     <ClCompile Include="Number\KDJ.cpp" />
     <ClCompile Include="Number\Macd.cpp" />
-    <ClCompile Include="StatisticsStock.cpp" />
+    <ClCompile Include="PriceRate.cpp" />
+    <ClCompile Include="PriChag.cpp" />
+    <ClCompile Include="PythonInterface.cpp" />
+    <ClCompile Include="StaticIntegral.cpp" />
+    <ClCompile Include="StaticRecord.cpp" />
+    <ClCompile Include="StatisticeInter.cpp" />
+    <ClCompile Include="StatusB.cpp" />
+    <ClCompile Include="StatusInter.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="StockAccountNum.cpp" />
+    <ClCompile Include="tinyxml\tinystr.cpp" />
+    <ClCompile Include="tinyxml\tinyxml.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="TrandRecord.cpp" />
     <ClCompile Include="TrendAnal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

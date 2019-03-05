@@ -53,5 +53,12 @@ if (!_bool_)\
 #define TO_STRING(n,str){str="";stringstream ss;ss  n;	ss >> str;}
 
 
+typedef  float tySData;
+typedef vector < tySData > VStockData;
+typedef vector<string> StringList;
+typedef vector<StringList> StringBlock;
+
+
+
 #endif // _COMMONFUNSTION_H
 

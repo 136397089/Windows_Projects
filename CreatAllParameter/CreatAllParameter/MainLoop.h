@@ -1,6 +1,6 @@
 #pragma once
 #include "stdafx.h"
-#include "Number/NumberAll.h"
+#include "Number/NumberInter.h"
 #include "Locker.h"
 #include "Number/IndexNumber.h"
 

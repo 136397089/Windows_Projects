@@ -29,7 +29,7 @@ class CKDJ
 	//public CNumberManager
 {
 public:
-	CKDJ(void);
+	CKDJ(tySData day1, tySData day2, tySData day3);
 	~CKDJ(void);
 // 	//////////////////////////////////////////////////////////////////////////
 // 	//更新目录下所有CSV文件里的KDJ值(数据按列排)
@@ -53,10 +53,11 @@ public:
 	bool GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ);
 	void Inition();
 private:
+	CKDJ();
 	void StaticSizePush(tySData mdata, float msize, list<tySData>& mList);
 	list<tySData> _lHigh;
 	list<tySData> _lLow;
 	list<tySData> _lClose;
 	//KDJ指标的参数
-	float _Nday, _M1, _M2;
+	const float _Nday, _M1, _M2;
 };

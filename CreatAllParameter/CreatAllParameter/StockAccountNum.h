@@ -4,17 +4,20 @@
 #include <list>
 #include <string>
 #include <fstream>
+#include "DateTool.h"
 using namespace std;
 #pragma once
-typedef double 双精度浮点;
-typedef string 标准字符串;
+// typedef double 双精度浮点;
+// typedef string 标准字符串;
 //一次交易
-struct 交易数据
+struct TransactionData
 {
 	//bool _IsBay;//是不是买入
-	标准字符串 _交易日期;
-	双精度浮点 _成交量;//交易量,小于0表示卖出，大于0表示买入
-	双精度浮点 _交易价格;//交易价格
+	int _iStockCode;
+	string _strStockCode;
+	CDate _Date;
+	int _Volume;//交易量,小于0表示卖出，大于0表示买入
+	double _Price;//交易价格
 };
 //类只对一个股票操作
 class CStockAccount
@@ -30,10 +33,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//初始化账号
 	//////////////////////////////////////////////////////////////////////////
-	bool 初始化账号函数(double 初始资金);
+	bool Inition(double InitialFunding);
 	//////////////////////////////////////////////////////////////////////////
 	//修改仓位到目标仓位
-	//
 	//////////////////////////////////////////////////////////////////////////
 	bool ChangeStockPosition(const double& currentPrice, const string& Date, const double& tagePosition);
 	//////////////////////////////////////////////////////////////////////////
@@ -47,7 +49,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//获取之前的所有操作
 	//////////////////////////////////////////////////////////////////////////
-	list<交易数据> GetAllBusiness();
+	list<TransactionData> GetAllBusiness();
 	//////////////////////////////////////////////////////////////////////////
 	//获取当前仓位
 	//////////////////////////////////////////////////////////////////////////
@@ -76,20 +78,22 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	//进行一次买卖操作
 	//////////////////////////////////////////////////////////////////////////
-	bool _进行交易(const 交易数据& mbusiness);
+	bool Trading(const TransactionData& mbusiness);
 	//初始变量，不变
 	string _OwnStockDate;//操作的股票代码
 	double _InitCapital;//初始的资金
 	//过程变量，可变
 	double _CurrentAvailableCapital;//当前的可用资金
 	double _OwnStock;//拥有的股票数量
-	double _CurrentPosition;//
+	double _CurrentPosition;//当前的仓位
 	//过程记录
-	list<交易数据> _AllBusiness;//发生过的所有操作
+	list<TransactionData> _AllBusiness;//发生过的所有操作
 	//
 	string _LastError;
 	//最后一次交易价格
 	double _lastPrise;
+	//单笔成交基数
+	int _minVolu;
 };
 
 #endif

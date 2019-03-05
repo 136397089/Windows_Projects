@@ -4,11 +4,11 @@
 #include "KDJ.h"
 
 using namespace std;
-CKDJ::CKDJ(void)
-{
-	_Nday = 9*5;
-	_M1 = 3*5;
-	_M2 = 3*5;
+CKDJ::CKDJ(tySData day1, tySData day2, tySData day3)
+	:_Nday(day1),
+	_M1(day2),
+	_M2(day3)
+{ 
 }
 
 CKDJ::~CKDJ(void)
@@ -28,9 +28,9 @@ bool CKDJ::GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ)
 
 	if (_lHigh.size() < _Nday)
 	{
-		mFrontKDJ.K_OF_KDJ = 100;
-		mFrontKDJ.D_OF_KDJ = 100;
-		mFrontKDJ.J_OF_KDJ = 100;
+		mFrontKDJ.K_OF_KDJ = 0;
+		mFrontKDJ.D_OF_KDJ = 0;
+		mFrontKDJ.J_OF_KDJ = 0;
 		return true;
 	}
 	//找到最大值和最小值

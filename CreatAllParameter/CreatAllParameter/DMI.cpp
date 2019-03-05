@@ -89,3 +89,12 @@ bool CDMI::GetNextDMI(const DatePriceData& TodayDayData, Dmi& mDmi)
 // 	}
 	return true;
 }
+
+bool CDMI::Inition()
+{
+	M1 = 12;//DI计算周期
+	M2 = 2;//ADXR计算周期 
+	_FrontDay = 0.0f;
+	_FrontADXDay = 0.0f;
+	return true;
+}

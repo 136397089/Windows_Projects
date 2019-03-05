@@ -11,11 +11,53 @@
 #include <sstream>
 #include <algorithm>
 #include "CommonFunction.h"
+#include "../DateTool.h"
+
 
 //读出目标文件允许的最大行数
 #define MAX_FILE_LINE_READFROM_RANK 100
 #define  MAX_FILE_LINE_READFROM_COLUMN 10000
 
+
+enum IndexType
+{
+	//定义列标签的名称
+	_eFile_Close_INDEX,
+	_eFile_Date_INDEX,
+	_eFile_Open_INDEX,
+	_eFile_High_INDEX,
+	_eFile_Low_INDEX,
+	_eFile_Volume_INDEX,
+	//MACD
+	_eMACD_MA12,
+	_eMACD_MA26,
+	_eMACD_DIFF,
+	_eMACD_DEA,
+	_eMACD_BAR,
+	//KDJ
+	_eKDJ_K,
+	_eKDJ_D,
+	_eKDJ_J,
+	//DMA
+	_eDMA_D,
+	_eDMA_A,
+	//TRIX
+	_eTRIX_TRIX,
+	_eTRIX_MA,
+	_eTRIX_VTR,
+	_eTRIX_VTB,
+	_eTRIX_VTA,
+	//
+	_eMA_MA5,
+	_eMA_MA10,
+	_eMA_MA20,
+	_eMA_MA40,
+	_ePRICECHANGE,
+	_eVOLHANGE,
+	_eASI_I,
+	_eASI_T
+};
+std::string GetIndexNameByIndexType(IndexType _indextype);
 //定义列标签的名称
 #define File_Close_INDEX "close"
 #define File_Date_INDEX "date"
@@ -50,32 +92,16 @@
 #define MA_MA10 "M10"
 #define MA_MA20 "M20"
 #define MA_MA40 "M40"
+
+#define PRICECHANGE "pChange"
+#define VOLHANGE "volChange"
+
+#define ASI_I "ASI"
+#define ASI_T "ASIT"
 //线程函数
 DWORD WINAPI ThreadToUpdatefile(PVOID pvParam);
 
-typedef  float tySData;
-typedef vector < tySData > VStockData;
-typedef vector<string> StringList;
-typedef vector<StringList> StringBlock;
 class CNumberManager;
-//////////////////////////////////////////////////////////////////////////
-//时间 年 月 日
-//
-//////////////////////////////////////////////////////////////////////////
-class CDate
-{
-public:
-	CDate(string day)
-	{
-	}
-	CDate()
-	{
-	}
-	string dateTime;
-	int iYear;
-	int iMonth;
-	int iDay;
-};
 
 //////////////////////////////////////////////////////////////////////////
 //
@@ -84,12 +110,14 @@ public:
 struct DatePriceData
 {
 public:
-	DatePriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f){}
+	int DateIndex;
+	DatePriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f),DateIndex(0){}
 	CDate mDate;
 	tySData _Open;
 	tySData _Close;
 	tySData _High;
 	tySData _Low;
+	tySData _Volume;
 	tySData _Ma5;
 	tySData _Ma10;
 	tySData _Ma20;
@@ -156,7 +184,14 @@ public:
 	//vMACDValue:要加入的行数据
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, VStockData vMACDValue, string tittle);
+	void ReSavefileRanks(string FilePath,const  VStockData vNewValue, string tittle);
+	//////////////////////////////////////////////////////////////////////////
+	//增加对应的行保存到CSV文件中
+	//FilePath：文件路径
+	//vMACDValue:要加入的行数据
+	//tittle:行名
+	//////////////////////////////////////////////////////////////////////////
+	void ReSavefileRanks(string FilePath, const vector<string> vNewValue, string tittle);
 
 
 	//////////////////////////////////////////////////////////////////////////

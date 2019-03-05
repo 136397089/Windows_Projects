@@ -15,6 +15,7 @@ _OwnStockDate(StockDate)
 	_CurrentAvailableCapital = _InitCapital;
 	_OwnStock = 0;
 	_CurrentPosition = 0.0f;
+	_minVolu = 100;
 	_AllBusiness.clear();
 }
 CStockAccount::CStockAccount() :
@@ -38,10 +39,10 @@ string CStockAccount::GetLastError()
 }
 
 //完成一次买卖操作
-bool CStockAccount::_进行交易(const 交易数据& mbusiness)
+bool CStockAccount::Trading(const TransactionData& mbusiness)
 {
 	//买入股票错误,资金不足
-	if (mbusiness._交易价格 * mbusiness._成交量 > _CurrentAvailableCapital && mbusiness._成交量 > 0.0)
+	if (mbusiness._Price * mbusiness._Volume > _CurrentAvailableCapital && mbusiness._Volume > 0.0)
 	{
 		LOG(ERROR) << "Stock Account error:Lack of Available Capital.";
 		LOG(INFO) << "Stock Account error:Lack of Available Capital.";
@@ -49,7 +50,7 @@ bool CStockAccount::_进行交易(const 交易数据& mbusiness)
 		return false;
 	}
 	//卖出股票错误,股票不足
-	if (_OwnStock + mbusiness._成交量 < 0 && mbusiness._成交量 < 0.0)
+	if (_OwnStock + mbusiness._Volume < 0 && mbusiness._Volume < 0.0)
 	{
 		LOG(ERROR) << "Stock Account error:Lack of Operable Stock.";
 		LOG(INFO) << "Stock Account error:Lack of Operable Stock.";
@@ -57,20 +58,20 @@ bool CStockAccount::_进行交易(const 交易数据& mbusiness)
 		return false;
 	}
 	//买入股票
-	if (mbusiness._交易价格 * mbusiness._成交量 <= _CurrentAvailableCapital && mbusiness._成交量 > 0.0)
+	if (mbusiness._Price * mbusiness._Volume <= _CurrentAvailableCapital && mbusiness._Volume > 0.0)
 	{
-		_lastPrise = mbusiness._交易价格;
-		_CurrentAvailableCapital = _CurrentAvailableCapital - mbusiness._交易价格 * mbusiness._成交量;
-		_OwnStock = _OwnStock + mbusiness._成交量;
+		_lastPrise = mbusiness._Price;
+		_CurrentAvailableCapital = _CurrentAvailableCapital - mbusiness._Price * mbusiness._Volume;
+		_OwnStock = _OwnStock + mbusiness._Volume;
 		_AllBusiness.push_back(mbusiness);
 		return true;
 	}
 	//卖出股票
-	else if (_OwnStock + mbusiness._成交量 >= 0  && mbusiness._成交量 < 0.0)
+	else if (_OwnStock + mbusiness._Volume >= 0  && mbusiness._Volume < 0.0)
 	{
-		_lastPrise = mbusiness._交易价格;
-		_CurrentAvailableCapital = _CurrentAvailableCapital - mbusiness._交易价格 * mbusiness._成交量;
-		_OwnStock = _OwnStock + mbusiness._成交量;
+		_lastPrise = mbusiness._Price;
+		_CurrentAvailableCapital = _CurrentAvailableCapital - mbusiness._Price * mbusiness._Volume;
+		_OwnStock = _OwnStock + mbusiness._Volume;
 		_AllBusiness.push_back(mbusiness);
 		return true;
 	}
@@ -115,7 +116,7 @@ bool CStockAccount::AllIn(const double& currentPrice, const string& date)
 //修改仓位到目标仓位
 bool CStockAccount::ChangeStockPosition(const double& currentPrice, const string& Date, const double& tagePosition)
 {
-	//1.0判断仓位是不出错
+	//1.0判断仓位是否出错
 	double localTagePosition = tagePosition;
 	if (localTagePosition > 1.0)
 	{
@@ -142,25 +143,26 @@ bool CStockAccount::ChangeStockPosition(const double& currentPrice, const string
 	}
 	double currentPosition = GetPosition();
 	//不管目标仓位是大于还是小于当前仓位，都是一样的计算公式
-	交易数据 tempBusiness;
+	TransactionData tempBusiness;
 	if (localTagePosition > _CurrentPosition)
 	{
-		tempBusiness._交易价格 = currentPrice;
-		tempBusiness._交易日期 = Date;
-		tempBusiness._成交量 = _CurrentAvailableCapital * (localTagePosition - _CurrentPosition) / currentPrice - 1;
+		tempBusiness._Price = currentPrice;
+		tempBusiness._Date.SetDay(Date);
+		tempBusiness._Volume = _CurrentAvailableCapital * (localTagePosition - _CurrentPosition) / currentPrice - 1;
+		tempBusiness._Volume = floor(tempBusiness._Volume / _minVolu) * _minVolu;
 		LOG(INFO) << "Stock Account Info: Bay.";
-		if (_进行交易(tempBusiness))
+		if (Trading(tempBusiness))
 		{
 			_CurrentPosition = localTagePosition;
 		}
 	}
 	else
 	{
-		tempBusiness._交易价格 = currentPrice;
-		tempBusiness._交易日期 = Date;
-		tempBusiness._成交量 = _OwnStock * (localTagePosition - _CurrentPosition) / _CurrentPosition;
+		tempBusiness._Price = currentPrice;
+		tempBusiness._Date.SetDay(Date);
+		tempBusiness._Volume = _OwnStock * (localTagePosition - _CurrentPosition) / _CurrentPosition;
 		LOG(INFO) << "Stock Account Info: sell.";
-		if (_进行交易(tempBusiness))
+		if (Trading(tempBusiness))
 		{
 			_CurrentPosition = localTagePosition;
 		}
@@ -185,18 +187,18 @@ double CStockAccount::GetCurrentAssets(double currentPrice)
 	return _CurrentAvailableCapital + currentPrice * _OwnStock;
 }
 
-list<交易数据> CStockAccount::GetAllBusiness()
+list<TransactionData> CStockAccount::GetAllBusiness()
 {
 	return _AllBusiness;
 }
 
-bool CStockAccount::初始化账号函数(double 初始资金)
+bool CStockAccount::Inition(double InitialFunding)
 {
 	_lastPrise = 0;
 	_LastError = "";
 
-	_InitCapital = 初始资金;
-	_CurrentAvailableCapital = 初始资金;
+	_InitCapital = InitialFunding;
+	_CurrentAvailableCapital = InitialFunding;
 	_OwnStock = 0.0f;
 	_CurrentPosition = 0.0f;
 	_AllBusiness.clear();
@@ -215,8 +217,8 @@ void CStockAccount::PrintAllBusiness(const string& filePath)
 		}
 		outfile << _OwnStockDate << endl;
 		outfile << "Date,Price,Volume"<<endl;
-		for (list<交易数据>::iterator ite = _AllBusiness.begin(); ite != _AllBusiness.end();ite++)
-			outfile << ite->_交易日期 << ","<< ite->_交易价格 << ","<< ite->_成交量 << endl;
+		for (list<TransactionData>::iterator ite = _AllBusiness.begin(); ite != _AllBusiness.end();ite++)
+			outfile << ite->_Date.GetDay() << ","<< ite->_Price << ","<< ite->_Volume << endl;
 		outfile.close();
 	}
 }

@@ -13,14 +13,32 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
-    <Filter Include="Namber">
-      <UniqueIdentifier>{51ea24fd-ae0c-4d39-8871-b27601847746}</UniqueIdentifier>
-    </Filter>
     <Filter Include="glog">
       <UniqueIdentifier>{24706687-14f9-49e6-a0f6-2eeccfde2c56}</UniqueIdentifier>
     </Filter>
     <Filter Include="Locker">
       <UniqueIdentifier>{b418f81a-809d-4538-b4be-08a39e4c3d09}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Number">
+      <UniqueIdentifier>{51ea24fd-ae0c-4d39-8871-b27601847746}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Matrix">
+      <UniqueIdentifier>{1a584017-adae-4f5d-9b04-470416275fd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Statistics">
+      <UniqueIdentifier>{4f5623b8-c8bf-4c85-892a-5a7d48807ceb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Status">
+      <UniqueIdentifier>{2c7b3149-1857-4905-b2be-bf2cdfaa242d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Number\SingleNumber">
+      <UniqueIdentifier>{79edb531-38c0-42de-8265-feb26fc95c6b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Python">
+      <UniqueIdentifier>{3b54f555-fbaf-4491-9e64-1a3dab1a96a8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="XML">
+      <UniqueIdentifier>{b5ccfb4e-e441-4b67-9b86-323785d5fb8e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -34,43 +52,16 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="Number\IndexNumber.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\KDJ.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\Macd.h">
-      <Filter>Namber</Filter>
+      <Filter>Number</Filter>
     </ClInclude>
     <ClInclude Include="Number\commonfunction.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\_DMA.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\Right.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\NumberAll.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\TRIX.h">
-      <Filter>Namber</Filter>
+      <Filter>Number</Filter>
     </ClInclude>
     <ClInclude Include="StockAccountNum.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="CommonFunction.h">
       <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="TrendAnal.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\StateRecords.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="Number\ASI.h">
-      <Filter>Namber</Filter>
     </ClInclude>
     <ClInclude Include="Log.h">
       <Filter>头文件</Filter>
@@ -93,17 +84,89 @@
     <ClInclude Include="Locker.h">
       <Filter>Locker</Filter>
     </ClInclude>
-    <ClInclude Include="StatisticsStock.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
-    <ClInclude Include="CDP.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
-    <ClInclude Include="DMI.h">
-      <Filter>Namber</Filter>
-    </ClInclude>
     <ClInclude Include="MainLoop.h">
       <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticRecord.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\StatusRecords.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="TrandRecord.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="TrendAnal.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Matrix.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusB.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="StatisticeInter.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="FreqStat.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="CLocalRecordTool.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\NumberInter.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\_DMA.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\ASI.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="CDP.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="DMI.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Ma.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\TRIX.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\KDJ.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\Macd.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="PriChag.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="DateTool.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="PythonInterface.h">
+      <Filter>Python</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinystr.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinyxml\tinyxml.h">
+      <Filter>XML</Filter>
+    </ClInclude>
+    <ClInclude Include="PriceRate.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="BullMarkBearMark.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusInter.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="StaticIntegral.h">
+      <Filter>Status</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -114,40 +177,13 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="Number\IndexNumber.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\KDJ.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\Macd.cpp">
-      <Filter>Namber</Filter>
+      <Filter>Number</Filter>
     </ClCompile>
     <ClCompile Include="Number\CommonFunction.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\_DMA.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\Right.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\NumberAll.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\TRIX.cpp">
-      <Filter>Namber</Filter>
+      <Filter>Number</Filter>
     </ClCompile>
     <ClCompile Include="StockAccountNum.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="TrendAnal.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\StateRecords.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\ASI.cpp">
-      <Filter>Namber</Filter>
     </ClCompile>
     <ClCompile Include="Log.cpp">
       <Filter>源文件</Filter>
@@ -155,17 +191,95 @@
     <ClCompile Include="Locker.cpp">
       <Filter>Locker</Filter>
     </ClCompile>
-    <ClCompile Include="StatisticsStock.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="CDP.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
-    <ClCompile Include="DMI.cpp">
-      <Filter>Namber</Filter>
-    </ClCompile>
     <ClCompile Include="MainLoop.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticRecord.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\StatusRecords.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="TrandRecord.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="TrendAnal.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Matrix.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusB.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="StatisticeInter.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="FreqStat.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="CLocalRecordTool.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\_DMA.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\ASI.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="CDP.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="DMI.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Ma.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\TRIX.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\KDJ.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\Macd.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="PriChag.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="DateTool.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="PythonInterface.cpp">
+      <Filter>Python</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinystr.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxml.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlerror.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="tinyxml\tinyxmlparser.cpp">
+      <Filter>XML</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\NumberInter.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="PriceRate.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="BullMarkBearMark.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="StatusInter.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="StaticIntegral.cpp">
+      <Filter>Status</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

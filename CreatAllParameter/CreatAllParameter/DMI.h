@@ -55,6 +55,8 @@ public:
 	//mMacd:Ç°ÈÕµÄMACD
 	//////////////////////////////////////////////////////////////////////////
 	bool GetNextDMI(const DatePriceData& OneDayData, Dmi& mDmi);
+
+	bool Inition();
 private:
 	DatePriceData _FrontPriceData;
 	//list<DMTR> _vFrontDMTRList;

@@ -2,7 +2,7 @@
 //
 
 #include "stdafx.h"
-#include "number/NumberAll.h"
+#include "number/NumberInter.h"
 #include "Log.h"
 #include "StockAccountNum.h"
 #include "MainLoop.h"

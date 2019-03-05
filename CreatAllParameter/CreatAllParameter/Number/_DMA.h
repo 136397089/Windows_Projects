@@ -6,6 +6,7 @@
 #define _DMA_H
 
 
+
 struct DMA_DATA/*:public IndexBaseType*/
 {
 	DMA_DATA() :_DDD(0), _AMA(0){}

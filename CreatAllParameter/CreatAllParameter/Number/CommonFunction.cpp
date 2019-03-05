@@ -17,12 +17,12 @@ vector<string> CutString(string inputstring,string CutIndex)
 	int index = strRight.find(CutIndex);
 	while(index >= 0)
 	{
-		strLeft = strRight.substr(0,strRight.find(CutIndex));
-		strRight = strRight.substr(strRight.find(CutIndex)+1);
-		vTempString.push_back(strLeft);
+		//strLeft = strRight.substr(0,strRight.find(CutIndex));
+		vTempString.push_back(strRight.substr(0, strRight.find(CutIndex)));
+		strRight = strRight.substr(strRight.find(CutIndex) + 1);
 		index = strRight.find(CutIndex);
 	}
-	if (strRight.size()>1)
+	if (strRight.size()>=1 && strRight != CutIndex)
 	{
 		vTempString.push_back(strRight);
 	}

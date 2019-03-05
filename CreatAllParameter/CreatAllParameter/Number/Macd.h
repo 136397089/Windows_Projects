@@ -25,7 +25,7 @@ public:
 	tySData diff;
 	tySData dea;
 	tySData bar;
-// 	Macd& operator = (const Macd& rhs){
+// 		Macd& operator = (const Macd& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
 // 		_Index3 = rhs._Index3;
@@ -44,27 +44,9 @@ public:
 class CMacdManager// : public CNumberManager
 {
 public:
-	CMacdManager(void);
+	CMacdManager(tySData shortsmoothness, tySData longsmoothness,tySData m);
 	~CMacdManager(void);
 
-// 	vector<string> CutString(string inputstring,string CutIndex);
-
-
-	//////////////////////////////////////////////////////////////////////////
-	//更新目录下所有CSV文件里的MACD值(数据按列排)
-	//strPath:目录路径
-	//////////////////////////////////////////////////////////////////////////
-// 	virtual void UpdateFileColumn(string strFolderPath);
-// 	//////////////////////////////////////////////////////////////////////////
-// 	//更新目录下所有CSV文件里的MACD值(天数按行排)
-// 	//strPath:目录路径
-// 	//////////////////////////////////////////////////////////////////////////
-// 	virtual void UpdatePathFilesRanks(string strPath) ;
-// 	//////////////////////////////////////////////////////////////////////////
-// 	//更新单个CSV文件里的MACD值(天数按行排)
-// 	//strPath:文件路径
-// 	//////////////////////////////////////////////////////////////////////////
-// 	virtual void UpdateFileRanks(string strfilename);
 	//////////////////////////////////////////////////////////////////////////
 	//通过前日的MACD获得今日的MACD值
 	//closeData:收盘价
@@ -72,6 +54,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool GetNextMacd(const DatePriceData& OneDayData, Macd& mMacd);
 private:
+	const tySData shortSmoothness;
+	const tySData longSmoothness;
+	const tySData M;
 };
 
 

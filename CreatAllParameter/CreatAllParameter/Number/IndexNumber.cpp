@@ -1,6 +1,16 @@
 #include "StdAfx.h"
+#include <iomanip>
+#include <string>
+#include <map>
 #include "IndexNumber.h"
 #include "../Locker.h"
+
+
+static string logPath("D:\\StockFile\\Log");
+static string plotPath("D:\\StockFile\\PlotFile");
+
+
+
 CNumberManager::CNumberManager(void)
 {
 	_StockCSVFileMutex = CreateMutex(nullptr, true, "StockCSVFileMutex");
@@ -64,7 +74,7 @@ VStockData CNumberManager::ReadColumnStringFormFile(string filepath, string strT
 //////////////////////////////////////////////////////////////////////////
 //将列数据保存到文件中
 //
-//
+//有Bug，无调用，暂不修改
 //////////////////////////////////////////////////////////////////////////
 void CNumberManager::ReSavefileColumn(string FilePath, VStockData vNumValue, string tittle)
 {
@@ -195,7 +205,7 @@ VStockData CNumberManager::ReadRanksStringFormFile(string filepath, string strTi
 //vMACDValue:要加入的行数据
 //tittle:列名
 //////////////////////////////////////////////////////////////////////////
-void CNumberManager::ReSavefileRanks(string FilePath, VStockData vNumValue, string tittle)
+void CNumberManager::ReSavefileRanks(string FilePath,const  VStockData vNumValue, string tittle)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(),ios::in);
@@ -228,7 +238,7 @@ void CNumberManager::ReSavefileRanks(string FilePath, VStockData vNumValue, stri
 		{
 			outfile << tittle;
 			addNewLine = false;
-			for (VStockData::iterator ite = vNumValue.begin(); ite != vNumValue.end(); ite++)
+			for (VStockData::const_iterator ite = vNumValue.cbegin(); ite != vNumValue.cend(); ite++)
 			{
 				outfile << "," << *ite;
 			}
@@ -239,7 +249,7 @@ void CNumberManager::ReSavefileRanks(string FilePath, VStockData vNumValue, stri
 	if (addNewLine)//需要增加新的行
 	{
 		outfile << tittle;
-		for (VStockData::iterator ite = vNumValue.begin(); ite != vNumValue.end(); ite++)
+		for (VStockData::const_iterator ite = vNumValue.cbegin(); ite != vNumValue.cend(); ite++)
 		{
 			outfile << "," << *ite;
 		}
@@ -247,6 +257,61 @@ void CNumberManager::ReSavefileRanks(string FilePath, VStockData vNumValue, stri
 	}
 
 	outfile.close();
+}
+
+void CNumberManager::ReSavefileRanks(string FilePath, const vector<string> vNewValue, string tittle)
+{
+	CLocker(_StockCSVFileMutex, INFINITE);
+	fstream infile(FilePath.c_str(), ios::in);
+	string ch;
+	string buffer[MAX_FILE_LINE_READFROM_RANK];
+	//数据太少，不做操作
+	if (vNewValue.size() < 3)
+	{
+		cout << "Size is too small.";
+		return;
+	}
+
+	//将文件全部内容读出到buffer[]数据中
+	int lineIndex = 0;
+	while (getline(infile, buffer[lineIndex]))
+	{
+		lineIndex++;
+	}
+	infile.close();
+
+	fstream outfile(FilePath.c_str(), ios::out);
+	bool addNewLine = true;//有时要保存的数据在原文件已经存在，用来标记是不是要增加新的行
+	for (int lineNumber = 0; lineNumber < lineIndex; lineNumber++)
+	{
+		if (buffer[lineNumber].find(tittle) >= buffer[lineNumber].size())//不是要保存的目标行，原数据放回
+		{
+			outfile << buffer[lineNumber] << endl;
+		}
+		else//是目标行则把输入的数据保存
+		{
+			outfile << tittle;
+			addNewLine = false;
+			for (vector<string>::const_iterator ite = vNewValue.cbegin(); ite != vNewValue.cend(); ite++)
+			{
+				outfile << "," << *ite;
+			}
+			outfile << endl;
+		}
+	}
+
+	if (addNewLine)//需要增加新的行
+	{
+		outfile << tittle;
+		for (vector<string>::const_iterator ite = vNewValue.cbegin(); ite != vNewValue.cend(); ite++)
+		{
+			outfile << "," << *ite;
+		}
+		outfile << endl;
+	}
+
+	outfile.close();
+
 }
 
 
@@ -437,7 +502,6 @@ bool CNumberManager::SaveDataToCSVFile(const string& fullFilePath, const StringB
 	return true;
 }
 
-
 //////////////////////////////////////////////////////////////////////////
 //线程函数
 //
@@ -452,3 +516,69 @@ DWORD WINAPI ThreadToUpdatefile(PVOID pvParam)
 	macd._TreadNum--;
 	return 0;
 }
+map<IndexType, string> IndexName = {
+	{_eFile_Close_INDEX ,  File_Close_INDEX } ,
+	{_eFile_Close_INDEX , File_Close_INDEX },
+	{_eFile_Date_INDEX , File_Date_INDEX },
+	{_eFile_Open_INDEX , File_Open_INDEX },
+	{_eFile_High_INDEX , File_High_INDEX },
+	{_eFile_Low_INDEX , File_Low_INDEX },
+	{_eFile_Volume_INDEX ,File_Volume_INDEX },
+	{ _eMACD_MA12, MACD_MA12 },
+	{ _eMACD_MA26, MACD_MA26 },
+	{ _eMACD_DIFF, MACD_DIFF },
+	{_eMACD_DEA , MACD_DEA },
+	{_eMACD_BAR , MACD_BAR },
+	{_eKDJ_K , KDJ_K },
+	{_eKDJ_D , KDJ_D },
+	{_eKDJ_J , KDJ_J },
+	{_eDMA_D , DMA_D },
+	{_eDMA_A , DMA_A },
+	{_eTRIX_TRIX , TRIX_TRIX },
+	{_eTRIX_MA , TRIX_MA },
+	{ _eTRIX_VTR, TRIX_VTR },
+	{ _eTRIX_VTB, TRIX_VTB },
+	{ _eTRIX_VTA, TRIX_VTA },
+	{_eMA_MA5 , MA_MA5 },
+	{ _eMA_MA10, MA_MA10 },
+	{ _eMA_MA20, MA_MA20 },
+	{ _eMA_MA40, MA_MA40 },
+	{_ePRICECHANGE , PRICECHANGE },
+	{_eVOLHANGE , VOLHANGE },
+	{_eASI_I , ASI_I },
+	{_eASI_T , ASI_T }
+};
+std::string GetIndexNameByIndexType(IndexType _indextype)
+{
+	return IndexName[_indextype];
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
