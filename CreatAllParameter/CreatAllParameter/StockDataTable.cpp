@@ -101,14 +101,11 @@ StockDataPointer StockDataTable::GetAllPointer() const
 {
 	StockDataPointer indexPointerMap;
 	//pirce
-	indexPointerMap[_eFile_Open_INDEX] = &_vOpen;
 	indexPointerMap[_eFile_Close_INDEX] = &_vClose;
+	indexPointerMap[_eFile_Open_INDEX] = &_vOpen;
 	indexPointerMap[_eFile_High_INDEX] = &_vHigh;
 	indexPointerMap[_eFile_Low_INDEX] = &_vLow;
 	indexPointerMap[_eFile_Volume_INDEX] = &_vVolume;
-	//change rate
-	indexPointerMap[_ePRICECHANGE] = &_vPriChaRate;
-	indexPointerMap[_eVOLHANGE] = &_vVolChaRate;
 	//MA
 	indexPointerMap[_eMA_MA5] = &_vMa1;
 	indexPointerMap[_eMA_MA10] = &_vMa2;
@@ -120,6 +117,10 @@ StockDataPointer StockDataTable::GetAllPointer() const
 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
 	indexPointerMap[_eMACD_DIFF] = &_vDiff;
 	indexPointerMap[_eMACD_DEA] = &_vDEA;
+	//KDJ
+	indexPointerMap[_eKDJ_K] = &_vK;
+	indexPointerMap[_eKDJ_D] = &_vD;
+	indexPointerMap[_eKDJ_J] = &_vJ;
 	//DMA
 	indexPointerMap[_eDMA_D] = &_vDMAValue;
 	indexPointerMap[_eDMA_A] = &_vAMAValue;
@@ -129,10 +130,9 @@ StockDataPointer StockDataTable::GetAllPointer() const
 	indexPointerMap[_eTRIX_VTR] = &_vtr;
 	indexPointerMap[_eTRIX_VTB] = &_vtb;
 	indexPointerMap[_eTRIX_VTA] = &_vta;
-	//KDJ
-	indexPointerMap[_eKDJ_K] = &_vK;
-	indexPointerMap[_eKDJ_D] = &_vD;
-	indexPointerMap[_eKDJ_J] = &_vJ;
+	//change rate
+	indexPointerMap[_ePRICECHANGE] = &_vPriChaRate;
+	indexPointerMap[_eVOLHANGE] = &_vVolChaRate;
 	//ASI
 	indexPointerMap[_eASI_I] = &_vAsi_i;
 	indexPointerMap[_eASI_T] = &_vAsit;

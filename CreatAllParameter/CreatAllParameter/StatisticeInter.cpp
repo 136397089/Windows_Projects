@@ -3,7 +3,7 @@
 #include "StatisticeInter.h"
 
 #include "glog/logging.h"
-
+#include "CcdpStatistics.h"
 CStatisticeInter::CStatisticeInter()
 {
 }
@@ -19,17 +19,20 @@ bool CStatisticeInter::Inition()
 }
 //
 bool CStatisticeInter::Inter(
-	const StockDataTable& daynumber,
-	const StockDataTable& weeknumber,
-	const StockDataTable& mounthnumber,
+	const StockDataTable& daydata,
+	const StockDataTable& weekdata,
+	const StockDataTable& mounthdata,
 	CStateInter& daystate,
 	CStateInter& weekstate,
 	CStateInter& monthstate)
 {
 	Inition();
-	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
-	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
-	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
+	CcdpStatistics CDPStaTool;
+	CDPStaTool.CountCDPData(daydata);
+
+	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
+	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
+	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	//GroupFreqStatistice(allnumber, stateinter);
 	return true;
 }

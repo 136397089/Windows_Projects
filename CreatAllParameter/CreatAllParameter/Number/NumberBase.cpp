@@ -515,7 +515,6 @@ DWORD WINAPI ThreadToUpdatefile(PVOID pvParam)
 	return 0;
 }
 map<IndexType, string> IndexName = {
-	{_eFile_Close_INDEX ,  File_Close_INDEX } ,
 	{_eFile_Close_INDEX , File_Close_INDEX },
 	{_eFile_Date_INDEX , File_Date_INDEX },
 	{_eFile_Open_INDEX , File_Open_INDEX },
@@ -541,10 +540,15 @@ map<IndexType, string> IndexName = {
 	{ _eMA_MA10, MA_MA10 },
 	{ _eMA_MA20, MA_MA20 },
 	{ _eMA_MA40, MA_MA40 },
-	{_ePRICECHANGE , PRICECHANGE },
-	{_eVOLHANGE , VOLHANGE },
-	{_eASI_I , ASI_I },
-	{_eASI_T , ASI_T }
+	{ _ePRICECHANGE, PRICECHANGE },
+	{ _eVOLHANGE, VOLHANGE },
+	{ _eASI_I, ASI_I },
+	{ _eASI_T, ASI_T },
+	{ _eCDP_CDP, CDP_CDP },
+	{ _eCDP_AH, CDP_AH },
+	{ _eCDP_NH, CDP_NH },
+	{ _eCDP_NL, CDP_NL },
+	{ _eCDP_AL, CDP_AL }
 };
 std::string GetIndexNameByIndexType(IndexType _indextype)
 {

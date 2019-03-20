@@ -1,5 +1,9 @@
-﻿生成启动时间为 2019/3/20 20:29:38。
+﻿生成启动时间为 2019/3/20 21:28:18。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
+     1>Link:
+         CreatAllParameter.vcxproj -> D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.exe
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.03
+已用时间 00:00:00.08

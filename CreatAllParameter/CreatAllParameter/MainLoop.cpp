@@ -97,6 +97,7 @@ bool CMainLoop::StatisticalFileQuantity(string strPath)
 
 bool CMainLoop::SaveDataToFile(const string& strFilePath, const StockDataTable & allData)
 {
+	FileTool.ReSavefileRanks(strFilePath, allData._vTimeDay, GetIndexNameByIndexType(_eFile_Date_INDEX));
 	StockDataPointer pointers = allData.GetAllPointer();
 	for (StockDataPointer::const_iterator ite = pointers.cbegin(); ite != pointers.cend(); ite++)
 	{
