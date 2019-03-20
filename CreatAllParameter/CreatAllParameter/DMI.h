@@ -1,12 +1,12 @@
 #pragma once
-#include "Number\IndexNumber.h"
+#include "Number\NumberBase.h"
 
 struct  Dmi
 {
-	tySData _PDI;
-	tySData _NDI;
-	tySData _ADX;
-	tySData _ADXR;
+	tyStockData _PDI;
+	tyStockData _NDI;
+	tyStockData _ADX;
+	tyStockData _ADXR;
 	Dmi()
 	{
 		_PDI = 0.0f;
@@ -17,10 +17,10 @@ struct  Dmi
 };
 struct DMTR
 {
-	tySData PDM;
-	tySData NDM;
-	tySData TR;
-	tySData ADX;
+	tyStockData PDM;
+	tyStockData NDM;
+	tyStockData TR;
+	tyStockData ADX;
 	DMTR()
 	{
 		PDM = 0.0f;
@@ -62,9 +62,9 @@ private:
 	//list<DMTR> _vFrontDMTRList;
 	Dmi _FrontDMI;
 	DMTR _FrontAvgDMTR;
-	tySData M1;
-	tySData M2;
-	tySData _FrontDay;//之前已经加入数据的天数
-	tySData _FrontADXDay;
+	tyStockData M1;
+	tyStockData M2;
+	tyStockData _FrontDay;//之前已经加入数据的天数
+	tyStockData _FrontADXDay;
 };
 

@@ -1,12 +1,14 @@
 #include "stdafx.h"
 #include "MainLoop.h"
-#include "StatusInter.h"
+#include "StateInter.h"
 #include "Matrix.h"
 #include "StatisticeInter.h"
 #include "glog/logging.h"
 #include "StockAccountNum.h"
 #include "PythonInterface.h"
 #include "BullMarkBearMark.h"
+#include "DataSizeSwich.h"
+
 
 CMainLoop::CMainLoop()
 {
@@ -18,7 +20,7 @@ CMainLoop::CMainLoop()
 CMainLoop::~CMainLoop()
 {
 }
-
+//成交量发生巨大变化是很能体现资金心态发生改变的
 
 bool CMainLoop::RunLoop(string strFolderPath)
 {
@@ -27,10 +29,6 @@ bool CMainLoop::RunLoop(string strFolderPath)
 	CPythonInterface tempinterface;
 	tempinterface.Inition();
 #endif
-
-
-
-
 	WIN32_FIND_DATA p;
 	HANDLE h;
 	string mFilePath;
@@ -42,32 +40,37 @@ bool CMainLoop::RunLoop(string strFolderPath)
 	{
 		return false;
 	}
-
-	CNumberInterface tempna;
-	CStatusInter statusinter;
+	StockDataTable stockdata;
+	CNumberInterface numberTool;
+	CStateInter daystate;
+	CStateInter weekstate;
+	CStateInter monthstate;
 	CStatisticeInter statisticeInter;
 	map<float, int> vfreqlist;
 	//遍历所有文件
 	do
 	{
-		tempna.AnalyseTheFile(p.cFileName, strFolderPath);
-// 		SaveDataToFile(strFolderPath + "//" + p.cFileName, tempna.GetAllValue());
-		AllStockData allstockdata = tempna.GetAllValue();
-		statusinter.Inter(allstockdata, p.cFileName);
-		statisticeInter.Inter(allstockdata, statusinter);
+		numberTool.AnalyseTheFile(p.cFileName, strFolderPath);
+		//stockdata = numberTool.GetMonthValue();
+		//SaveDataToFile(strFolderPath + "//" + "W_" + p.cFileName, numberTool.GetDayValue());
+		daystate.Inter(numberTool.GetDayValue(), p.cFileName);
+		weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
+		monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
+		statisticeInter.Inter(
+			numberTool.GetDayValue(),
+			numberTool.GetWeekValue(), 
+			numberTool.GetMonthValue(),
+			daystate,weekstate,monthstate);
 #ifdef _MYDEBUG
 		CBullMarkBearMark tempmatket;
-		MarketTypeList templist = tempmatket.GetMarketTypes(allstockdata._vCloseData, allstockdata._vTimeDay);
+		MarketTypeList templist = tempmatket.GetMarketTypes(stockdata._vClose, stockdata._vTimeDay);
 		string logfailepath = "D:\\StockFile\\Log\\";
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, statusinter.allIndexStatus[_eMACD_DEA].GetLocalDay(), "Day");
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, statusinter.allIndexStatus[_eMACD_DEA].GetLocalStatusPointsValue(), "Localstatus");
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, statusinter.allIndexStatus[_eMACD_DEA].GetTrendStatusPointsValue(), "LowTrendstatus");
+		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetLocalDay(), "Day");
+		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetLocalStatePointsValue(), "Localstate");
+		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetTrendStatePointsValue(), "LowTrendstate");
 #endif
-
 	} while (FindNextFile(h, &p));
-
 	return true;
-
 }
 
 //
@@ -92,7 +95,7 @@ bool CMainLoop::StatisticalFileQuantity(string strPath)
 	return true;
 }
 
-bool CMainLoop::SaveDataToFile(const string& strFilePath, const AllStockData & allData)
+bool CMainLoop::SaveDataToFile(const string& strFilePath, const StockDataTable & allData)
 {
 	StockDataPointer pointers = allData.GetAllPointer();
 	for (StockDataPointer::const_iterator ite = pointers.cbegin(); ite != pointers.cend(); ite++)

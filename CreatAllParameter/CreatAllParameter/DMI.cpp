@@ -51,8 +51,8 @@ bool CDMI::GetNextDMI(const DatePriceData& TodayDayData, Dmi& mDmi)
 		else
 			currentDMTR.NDM = 0;
 		//1.3º∆À„’Ê µ≤®∑˘£®TR£©
-		tySData TR; 
-		tySData A,B,C;
+		tyStockData TR; 
+		tyStockData A,B,C;
 		A = TodayDayData._High - TodayDayData._Low;
 		B = TodayDayData._High - _FrontPriceData._Close;
 		C = TodayDayData._Low - _FrontPriceData._Close;

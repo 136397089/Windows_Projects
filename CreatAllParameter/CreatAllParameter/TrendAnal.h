@@ -3,7 +3,7 @@
 #define _TRENDANAL_H
 #include <vector>
 #include <fstream>
-#include "Number/IndexNumber.h"
+#include "Number/NumberBase.h"
 //趋势线函数参数
 // struct TrendPere
 // {

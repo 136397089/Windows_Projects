@@ -50,6 +50,7 @@ public:
 	CDate GetFrontWeekDay(int day, int week);//获得前几个星期的周几日期
 
 	int GetWeekDay();//获得当日的星期数
+	int GetMonth();
 
 	string GetDay()const;//获得日期字符串
 	string GetDay(const string& splitter)const;//获得日期字符串

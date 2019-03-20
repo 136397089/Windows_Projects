@@ -1,7 +1,7 @@
 #pragma once
 #ifndef STATICINTEGRAL_H
 #define  STATICINTEGRAL_H
-#include "StatusB.h"
+#include "StateB.h"
 
 class CStaticIntegral
 {
@@ -12,8 +12,8 @@ public:
 
 	bool GetsStaticIng(
 		const VStockData& _data ,
-		const StatusPointsList& _staticPoint,
-		StatusPointsList& _staticIng);
+		const StatePointsList& _staticPoint,
+		StatePointsList& _staticIng);
 	
 
 private:

@@ -4,7 +4,7 @@
 #pragma once
 //#include "stdafx.h"
 #include <Windows.h>
-#include "IndexNumber.h"
+#include "NumberBase.h"
 #include "CommonFunction.h"
 
 
@@ -20,11 +20,11 @@ struct Macd/*:public IndexBaseType*/
 {
 public:
 	Macd() :m12(0), m26(0), diff(0), dea(0), bar(0){}
-	tySData m12;
-	tySData m26;
-	tySData diff;
-	tySData dea;
-	tySData bar;
+	tyStockData m12;
+	tyStockData m26;
+	tyStockData diff;
+	tyStockData dea;
+	tyStockData bar;
 // 		Macd& operator = (const Macd& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -44,7 +44,7 @@ public:
 class CMacdManager// : public CNumberManager
 {
 public:
-	CMacdManager(tySData shortsmoothness, tySData longsmoothness,tySData m);
+	CMacdManager(tyStockData shortsmoothness, tyStockData longsmoothness,tyStockData m);
 	~CMacdManager(void);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -54,9 +54,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool GetNextMacd(const DatePriceData& OneDayData, Macd& mMacd);
 private:
-	const tySData shortSmoothness;
-	const tySData longSmoothness;
-	const tySData M;
+	const tyStockData shortSmoothness;
+	const tyStockData longSmoothness;
+	const tyStockData M;
 };
 
 

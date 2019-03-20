@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "Number/NumberInter.h"
 #include "StatisticeInter.h"
-#include "PriceRate.h"
+
 #include "glog/logging.h"
 
 CStatisticeInter::CStatisticeInter()
@@ -18,28 +18,37 @@ bool CStatisticeInter::Inition()
 	return true;
 }
 //
-bool CStatisticeInter::Inter(const AllStockData& allnumber, CStatusInter& statusinter)
+bool CStatisticeInter::Inter(
+	const StockDataTable& daynumber,
+	const StockDataTable& weeknumber,
+	const StockDataTable& mounthnumber,
+	CStateInter& daystate,
+	CStateInter& weekstate,
+	CStateInter& monthstate)
 {
-	MACD_EDA_Statistice(allnumber, statusinter.allIndexStatus[_eMACD_DEA]);
-	//GroupFreqStatistice(allnumber, statusinter);
+	Inition();
+	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
+	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
+	MACD_EDA_Statistice(daynumber, daystate.allIndexStates[_eMACD_BAR]);
+	//GroupFreqStatistice(allnumber, stateinter);
 	return true;
 }
 
 
 //
-bool CStatisticeInter::GroupFreqStatistice(const AllStockData& allnumber, CStatusInter& statusinter)
+bool CStatisticeInter::GroupFreqStatistice(const StockDataTable& stockdata,	CStateInter& stateinter)
 {
-	CFreqStat tempStat;
+	CFreqStatistice tempStat;
 	changeRateStatis vfreqlist;
-	StatusPointsList& thePoints = statusinter.allIndexStatus[_eMACD_DEA]._trendstatus;
+	StatePointsList& thePoints = stateinter.allIndexStates[_eMACD_DEA]._trendstate;
 	for (unsigned int i = 0; i < thePoints.size(); i++)
 	{
 		unsigned int timeindex = thePoints[i]._TimeIndex;
 		if (thePoints[i]._IndexType == _eTrendBottomRise&&
-			allnumber._vDEA[timeindex] > 0)
+			stockdata._vDEA[timeindex] > 0)
 		{
 			unsigned int beginindex = thePoints[i]._TimeIndex;
-			AllStockData tempdata = allnumber.NewDataByIndex(beginindex, beginindex + 30);
+			StockDataTable tempdata = stockdata.NewDataByIndex(beginindex, beginindex + 30);
 			tempStat.Inition();
 			tempStat.GetGroupFrqu(tempdata._vPriChaRate, 0.004f, vfreqlist);
 		}
@@ -47,9 +56,9 @@ bool CStatisticeInter::GroupFreqStatistice(const AllStockData& allnumber, CStatu
 	return true;
 }
 
-bool CStatisticeInter::MACD_EDA_Statistice(const AllStockData& allnumber, const AllStatus& _Status)
+bool CStatisticeInter::MACD_EDA_Statistice(const StockDataTable& allnumber, const StateTable& _State)
 {
-	const StatusPointsList& StaticList = _Status._staticstatus;
+	const StatePointsList& StaticList = _State._staticstate;
 	//输入检查
 	if (StaticList.size() < 3)
 	{
@@ -57,30 +66,88 @@ bool CStatisticeInter::MACD_EDA_Statistice(const AllStockData& allnumber, const 
 		return false;
 	}
 
-	CFreqStat freqStatTool;
-	CPriceRate priceRateTool;
+	CFreqStatistice freqStatTool;
+	CStatisticeTool statictool;
 	changeRateStatis vfreqlist;
 
-	AllStockData tempdata;
+	StockDataTable newdata;
 	VStockData PriceChangeResult;
 
 	unsigned int backIndex = 0;
 	unsigned int frontIndex = 0;
-	for (unsigned int i = 1; i < StaticList.size(); i++)
+	StaticResults changerate;
+	vector<StaticResults> Upresults;
+	vector<StaticResults> Downresults;
+	vector<StaticResults> Allresules;
+	for (unsigned int i = 0; i < StaticList.size(); i++)
 	{
 		backIndex = frontIndex;
 		frontIndex = StaticList[i]._TimeIndex;
 
-		tempdata = allnumber.NewDataByIndex(backIndex, StaticList[i]._TimeIndex);
-
+		if (frontIndex <= backIndex)
+			continue;
+		newdata = allnumber.NewDataByIndex(frontIndex, frontIndex + 30);
+		//统计区间上涨和下跌的次数比例
 		freqStatTool.Inition();
-		freqStatTool.GetGroupFrqu(tempdata._vPriChaRate, 0.01f, vfreqlist);
-		int rise = freqStatTool.GetFreqByValue(0.000001f, 1.0f);
-		int fall = freqStatTool.GetFreqByValue(-1.0f, 0.000001f);
+		freqStatTool.GetGroupFrqu(newdata._vPriChaRate, 0.01f, vfreqlist);
+		float rise = freqStatTool.GetFreqByValue(0.00001f, 1.0f);
+		float fall = freqStatTool.GetFreqByValue(-1.0f, -0.00001f);
+		changerate.RiseDayRate = rise / (float)newdata._vPriChaRate.size();
+		changerate.FallDayRate = fall / (float)newdata._vPriChaRate.size();
+		changerate.BeginDate.SetDay(newdata._vTimeDay[0]);
+		changerate._IndexType = StaticList[i]._IndexType;
+		//
+		statictool.GetEveryDayChangeRate(newdata._vClose, PriceChangeResult);
+		statictool.GetMaxChangeRates(PriceChangeResult, changerate);
+		
+		if (changerate._IndexType == _eStaticPositiveUpClose)
+		{
+			Upresults.push_back(changerate);
+			Allresules.push_back(changerate);
+		}
+		else
+		{
+			Downresults.push_back(changerate);
+			Allresules.push_back(changerate);
+		}
+	}
+	Save_MACD_EDA_StatisticeResultTofile(Allresules);
+	return true;
+}
 
-		priceRateTool.GetEveryDayChangeRate(tempdata._vCloseData,PriceChangeResult);
+
+bool CStatisticeInter::Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result)
+{
+	fstream outfile("D:\\StockFile\\Log\\StatisticeResult.csv", ios::out);
+	outfile
+		<< "date" << ","
+		<< "RiseRate" << ","
+		<< "FallRate" << ","
+		<< "RiseRate1" << ","
+		<< "RiseRate2" << ","
+		<< "RiseRate3" << ","
+		<< "FallRate1" << ","
+		<< "FallRate2" << ","
+		<< "FallRate3" << ","
+		<< "IndexType"
+		<< endl;
+	for (vector<StaticResults>::iterator ite = result.begin(); ite != result.end(); ite++)
+	{
+		outfile
+		<< ite->BeginDate.GetDay()<<","
+		<< ite->RiseDayRate << ","
+		<< ite->FallDayRate << ","
+		<< ite->RiseRate1 << ","
+		<< ite->RiseRate2 << ","
+		<< ite->RiseRate3 << ","
+		<< ite->FallRate1 << ","
+		<< ite->FallRate2 << ","
+		<< ite->FallRate3 << ","
+		<< ite->_IndexType << ",";
+		outfile << endl;
 	}
 
+	outfile.close();
 	return true;
 }
 

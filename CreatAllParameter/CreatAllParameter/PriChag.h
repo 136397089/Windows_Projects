@@ -2,7 +2,7 @@
 #ifndef PRICECHANGE_H
 #define PRICECHANGE_H
 
-#include "Number\IndexNumber.h"
+#include "Number\NumberBase.h"
 
 
 class CChagRate
@@ -11,7 +11,7 @@ public:
 	CChagRate();
 	~CChagRate();
 
-	bool GetNextChangeRate(const tySData& OneDayData, float& changeRate);
+	bool GetNextChangeRate(const tyStockData& OneDayData, float& changeRate);
 
 	bool Inition();
 private:

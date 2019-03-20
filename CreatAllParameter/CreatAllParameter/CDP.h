@@ -1,14 +1,14 @@
 #pragma once
-#include "Number\IndexNumber.h"
+#include "Number\NumberBase.h"
 
 
 struct CDP
 {
-	tySData _CDP;
-	tySData _AH_High;
-	tySData _NH_NormalHigh;
-	tySData _AL_Low;
-	tySData _NL_NormalLow;
+	tyStockData _CDP;
+	tyStockData _AH_High;
+	tyStockData _NH_NormalHigh;
+	tyStockData _AL_Low;
+	tyStockData _NL_NormalLow;
 
 };
 class CCDP// :public CNumberManager

@@ -1,6 +1,6 @@
 
 #pragma once
-#include "indexnumber.h"
+#include "NumberBase.h"
 #include <list>
 #ifndef _DMA_H
 #define _DMA_H
@@ -10,8 +10,8 @@
 struct DMA_DATA/*:public IndexBaseType*/
 {
 	DMA_DATA() :_DDD(0), _AMA(0){}
-	tySData _AMA;
-	tySData _DDD;
+	tyStockData _AMA;
+	tyStockData _DDD;
 // 	DMA_DATA& operator = (const DMA_DATA& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -48,8 +48,8 @@ public:
 	void GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& _Dma);
 	void Inition();
 private:
-	list<tySData> closelyData50;
-	list<tySData> frontDMAData;
+	list<tyStockData> closelyData50;
+	list<tyStockData> frontDMAData;
 	unsigned int Paremeter50;
 	unsigned int Paremeter10;
 };

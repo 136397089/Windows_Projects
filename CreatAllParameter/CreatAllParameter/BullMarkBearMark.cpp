@@ -21,8 +21,8 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 	if (pricedata.size() == 0)
 		return templist;
 
-	tySData fristData = pricedata[0];
-	tySData FrontData = pricedata[0];
+	tyStockData fristData = pricedata[0];
+	tyStockData FrontData = pricedata[0];
 	string FrontDay = day[0];
 	MarketTypeIndex tempmarkindex;
 	bool fristIndexFound = false;

@@ -19,8 +19,8 @@ void CStaticIntegral::Inition()
 
 bool CStaticIntegral::GetsStaticIng(
 	const VStockData& _data,
-	const StatusPointsList& _staticPoint,
-	StatusPointsList& _staticIng)
+	const StatePointsList& _staticPoint,
+	StatePointsList& _staticIng)
 {
 	//输入参数检查
 	if (_staticPoint.size() < 1)
@@ -33,7 +33,7 @@ bool CStaticIntegral::GetsStaticIng(
 		_LastError = "data size is less then 2.";
 		return false;
 	}
-	StatusPoint LastStaticpoint = _staticPoint[_staticPoint.size() - 1];
+	StatePoint LastStaticpoint = _staticPoint[_staticPoint.size() - 1];
 	unsigned int dataMaxIndex = _data.size() - 1;
 	if (LastStaticpoint._TimeIndex > dataMaxIndex)
 	{
@@ -44,16 +44,16 @@ bool CStaticIntegral::GetsStaticIng(
 	_staticIng.clear();
 	unsigned int _FrontIndex = 0;
 	unsigned int _BackIndex = 0;
-	StatusPoint tempstatusPoint;
+	StatePoint tempstatePoint;
 	for (unsigned int i = 0; i < _staticPoint.size();i++)
 	{
 		_BackIndex = _FrontIndex;
 		_FrontIndex = _staticPoint[i]._TimeIndex;
 
-		tempstatusPoint._Value = 0;
-		tempstatusPoint._Date = _staticPoint[i]._Date;
-		tempstatusPoint._TimeIndex = _FrontIndex;
-		tempstatusPoint._OtherSideIndex = _BackIndex;
+		tempstatePoint._Value = 0;
+		tempstatePoint._Date = _staticPoint[i]._Date;
+		tempstatePoint._TimeIndex = _FrontIndex;
+		tempstatePoint._OtherSideIndex = _BackIndex;
 
 		if (_BackIndex > dataMaxIndex || _FrontIndex > dataMaxIndex || _BackIndex > _FrontIndex)
 		{//下标出错:输入的静态特征点index超出了_data的最大index,或者后面的静态特征点index大于前面静态特征点的index
@@ -61,8 +61,8 @@ bool CStaticIntegral::GetsStaticIng(
 			return false;
 		}
 		for (unsigned int j = _BackIndex; j < _FrontIndex; j++)
-			tempstatusPoint._Value = tempstatusPoint._Value + _data[j];
-		_staticIng.push_back(tempstatusPoint);
+			tempstatePoint._Value = tempstatePoint._Value + _data[j];
+		_staticIng.push_back(tempstatePoint);
 	}
 	return true;
 }

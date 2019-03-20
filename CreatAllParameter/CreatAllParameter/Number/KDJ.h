@@ -1,5 +1,5 @@
 #pragma once
-#include "indexnumber.h"
+#include "NumberBase.h"
 
 ////////////////////////////////////////////////////////////////////////////
 //
@@ -9,9 +9,9 @@ struct KDJ/*:public IndexBaseType*/
 {
 public:
 	KDJ() :K_OF_KDJ(0), D_OF_KDJ(0), J_OF_KDJ(0){}
-	tySData K_OF_KDJ;
-	tySData D_OF_KDJ;
-	tySData J_OF_KDJ;
+	tyStockData K_OF_KDJ;
+	tyStockData D_OF_KDJ;
+	tyStockData J_OF_KDJ;
 // 	KDJ operator = (const KDJ& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -29,7 +29,7 @@ class CKDJ
 	//public CNumberManager
 {
 public:
-	CKDJ(tySData day1, tySData day2, tySData day3);
+	CKDJ(tyStockData day1, tyStockData day2, tyStockData day3);
 	~CKDJ(void);
 // 	//////////////////////////////////////////////////////////////////////////
 // 	//更新目录下所有CSV文件里的KDJ值(数据按列排)
@@ -54,10 +54,10 @@ public:
 	void Inition();
 private:
 	CKDJ();
-	void StaticSizePush(tySData mdata, float msize, list<tySData>& mList);
-	list<tySData> _lHigh;
-	list<tySData> _lLow;
-	list<tySData> _lClose;
+	void StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList);
+	list<tyStockData> _lHigh;
+	list<tyStockData> _lLow;
+	list<tyStockData> _lClose;
 	//KDJ指标的参数
 	const float _Nday, _M1, _M2;
 };

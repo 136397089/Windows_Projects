@@ -2,7 +2,7 @@
 
 #ifndef REANDRECORD_H
 #define REANDRECORD_H
-#include "StatusB.h"
+#include "StateB.h"
 
 class CTrandRecordTool
 {
@@ -12,35 +12,35 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	//输入数据，进行趋势分析
 	///////////////////////////////////////////////////////////////////////////
-	StatusPointsList ComTrendState();
+	StatePointsList ComTrendState();
 	//
-	StatusPointsList ButtonTrendState();
+	StatePointsList ButtonTrendState();
 	//
-	StatusPointsList TopTrendState();
+	StatePointsList TopTrendState();
 	//
-	void SetTrendStatusData(const StatusPointsList& LocalResult);
+	void SetTrendStateData(const StatePointsList& LocalResult);
 	//
 	void Inition();
 private:
-	//获得单日低点的趋势
+	//获得单日低点的趋势--
 	CharaPointType GetBottonPointTrandResult() const;
 	//获得单日高点的趋势
 	CharaPointType GetTopPointTrandResult() const ;
 	//获得单日综合趋势
 	CharaPointType GetCompositeTrandResult()const;
 	//
-	StatusPointsList _vIndexRecord_Local;
+	StatePointsList _vIndexRecord_Local;
 
-	StatusPointsList _vLowIndexRecord_Local;
+	StatePointsList _vLowIndexRecord_Local;
 
-	StatusPointsList _vHighIndexRecord_Local;
+	StatePointsList _vHighIndexRecord_Local;
 
 	//记录综合趋势结果
-	StatusPointsList  comtrend;
+	StatePointsList  comtrend;
 	//记录底部趋势结果
-	StatusPointsList  bottontrend;
+	StatePointsList  bottontrend;
 	//记录顶部趋势结果
-	StatusPointsList  toptrend;
+	StatePointsList  toptrend;
 
 	//当局部高点大于highminsize时才开始高点的趋势分析
 	unsigned int highminsize;

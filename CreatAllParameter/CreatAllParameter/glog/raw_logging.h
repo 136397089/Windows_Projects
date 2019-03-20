@@ -65,11 +65,11 @@ namespace google {
 // * it uses an explicit format and arguments list
 // * it will silently chop off really long message strings
 // Usage example:
-//   RAW_LOG(ERROR, "Failed foo with %i: %s", status, error);
-//   RAW_VLOG(3, "status is %i", status);
+//   RAW_LOG(ERROR, "Failed foo with %i: %s", state, error);
+//   RAW_VLOG(3, "state is %i", state);
 // These will print an almost standard log lines like this to stderr only:
 //   E0821 211317 file.cc:123] RAW: Failed foo with 22: bad_file
-//   I0821 211317 file.cc:142] RAW: status is 20
+//   I0821 211317 file.cc:142] RAW: state is 20
 #define RAW_LOG(severity, ...) \
   do { \
     switch (google::GLOG_ ## severity) {  \

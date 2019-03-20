@@ -145,7 +145,7 @@ CDate CDate::operator-(int dayNum)
 {
 	CDate tmpDate(*this);
 	tmpDate._day -= dayNum;
-	while (tmpDate._day < 0)
+	while (tmpDate._day <= 0)
 	{
 		tmpDate._month -= 1;
 		if (tmpDate._month <= 0)
@@ -160,7 +160,7 @@ CDate CDate::operator-(int dayNum)
 CDate& CDate::operator-=(int dayNum)//-=,会改变原来的值，进而在原来的值上面继续减指定的天数
 {
 	_day -= dayNum;
-	while (_day < 0)
+	while (_day <= 0)
 	{
 		_month -= 1;
 		if (_month <= 0)
@@ -273,6 +273,12 @@ CDate CDate::GetFrontWeekDay(int day, int week)
 {
 	CDate tempday = *this;
 	int diffDay = week * 7 + GetWeekDay() - day;
-	tempday = tempday - diffDay;
+	tempday -= diffDay;
+
 	return tempday;
+}
+
+int CDate::GetMonth()
+{
+	return _month;
 }

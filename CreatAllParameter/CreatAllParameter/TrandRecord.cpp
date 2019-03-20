@@ -17,7 +17,7 @@ CTrandRecordTool::~CTrandRecordTool()
 {
 }
 
-StatusPointsList CTrandRecordTool::ComTrendState()
+StatePointsList CTrandRecordTool::ComTrendState()
 {
 	return  comtrend;
 }
@@ -29,9 +29,9 @@ void CTrandRecordTool::Inition()
 	_vHighIndexRecord_Local.clear();
 }
 
-void CTrandRecordTool::SetTrendStatusData(const StatusPointsList& LocalResult)
+void CTrandRecordTool::SetTrendStateData(const StatePointsList& LocalResult)
 {
-	StatusPoint tempFeatPoint;
+	StatePoint tempFeatPoint;
 
 	for (unsigned int i = 0; i < LocalResult.size(); i++)
 	{
@@ -157,12 +157,12 @@ CharaPointType CTrandRecordTool::GetCompositeTrandResult()const
 		return _eUndefindType;
 }
 
-StatusPointsList CTrandRecordTool::ButtonTrendState()
+StatePointsList CTrandRecordTool::ButtonTrendState()
 {
 	return bottontrend;
 }
 
-StatusPointsList CTrandRecordTool::TopTrendState()
+StatePointsList CTrandRecordTool::TopTrendState()
 {
 	return toptrend;
 }

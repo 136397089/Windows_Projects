@@ -2,7 +2,7 @@
 #include "stdafx.h"
 #include "Number/NumberInter.h"
 #include "Locker.h"
-#include "Number/IndexNumber.h"
+#include "Number/NumberBase.h"
 
 class CMainLoop
 {
@@ -13,7 +13,7 @@ public:
 	fstream resultFileCsv;
 	int FileNumber;
 	float FileIndex;
-	CNumberManager FileTool;
+	CNumberBase FileTool;
 
 	HANDLE _StockCSVFileMutex;
 
@@ -29,6 +29,6 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//将计算完的数据保存到文件当中
 	//////////////////////////////////////////////////////////////////////////
-	bool SaveDataToFile(const string& strFilePath,const AllStockData & allData);
+	bool SaveDataToFile(const string& strFilePath,const StockDataTable & allData);
 };
 

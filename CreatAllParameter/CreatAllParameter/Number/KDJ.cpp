@@ -4,7 +4,7 @@
 #include "KDJ.h"
 
 using namespace std;
-CKDJ::CKDJ(tySData day1, tySData day2, tySData day3)
+CKDJ::CKDJ(tyStockData day1, tyStockData day2, tyStockData day3)
 	:_Nday(day1),
 	_M1(day2),
 	_M2(day3)
@@ -154,7 +154,7 @@ bool CKDJ::GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ)
 // 
 // }
 
-void CKDJ::StaticSizePush(tySData mdata, float msize, list<tySData>& mList)
+void CKDJ::StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList)
 {
 	mList.push_back(mdata);
 	if (mList.size() > msize)

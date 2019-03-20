@@ -53,8 +53,8 @@ if (!_bool_)\
 #define TO_STRING(n,str){str="";stringstream ss;ss  n;	ss >> str;}
 
 
-typedef  float tySData;
-typedef vector < tySData > VStockData;
+typedef  float tyStockData;
+typedef vector < tyStockData > VStockData;
 typedef vector<string> StringList;
 typedef vector<StringList> StringBlock;
 

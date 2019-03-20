@@ -1,14 +1,14 @@
 
 #pragma once
 
-#include "number/indexnumber.h"
+#include "number/NumberBase.h"
 struct MA
 {
 	MA() :Ma1(0), Ma2(0), Ma3(0), Ma4(0) {}
-	tySData Ma1;
-	tySData Ma2;
-	tySData Ma3;
-	tySData Ma4;
+	tyStockData Ma1;
+	tyStockData Ma2;
+	tyStockData Ma3;
+	tyStockData Ma4;
 };
 
 class CMa
@@ -20,7 +20,7 @@ public:
 
 	bool Inition();
 private:
-	list<tySData> closedatas;
+	list<tyStockData> closedatas;
 	int M1_Par, M2_Par, M3_Par, M4_Par;
 	int day;
 	CMa();

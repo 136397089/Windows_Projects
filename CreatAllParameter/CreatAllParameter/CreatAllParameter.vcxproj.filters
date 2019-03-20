@@ -51,9 +51,6 @@
     <ClInclude Include="targetver.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="Number\IndexNumber.h">
-      <Filter>Number</Filter>
-    </ClInclude>
     <ClInclude Include="Number\commonfunction.h">
       <Filter>Number</Filter>
     </ClInclude>
@@ -90,9 +87,6 @@
     <ClInclude Include="StaticRecord.h">
       <Filter>Status</Filter>
     </ClInclude>
-    <ClInclude Include="Number\StatusRecords.h">
-      <Filter>Status</Filter>
-    </ClInclude>
     <ClInclude Include="TrandRecord.h">
       <Filter>Status</Filter>
     </ClInclude>
@@ -102,13 +96,7 @@
     <ClInclude Include="Matrix.h">
       <Filter>Matrix</Filter>
     </ClInclude>
-    <ClInclude Include="StatusB.h">
-      <Filter>Status</Filter>
-    </ClInclude>
     <ClInclude Include="StatisticeInter.h">
-      <Filter>Statistics</Filter>
-    </ClInclude>
-    <ClInclude Include="FreqStat.h">
       <Filter>Statistics</Filter>
     </ClInclude>
     <ClInclude Include="CLocalRecordTool.h">
@@ -156,17 +144,41 @@
     <ClInclude Include="tinyxml\tinyxml.h">
       <Filter>XML</Filter>
     </ClInclude>
-    <ClInclude Include="PriceRate.h">
-      <Filter>Statistics</Filter>
-    </ClInclude>
     <ClInclude Include="BullMarkBearMark.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="StatusInter.h">
-      <Filter>Status</Filter>
-    </ClInclude>
     <ClInclude Include="StaticIntegral.h">
       <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="DataSizeSwich.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="StateB.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="StateInter.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\StateRecords.h">
+      <Filter>Status</Filter>
+    </ClInclude>
+    <ClInclude Include="StatisticeTool.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="FreqStatistice.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="Numbers.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="Number\NumberBase.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="StockDataTable.h">
+      <Filter>Number</Filter>
+    </ClInclude>
+    <ClInclude Include="CcdpStatistics.h">
+      <Filter>Statistics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -175,9 +187,6 @@
     </ClCompile>
     <ClCompile Include="CreatAllParameter.cpp">
       <Filter>源文件</Filter>
-    </ClCompile>
-    <ClCompile Include="Number\IndexNumber.cpp">
-      <Filter>Number</Filter>
     </ClCompile>
     <ClCompile Include="Number\CommonFunction.cpp">
       <Filter>Number</Filter>
@@ -197,9 +206,6 @@
     <ClCompile Include="StaticRecord.cpp">
       <Filter>Status</Filter>
     </ClCompile>
-    <ClCompile Include="Number\StatusRecords.cpp">
-      <Filter>Status</Filter>
-    </ClCompile>
     <ClCompile Include="TrandRecord.cpp">
       <Filter>Status</Filter>
     </ClCompile>
@@ -209,13 +215,7 @@
     <ClCompile Include="Matrix.cpp">
       <Filter>Matrix</Filter>
     </ClCompile>
-    <ClCompile Include="StatusB.cpp">
-      <Filter>Status</Filter>
-    </ClCompile>
     <ClCompile Include="StatisticeInter.cpp">
-      <Filter>Statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="FreqStat.cpp">
       <Filter>Statistics</Filter>
     </ClCompile>
     <ClCompile Include="CLocalRecordTool.cpp">
@@ -266,20 +266,44 @@
     <ClCompile Include="tinyxml\tinyxmlparser.cpp">
       <Filter>XML</Filter>
     </ClCompile>
-    <ClCompile Include="Number\NumberInter.cpp">
-      <Filter>Statistics</Filter>
-    </ClCompile>
-    <ClCompile Include="PriceRate.cpp">
-      <Filter>Statistics</Filter>
-    </ClCompile>
     <ClCompile Include="BullMarkBearMark.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="StatusInter.cpp">
-      <Filter>Status</Filter>
-    </ClCompile>
     <ClCompile Include="StaticIntegral.cpp">
       <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="DataSizeSwich.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="StateB.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="StateInter.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\StateRecords.cpp">
+      <Filter>Status</Filter>
+    </ClCompile>
+    <ClCompile Include="StatisticeTool.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="FreqStatistice.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Numbers.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\NumberBase.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="StockDataTable.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="Number\NumberInter.cpp">
+      <Filter>Number</Filter>
+    </ClCompile>
+    <ClCompile Include="CcdpStatistics.cpp">
+      <Filter>Statistics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

@@ -15,13 +15,13 @@ CLocalRecordTool::~CLocalRecordTool()
 {
 }
 
-void CLocalRecordTool::LocalStatusRecordSigPoint(
+void CLocalRecordTool::LocalStateRecordSigPoint(
 	const string strday,
-	const tySData& OneDayData)
+	const tyStockData& OneDayData)
 {
 	_CurrentMark++;
 	//记录下这一天的数据到列表中，用于后期分析
-	StatusPoint thedata;
+	StatePoint thedata;
 	thedata._TimeIndex = _CurrentMark;
 	thedata._Value = OneDayData;
 	thedata._Date.SetDay(strday);
@@ -34,7 +34,7 @@ void CLocalRecordTool::LocalStatusRecordSigPoint(
 		_lTempValue.pop_front();
 	}
 	//进行局部特征分析
-	LocalStatusRecordSingleStep( strday, OneDayData);
+	LocalStateRecordSingleStep( strday, OneDayData);
 	//记录当前点，作为下次分析时的前一个点
 	_frontPoint._Value = OneDayData;
 	_frontPoint._TimeIndex = _CurrentMark;
@@ -43,22 +43,22 @@ void CLocalRecordTool::LocalStatusRecordSigPoint(
 	return;
 }
 
-void CLocalRecordTool::LocalStatusRecordSingleStep(
+void CLocalRecordTool::LocalStateRecordSingleStep(
 	const string& day,
-	const tySData& dayValue)
+	const tyStockData& dayValue)
 {
 	//输入防错
 	if (_lTempValue.size() < 3)
 	{
 		return;
 	}
-	LocalStatusRecordSingleStep_Low( day, dayValue);
-	LocalStatusRecordSingleStep_High( day, dayValue);
+	LocalStateRecordSingleStep_Low( day, dayValue);
+	LocalStateRecordSingleStep_High( day, dayValue);
 }
 
-bool CLocalRecordTool::LocalStatusRecordSingleStep_Low(
+bool CLocalRecordTool::LocalStateRecordSingleStep_Low(
 	const string& day,
-	const tySData& dayValue)
+	const tyStockData& dayValue)
 {
 	//判断有没有形成局部低点
 	if (dayValue < temporaryLowPoint._Value)
@@ -80,7 +80,7 @@ bool CLocalRecordTool::LocalStatusRecordSingleStep_Low(
 		temporaryHighPoint._TimeIndex = _CurrentMark;
 		temporaryHighPoint._Date.SetDay(day);
 
-		StatusPoint LocalLowPoint;
+		StatePoint LocalLowPoint;
 		LocalLowPoint._Value = temporaryLowPoint._Value;
 		LocalLowPoint._TimeIndex = temporaryLowPoint._TimeIndex;
 		LocalLowPoint._Date.SetDay(temporaryLowPoint._Date.GetDay());
@@ -92,9 +92,9 @@ bool CLocalRecordTool::LocalStatusRecordSingleStep_Low(
 	return true;
 }
 
-bool CLocalRecordTool::LocalStatusRecordSingleStep_High(
+bool CLocalRecordTool::LocalStateRecordSingleStep_High(
 	const string& day,
-	const tySData& dayValue)
+	const tyStockData& dayValue)
 {
 	//判断有没有形成局部高点
 	if (dayValue > temporaryHighPoint._Value)
@@ -117,7 +117,7 @@ bool CLocalRecordTool::LocalStatusRecordSingleStep_High(
 		temporaryLowPoint._TimeIndex = _CurrentMark;
 		temporaryLowPoint._Date.SetDay(day);
 
-		StatusPoint LocalHighPoint;
+		StatePoint LocalHighPoint;
 		LocalHighPoint._Value = temporaryHighPoint._Value;
 		LocalHighPoint._TimeIndex = temporaryHighPoint._TimeIndex;
 		LocalHighPoint._Date.SetDay(temporaryHighPoint._Date.GetDay());
@@ -150,7 +150,7 @@ void CLocalRecordTool::Inition(unsigned int range)
 ///////////////////////////////////////////////////////////////////////////
 //返回总结果
 //////////////////////////////////////////////////////////////////////////
-const StatusPointsList& CLocalRecordTool::GetLocalResult()
+const StatePointsList& CLocalRecordTool::GetLocalResult()
 {
 	return _vIndexRecord_Local;
 }
@@ -158,7 +158,7 @@ const StatusPointsList& CLocalRecordTool::GetLocalResult()
 ///////////////////////////////////////////////////////////////////////////
 //返回局部低点结果
 //////////////////////////////////////////////////////////////////////////
-const StatusPointsList& CLocalRecordTool::GetLowLocalResult()
+const StatePointsList& CLocalRecordTool::GetLowLocalResult()
 {
 	return _vLowIndexRecord_Local;
 }
@@ -166,12 +166,12 @@ const StatusPointsList& CLocalRecordTool::GetLowLocalResult()
 ///////////////////////////////////////////////////////////////////////////
 //返回局部高点结果
 //////////////////////////////////////////////////////////////////////////
-const StatusPointsList& CLocalRecordTool::GetHighLocalResult()
+const StatePointsList& CLocalRecordTool::GetHighLocalResult()
 {
 	return _vHighIndexRecord_Local;
 }
 
-void CLocalRecordTool::SetLocalStatusData(const vector<string>& _day, const VStockData& _data)
+void CLocalRecordTool::SetLocalStateData(const vector<string>& _day, const VStockData& _data)
 {
 	if (_data.size() != _day.size())
 		return;
@@ -187,7 +187,7 @@ void CLocalRecordTool::SetLocalStatusData(const vector<string>& _day, const VSto
 
 	for (unsigned int i = 0; i < _data.size(); i++)
 	{
-		LocalStatusRecordSigPoint(_day[i], _data[i]);
+		LocalStateRecordSigPoint(_day[i], _data[i]);
 	}
 }
 

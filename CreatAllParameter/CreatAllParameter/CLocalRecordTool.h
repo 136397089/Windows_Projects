@@ -2,7 +2,7 @@
 #ifndef LOCALRECORD_H
 #define LOCALRECORD_H
 
-#include "StatusB.h"
+#include "StateB.h"
 
 //局部特征点的类型
 // enum LocalFeaturePointsType
@@ -34,7 +34,7 @@ struct index_and_value
 {
 	int index;
 	string date;
-	tySData value;
+	tyStockData value;
 	bool ispush;
 };
 #define  LOCALSTARTINDEX 60
@@ -51,47 +51,47 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	//输入数据，并进行分析
 	//////////////////////////////////////////////////////////////////////////
-	void SetLocalStatusData(const vector<string>& _day, const VStockData& _data);
+	void SetLocalStateData(const vector<string>& _day, const VStockData& _data);
 	///////////////////////////////////////////////////////////////////////////
 	//获取结果，返回局部结果
 	//////////////////////////////////////////////////////////////////////////
-	const StatusPointsList& GetLocalResult();
+	const StatePointsList& GetLocalResult();
 	///////////////////////////////////////////////////////////////////////////
 	//获取结果，返回局部低点结果
 	//////////////////////////////////////////////////////////////////////////
-	const StatusPointsList& GetLowLocalResult();
+	const StatePointsList& GetLowLocalResult();
 	///////////////////////////////////////////////////////////////////////////
 	//获取结果，返回局部高点结果
 	//////////////////////////////////////////////////////////////////////////
-	const StatusPointsList& GetHighLocalResult();
+	const StatePointsList& GetHighLocalResult();
 private:
 	///////////////////////////////////////////////////////////////////////////
 	//输入数据，进行单日局部分析
 	//////////////////////////////////////////////////////////////////////////
-	void LocalStatusRecordSigPoint(
+	void LocalStateRecordSigPoint(
 		/*const SigDayTechIndex& dayIndex,*/
 		const string strday,
-		const tySData& OneDayData);	//////////////////////////////////////////////////////////////////////////
+		const tyStockData& OneDayData);	//////////////////////////////////////////////////////////////////////////
 	//进行单日单指标局部分析
 	//////////////////////////////////////////////////////////////////////////
-	void LocalStatusRecordSingleStep(
+	void LocalStateRecordSingleStep(
 		/*const IndexGenre& valueType,*/
 		const string& day,
-		const tySData& dayValue);
+		const tyStockData& dayValue);
 	//////////////////////////////////////////////////////////////////////////
 	//单日单指标局部分析中的局部最低点分析
 	//////////////////////////////////////////////////////////////////////////
-	bool LocalStatusRecordSingleStep_Low(
+	bool LocalStateRecordSingleStep_Low(
 		/*const IndexGenre& valueType,*/
 		const string& day	,
-		const tySData& dayValue);
+		const tyStockData& dayValue);
 	//////////////////////////////////////////////////////////////////////////
 	//单日单指标局部分析中的局部最高点分析
 	//////////////////////////////////////////////////////////////////////////
-	bool LocalStatusRecordSingleStep_High(
+	bool LocalStateRecordSingleStep_High(
 		/*const IndexGenre& valueType,*/
 		const string& day,
-		const tySData& dayValue);
+		const tyStockData& dayValue);
 
 	/*
 	局部分析中，局部特征点的历史记录
@@ -99,19 +99,19 @@ private:
  	//
 	unsigned int _Parameter_Local;
 	//用于保存局部特征点
-	StatusPointsList _vIndexRecord_Local;
-	StatusPointsList _vLowIndexRecord_Local;
-	StatusPointsList _vHighIndexRecord_Local;
+	StatePointsList _vIndexRecord_Local;
+	StatePointsList _vLowIndexRecord_Local;
+	StatePointsList _vHighIndexRecord_Local;
 	//用于保存最近几天的数据
-	list<StatusPoint> _lTempValue;
+	list<StatePoint> _lTempValue;
 	//用于记录临时的最高点和最低点
 	//只有当后面一定数量的数据点被判断为高于或者低于临时点时才可以确定为局部最高或者最低
-	StatusPoint temporaryHighPoint;
-	StatusPoint temporaryLowPoint;
+	StatePoint temporaryHighPoint;
+	StatePoint temporaryLowPoint;
 	bool temporaryHighPointIsPush;
 	bool temporaryLowPointIsPush;
 	//////////////////////////////////////////////////////////////////////////
-	StatusPoint _frontPoint;
+	StatePoint _frontPoint;
 	//单日分析中，记录当前的Mark
 	unsigned int _CurrentMark;
 

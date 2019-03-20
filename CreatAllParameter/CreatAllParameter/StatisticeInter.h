@@ -2,18 +2,18 @@
 #ifndef STATISTICEINTERFACE_H
 #define STATISTICEINTERFACE_H
 #include <map>
-#include "FreqStat.h"
+#include "FreqStatistice.h"
 #include "number/NumberInter.h"
-#include "StatusInter.h"
-
+#include "StateInter.h"
+#include "StatisticeTool.h"
 //上证指数：日线MACD参数为36 78，diff上到0轴以上是上涨概率加大
 
 
 struct StaticResult
 {
-	float RiseRate;//上涨天数的占比
-	float MaxRise;//上涨的最大比例
 };
+
+
 
 class CStatisticeInter
 {
@@ -23,16 +23,23 @@ public:
 	//
 	bool Inition();
 	//
-	bool Inter(const AllStockData& allnumber, CStatusInter& statusinter);
+	bool Inter(const StockDataTable& daynumber,
+		const StockDataTable& weeknumber,
+		const StockDataTable& mounthnumber,
+		CStateInter& daystate,
+		CStateInter& weekstate,
+		CStateInter& monthstate);
 	//
-	bool GroupFreqStatistice(const AllStockData& allnumber, CStatusInter& statusinter);
+	bool GroupFreqStatistice(const StockDataTable& daynumber, CStateInter& stateinter);
 	//
-	bool MACD_EDA_Statistice(const AllStockData& allnumber, const AllStatus& StatusList);
+	bool MACD_EDA_Statistice(const StockDataTable& allnumber, const StateTable& StateList);
 	//
-	bool Ma5_Ma30_Statistice(const AllStockData& allnumber, const StatusPointsList& StatusList);
+	bool Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result);
+	//
+	bool Ma5_Ma30_Statistice(const StockDataTable& allnumber, const StatePointsList& StateList);
 	//unsigned int GetIndexFromTimeList(vector<string> _vTimeDay, string time1);
 	//
-	bool GetMaxChangeRates(const VStockData PriceChangeResult);
+private:
 	string _LastError;
 };
 

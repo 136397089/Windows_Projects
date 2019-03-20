@@ -1,14 +1,14 @@
 #pragma once
 #include <list>
-#include "IndexNumber.h"
+#include "NumberBase.h"
 struct TRIX /*: public IndexBaseType*/
 {
 	TRIX() :_TRIX(0), _TRMA(0),_AX(0), _BX(0), _TR(0){}
-	tySData _TRIX;
-	tySData _TRMA;
-	tySData _AX;
-	tySData _BX;
-	tySData _TR;
+	tyStockData _TRIX;
+	tyStockData _TRMA;
+	tyStockData _AX;
+	tyStockData _BX;
+	tyStockData _TR;
 
 // 	TRIX& operator = (const TRIX& rhs){
 // 		_Index1 = rhs._Index1;
@@ -26,16 +26,16 @@ public:
 	~CTRIX();
 	void GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix);
 private:
-	float GetEMA(const list<tySData>& dataList);
+	float GetEMA(const list<tyStockData>& dataList);
 	float _ParameterN;
 	float _ParameterM;
 	float _EMADenominator;
-	list<tySData> frontClose;
-	list<tySData> frontTA;
-	list<tySData> frontTB;
-	list<tySData> frontTR;
+	list<tyStockData> frontClose;
+	list<tyStockData> frontTA;
+	list<tyStockData> frontTB;
+	list<tyStockData> frontTR;
 	// vector<TRIX> _vTrix;
-	list<tySData> TrixData;
-	void StaticSizePush(tySData mdata, float msize, list<tySData>& mList);
+	list<tyStockData> TrixData;
+	void StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList);
 };
 

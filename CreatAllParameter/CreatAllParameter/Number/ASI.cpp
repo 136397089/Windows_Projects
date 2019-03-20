@@ -6,8 +6,8 @@
 
 CAsi::CAsi()
 {
-	_asiDayPara = 26;
-	_asitDayPara = 10;
+	_M1 = 26;
+	_M2 = 10;
 }
 
 
@@ -16,13 +16,13 @@ CAsi::~CAsi()
 }
 
 
-bool CAsi::GetNextASI(const DatePriceData& OneDayData, ASI& mFrontASI)
+bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 {
 	ASI tempasi = mFrontASI;
-	float A = abs(OneDayData._High - _FrontDayData._Close);
-	float B = abs(OneDayData._Low - _FrontDayData._Close);
-	float C = abs(OneDayData._High - _FrontDayData._Low);
-	float D = abs(_FrontDayData._Close - _FrontDayData._Open);
+	float A = abs(TodayData._High - _YesterdayData._Close);
+	float B = abs(TodayData._Low - _YesterdayData._Close);
+	float C = abs(TodayData._High - _YesterdayData._Low);
+	float D = abs(_YesterdayData._Close - TodayData._Open);
 
 	float R = 0;
 	if (A > B && A > C)
@@ -32,25 +32,40 @@ bool CAsi::GetNextASI(const DatePriceData& OneDayData, ASI& mFrontASI)
 	else
 		R = C + D / 4;
 
-	float E = OneDayData._Close - _FrontDayData._Close;
-	float F = OneDayData._Close - OneDayData._Open;
-	float G = _FrontDayData._Close - _FrontDayData._Open;
+	float E = (TodayData._Close - _YesterdayData._Close);
+	float F = (TodayData._Close - TodayData._Open);
+	float G = (_YesterdayData._Close - _YesterdayData._Open);
 	float X = E + F / 2 + G;
 	float K = max(A, B);
-	float L = 3;
-	float SI = 50 * X / R * K / L;
+	float SI = 16 * X * K / R;
 
 	_vSIList.push_back(SI);
-	if (_vSIList.size() > _asiDayPara)
+	tyStockData fristSI = 0; 
+	if (_vSIList.size() > _M1)
+	{
+		fristSI = *_vSIList.begin();
 		_vSIList.pop_front();
-	mFrontASI._asi = accumulate(_vSIList.begin(), _vSIList.end(), 0.0f);
+	}
+//	mFrontASI._asi = accumulate(_vSIList.begin(), _vSIList.end(), 0.0f);
+	mFrontASI._asi = mFrontASI._asi - fristSI + SI;
 
 	_vASIList.push_back(mFrontASI._asi);
-	if (_vASIList.size() > _asitDayPara)
+	tyStockData fristASI = 0;
+	if (_vASIList.size() > _M2)
+	{
+		fristASI = *_vASIList.begin();
 		_vASIList.pop_front();
-	mFrontASI._asit = accumulate(_vASIList.begin(), _vASIList.end(), 0.0f)/_asitDayPara;
+	}
+// 	mFrontASI._asit = accumulate(_vASIList.begin(), _vASIList.end(), 0.0f) / _vASIList.size();
+	mFrontASI._asit = mFrontASI._asit - (fristASI - mFrontASI._asi) / _M2;
 
-	_FrontDayData = OneDayData;
+	_YesterdayData = TodayData;
+	return true;
+}
 
+bool CAsi::Inition()
+{
+	_vSIList.clear();
+	_vASIList.clear();
 	return true;
 }

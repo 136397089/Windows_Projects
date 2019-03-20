@@ -32,10 +32,10 @@ bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 		closedatas.pop_front();
 	}
 	day ++;
-	list<tySData>::iterator  Ma1Begin = closedatas.end();
-	list<tySData>::iterator  Ma2Begin = closedatas.end();
-	list<tySData>::iterator  Ma3Begin = closedatas.end();
-	list<tySData>::iterator  Ma4Begin = closedatas.end();
+	list<tyStockData>::iterator  Ma1Begin = closedatas.end();
+	list<tyStockData>::iterator  Ma2Begin = closedatas.end();
+	list<tyStockData>::iterator  Ma3Begin = closedatas.end();
+	list<tyStockData>::iterator  Ma4Begin = closedatas.end();
 	if (day < M1_Par)
 		Ma1Begin = closedatas.begin();
 	else
@@ -56,10 +56,10 @@ bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 	else
 		advance(Ma4Begin, - M4_Par);
 
-	mFrontMa.Ma1 = accumulate(Ma1Begin, closedatas.end(), 0) / (tySData)M1_Par;
-	mFrontMa.Ma2 = accumulate(Ma2Begin, closedatas.end(), 0) / (tySData)M2_Par;
-	mFrontMa.Ma3 = accumulate(Ma3Begin, closedatas.end(), 0) / (tySData)M3_Par;
-	mFrontMa.Ma4 = accumulate(Ma4Begin, closedatas.end(), 0) / (tySData)M4_Par;
+	mFrontMa.Ma1 = accumulate(Ma1Begin, closedatas.end(), 0) / (tyStockData)M1_Par;
+	mFrontMa.Ma2 = accumulate(Ma2Begin, closedatas.end(), 0) / (tyStockData)M2_Par;
+	mFrontMa.Ma3 = accumulate(Ma3Begin, closedatas.end(), 0) / (tyStockData)M3_Par;
+	mFrontMa.Ma4 = accumulate(Ma4Begin, closedatas.end(), 0) / (tyStockData)M4_Par;
 	return true;
 }
 
