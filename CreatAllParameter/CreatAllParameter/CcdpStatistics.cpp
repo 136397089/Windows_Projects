@@ -22,6 +22,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 	const VStockData& low = _data._vLow;
 	const VStockData& _vopen = _data._vOpen;
 	const VStockData& _vclose = _data._vClose;
+
 	if (!CheckCDPData(_data))
 	{
 		_LastError = "CDP Data size error in function(CountCDPData).";
@@ -30,15 +31,22 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 
 	GetCDPDataByInedx(_data, 0, LastTimeCDP);
 	unsigned int j = 0;
-	unsigned int highIndex = 0;
-	unsigned int lowIndex = 0;
-	unsigned int openIndex = 0;
-	unsigned int closeIndex = 0;
+	highIndex = 0;
+	lowIndex = 0;
+	openIndex = 0;
+	closeIndex = 0;
+
 	Initon();
-	for (unsigned int i = 1; i < CDP.size(); i++)
+	VStockData _vpositions1;
+	VStockData _vpositions2;
+	VStockData _vpositions3;
+	VStockData _vpositions4;
+	VStockData _vpositions5;
+
+	for (unsigned int i = 10; i < CDP.size(); i++)
 	{
 		highIndex = GetHighIntervalIndex(high[i]);
-		lowIndex = GetLowIntervalIndex(low[i]);
+		lowIndex = GetHighIntervalIndex(low[i]);
 		openIndex = GetHighIntervalIndex(_vopen[i]);
 		closeIndex = GetHighIntervalIndex(_vclose[i]);
 
@@ -58,18 +66,20 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 			GetCDPDataByInedx(_data, i, LastTimeCDP);
 			continue;
 		}
-		if (_vopen[i] > LastTimeCDP._CDP && _vopen[i] < LastTimeCDP._NH_NormalHigh && low[i]< LastTimeCDP._CDP)
+		if (_data._vJ[i - 1] - _data._vJ[i - 2]>0)
 		{
 			CDPHighResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPHighResult.LowPriceIntervalFreq[lowIndex] ++;
+			CDPHighResult.OpenPriceIntervalFreq[openIndex]++;
+			CDPHighResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPHighResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (_vopen[i] < LastTimeCDP._AL_Low /*&& _vopen[i] > LastTimeCDP._AL_Low*/)
+		if (lowIndex >= 4 /*&& _data._vMACDValue[i - 1] - _data._vMACDValue[i - 2]>0*/)
 		{
-			CDPLowResult.HighPriceIntervalFreq[highIndex] ++;
-			CDPLowResult.LowPriceIntervalFreq[lowIndex] ++;
-			CDPLowResult.colseLine[lowIndex - highIndex] ++;
+			GetProportionOfPrice(_vpositions1, _data, LastTimeCDP._NL_NormalLow, i + 1, i + 4);
+			GetRiskOfPrice(_vpositions2, _data, LastTimeCDP._NL_NormalLow, i + 1, i + 4);
 		}
+
 		GetCDPDataByInedx(_data, i, LastTimeCDP);
 	}
 
@@ -153,6 +163,60 @@ unsigned int CcdpStatistics::GetLowIntervalIndex(tyStockData lowData)
 void CcdpStatistics::Initon()
 {
 	CDPStatisticeResult.clear();
+}
+
+tyStockData CcdpStatistics::FindMax(const VStockData& _data, unsigned int beginIndex, unsigned int endIndex)
+{
+	if (endIndex >= _data.size())
+		endIndex = _data.size();
+	if (beginIndex >= endIndex)
+		return 0;
+	tyStockData maxData = _data[beginIndex];
+	for (unsigned int i = beginIndex; i < endIndex;i++)
+	{
+		if (_data[i] > maxData)
+			maxData = _data[i];
+	}
+	return maxData;
+}
+
+tyStockData CcdpStatistics::FindMin(const VStockData& _data, unsigned int beginIndex, unsigned int endIndex)
+{
+	if (endIndex >= _data.size())
+		endIndex = _data.size();
+	if (beginIndex >= endIndex)
+		return 0;
+	tyStockData minData = _data[beginIndex];
+	for (unsigned int i = beginIndex; i < endIndex; i++)
+	{
+		if (_data[i] < minData)
+			minData = _data[i];
+	}
+	return minData;
+}
+
+bool CcdpStatistics::GetProportionOfPrice(
+	VStockData& Proportionlist,//保存的结果
+	const StockDataTable& _data,//所有的数据
+	tyStockData price,//目标价格
+	unsigned int beginIndex,//开始位置
+	unsigned int endIndex)//结束位置
+{
+	tyStockData maxdata = FindMax(_data._vHigh, beginIndex, endIndex);
+	tyStockData mindata = FindMin(_data._vLow, beginIndex, endIndex);
+	tyStockData Proportion = (maxdata - price) *100 / price;
+	Proportionlist.push_back(Proportion);
+	return true;
+}
+
+bool CcdpStatistics::GetRiskOfPrice(VStockData& Proportionlist, const StockDataTable& _data, tyStockData price, unsigned int beginIndex, unsigned int endIndex)
+{
+	tyStockData maxdata = FindMax(_data._vHigh, beginIndex, endIndex);
+	tyStockData mindata = FindMin(_data._vLow, beginIndex, endIndex);
+	tyStockData Proportion = (mindata - price) *100 / price;
+	Proportionlist.push_back(Proportion);
+	return true;
+
 }
 
 void CDPStatistics::clear()

@@ -37,6 +37,8 @@ public:
 	bool Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result);
 	//
 	bool Ma5_Ma30_Statistice(const StockDataTable& allnumber, const StatePointsList& StateList);
+	//
+	void simulation(const StockDataTable& daynumber,const StockDataTable& weeknumber);
 	//unsigned int GetIndexFromTimeList(vector<string> _vTimeDay, string time1);
 	//
 private:

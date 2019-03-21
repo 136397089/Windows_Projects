@@ -65,6 +65,7 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& datas)
 		//1.4保存计算完的各类指标数据到对应的Vector当中
 		PushBackIndex(currentIndex, datas);
 	}
+	datas.SetDate();
 	return true;
 }
 

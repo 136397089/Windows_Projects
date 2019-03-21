@@ -4,6 +4,7 @@
 
 #include "glog/logging.h"
 #include "CcdpStatistics.h"
+#include "StockAccountNum.h"
 CStatisticeInter::CStatisticeInter()
 {
 }
@@ -28,8 +29,8 @@ bool CStatisticeInter::Inter(
 {
 	Inition();
 	CcdpStatistics CDPStaTool;
-	CDPStaTool.CountCDPData(daydata);
-
+	CDPStaTool.CountCDPData(weekdata);
+	simulation(daydata,weekdata);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
@@ -152,6 +153,37 @@ bool CStatisticeInter::Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults
 
 	outfile.close();
 	return true;
+}
+
+void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDataTable& weeknumber)
+{
+	const VStockData &dayclose = daynumber._vClose;
+	const VStockData &daylow = daynumber._vLow;
+	const VStockData &dayhigh = daynumber._vHigh;
+	const vector<string> &day = daynumber._vTimeDay;
+
+	const VStockData &weekNL = daynumber._vNL_NormalLow;
+// 	const VStockData &daylow = daynumber._vLow;
+// 	const VStockData &dayhigh = daynumber._vHigh;
+	CStockAccount account("000001",100000);
+	for (unsigned int i = 10; i < day.size(); i++)
+	{
+		unsigned int iLastWeek = weeknumber.GetLastTimeIndexByDate(daynumber._vDate[i]);
+		if (daylow[i] < weekNL[iLastWeek] && account.GetPosition() <= 0.01)
+		{
+			account.AllIn(weekNL[iLastWeek], day[i]);
+			continue;
+		}
+		if (dayhigh[i] / account.GetLastPrice() >= 1.05 && account.GetPosition() >= 0.99)
+		{
+			account.SellOutAll(dayhigh[i], day[i]);
+		}
+		if (daylow[i] / account.GetLastPrice() <= 1.1 && account.GetPosition() >= 0.99)
+		{
+			account.SellOutAll(daylow[i], day[i]);
+		}
+	}
+	return;
 }
 
 

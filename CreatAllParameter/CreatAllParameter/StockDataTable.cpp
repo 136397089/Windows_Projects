@@ -12,6 +12,7 @@ void StockDataTable::clear()
 	_vLow.clear();
 	_vVolume.clear();
 	_vTimeDay.clear();
+	_vDate.clear();
 	//MA
 	_vMa1.clear();
 	_vMa2.clear();
@@ -75,24 +76,22 @@ StockDataTable StockDataTable::NewDataByIndex(unsigned int beginindex, unsigned 
 	COPYVECTOR(_vLow, beginindex, endindex);
 	COPYVECTOR(_vVolume, beginindex, endindex);
 	COPYVECTOR(_vPriChaRate, beginindex, endindex);
+	COPYVECTOR(_vDate, beginindex, endindex);
 
 	return temp;
 }
 
 bool StockDataTable::ChackDataSize() const
 {
-	if (
-		_vClose.size() != _vOpen.size()
+	if (_vClose.size() != _vOpen.size()
 		|| _vClose.size() != _vHigh.size()
 		|| _vClose.size() != _vLow.size()
 		|| _vClose.size() != _vTimeDay.size())
 	{
 		return false;
 	}
-	else
-	{
-		return true;
-	}
+
+	return true;
 }
 
 
@@ -184,6 +183,38 @@ StockDataPointer StockDataTable::GetIndexPointer() const
 	indexPointerMap[_eCDP_AL] = &_vAL_Low;
 
 	return indexPointerMap;
+}
+
+void StockDataTable::SetDate()
+{
+	CDate date;
+	_vDate.clear();
+	for (unsigned int i = 0; i < _vTimeDay.size();i++)
+	{
+		date.SetDay(_vTimeDay[i]);
+		_vDate.push_back(date);
+	}
+}
+
+unsigned int StockDataTable::GetLastTimeIndexByDate(CDate date)const
+{
+	if (_vDate.size() < 2)//数据太少
+		return 0;
+	
+	for (unsigned int i = 1; i < _vDate.size();i++)
+	{
+		if (_vDate[i - 1] < date && date <= _vDate[i])
+			return i - 1;
+	}
+	//找不到目标日期，只能返回用最大index
+	return _vDate.size()-1;
+}
+
+unsigned int StockDataTable::GetLastTimeIndexByDate(string strDate)const
+{
+	CDate tempdate;
+	tempdate.SetDay(strDate);
+	return GetLastTimeIndexByDate(tempdate);
 }
 
 

@@ -21,8 +21,15 @@ struct StockDataTable
 	StockDataPointer GetAllPointer() const;
 	//
 	StockDataPointer GetIndexPointer() const;
+	//字符串形式日期转为CDate形式的日期
+	void SetDate();
+	//通过日期查找前一时刻的Index
+	unsigned int GetLastTimeIndexByDate(string strDate) const;
+	//通过日期查找前一时刻的Index
+	unsigned int GetLastTimeIndexByDate(CDate date)const;
 	//读取的股票成交信息
 	vector<string> _vTimeDay;
+	vector<CDate> _vDate;
 	VStockData _vOpen;
 	VStockData _vClose;
 	VStockData _vHigh;

@@ -67,7 +67,7 @@ bool CStockAccount::Trading(const TransactionData& mbusiness)
 		return true;
 	}
 	//Âô³ö¹ÉÆ±
-	else if (_OwnStock + mbusiness._Volume >= 0  && mbusiness._Volume < 0.0)
+	else if (_OwnStock + mbusiness._Volume >= 0 && mbusiness._Volume < 0.0)
 	{
 		_lastPrise = mbusiness._Price;
 		_CurrentAvailableCapital = _CurrentAvailableCapital - mbusiness._Price * mbusiness._Volume;
