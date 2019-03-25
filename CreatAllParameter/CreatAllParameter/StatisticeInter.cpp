@@ -1,8 +1,10 @@
 #include "stdafx.h"
+#include <numeric>
+#include <complex>//复数
 #include "Number/NumberInter.h"
 #include "StatisticeInter.h"
-
-#include "glog/logging.h"
+#include "DFT.h"//快速傅立叶
+#include "glog/logging.h"//Log工具
 #include "CcdpStatistics.h"
 #include "StockAccountNum.h"
 CStatisticeInter::CStatisticeInter()
@@ -28,9 +30,17 @@ bool CStatisticeInter::Inter(
 	CStateInter& monthstate)
 {
 	Inition();
+
+	vector<unsigned int> MALineResult;
+	MALineStatistice(daydata._vMa1, daydata._vMa4, MALineResult);
+	return true;
+
+
 	CcdpStatistics CDPStaTool;
 	CDPStaTool.CountCDPData(weekdata);
 	simulation(daydata,weekdata);
+
+
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
@@ -64,7 +74,7 @@ bool CStatisticeInter::MACD_EDA_Statistice(const StockDataTable& allnumber, cons
 {
 	const StatePointsList& StaticList = _State._staticstate;
 	//输入检查
-	if (StaticList.size() < 3)
+	if (StaticList.size() < DATAMINSIZE)
 	{
 		_LastError = "StaticList  size error. In MACD_EDA_Statistice.";
 		return false;
@@ -162,26 +172,146 @@ void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDa
 	const VStockData &dayhigh = daynumber._vHigh;
 	const vector<string> &day = daynumber._vTimeDay;
 
-	const VStockData &weekNL = daynumber._vNL_NormalLow;
+	const VStockData &weekNL = weeknumber._vNL_NormalLow;
+	const VStockData &weekKDJ_J = weeknumber._vJ;
 // 	const VStockData &daylow = daynumber._vLow;
 // 	const VStockData &dayhigh = daynumber._vHigh;
-	CStockAccount account("000001",100000);
-	for (unsigned int i = 10; i < day.size(); i++)
+	CStockAccount account("000001",1000000);
+
+	float StopLossLine1 = 0.95f;
+	float StopLossLine2 = 0.90f;
+	float StopLossLine3 = 0.98f;
+
+	//CDFT DFTTool;
+	//DFTDataList result = DFTTool.DFT(daynumber._vPSY);
+	for (unsigned int i = DATAMINSIZE; i < day.size(); i++)
 	{
 		unsigned int iLastWeek = weeknumber.GetLastTimeIndexByDate(daynumber._vDate[i]);
-		if (daylow[i] < weekNL[iLastWeek] && account.GetPosition() <= 0.01)
+		if (daylow[i] < weekNL[iLastWeek] &&
+			account.GetStockQuantityOwned() <= 0.01 &&
+			daynumber._vPSY[i]   < 30)
 		{
 			account.AllIn(weekNL[iLastWeek], day[i]);
 			continue;
 		}
-		if (dayhigh[i] / account.GetLastPrice() >= 1.05 && account.GetPosition() >= 0.99)
+		if (dayhigh[i] / account.GetLastBuyPrice() >= 1.05f &&
+			account.GetStockQuantityOwned() >= 1.0f)
 		{
-			account.SellOutAll(dayhigh[i], day[i]);
+			account.SellOutAll(account.GetLastBuyPrice()*1.05f, day[i]);
+			LOG(INFO) << day[i] << " Profit :" << account.GetCurrentAssets(0.0f)
+				<< " Buy: " << account.GetLastBuyPrice() << "--"
+				<< "Sell: " << account.GetLastSellPrice() << endl;
+			continue;
 		}
-		if (daylow[i] / account.GetLastPrice() <= 1.1 && account.GetPosition() >= 0.99)
+		if (dayhigh[i] >= weeknumber._vNH_NormalHigh[iLastWeek]&&
+			account.GetStockQuantityOwned() >= 1.0f)
 		{
-			account.SellOutAll(daylow[i], day[i]);
+			account.SellOutAll(weeknumber._vNH_NormalHigh[iLastWeek], day[i]);
+			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
+				<< " Buy: " << account.GetLastBuyPrice() << "--"
+				<< "Sell: " << account.GetLastSellPrice() << endl;
 		}
+		if (daylow[i] / account.GetLastBuyPrice() <= StopLossLine1 &&
+			account.GetStockQuantityOwned() >= 1.0f
+			&& daynumber._vAsit[i] - daynumber._vAsit[i - 1] < 0)
+		{
+			account.SellOutAll(account.GetLastBuyPrice() * StopLossLine1, day[i]);
+			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
+				<< " Buy: " << account.GetLastBuyPrice() << "--"
+				<< "Sell: " << account.GetLastSellPrice() << endl;
+		}
+		if (daylow[i] / account.GetLastBuyPrice() <= StopLossLine2 &&
+			account.GetStockQuantityOwned() >= 1.0f)
+		{
+			account.SellOutAll(account.GetLastBuyPrice() * StopLossLine2, day[i]);
+			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
+				<<" Buy: "<< account.GetLastBuyPrice() << "--"
+				<<"Sell: "<< account.GetLastSellPrice()<< endl;
+		}
+	}
+	return;
+}
+
+tyStockData CStatisticeInter::Autocorrelation(const VStockData& _data, unsigned int interval)
+{
+	if (interval >= _data.size())
+	{
+		return 0;
+	}
+	tyStockData Average = accumulate(_data.begin(), _data.end(), 0) / _data.size();
+
+	tyStockData Var = 0;
+	for (unsigned int i = 0; i < _data.size();i++)
+	{
+		Var = Var + (_data[i] - Average)*(_data[i] - Average);
+	}
+
+	for (unsigned int i = interval; i < _data.size(); i++)
+	{
+
+	}
+	return 0;
+}
+
+void CStatisticeInter::MALineStatistice(
+	const VStockData& _madata1,
+	const VStockData& _madata2,
+	vector<unsigned int>& _result)
+{
+	_result.clear();
+
+	vector<unsigned int> _UpCloseresult;
+	vector<unsigned int> _DownCloseresult;
+	map<unsigned int, int> _Upresult2;
+	map<unsigned int, int> _Downresult2;
+
+	_UpCloseresult.clear();
+	_DownCloseresult.clear();
+	_Upresult2.clear();
+	_Downresult2.clear();
+
+	if (_madata1.size() != _madata2.size() && _madata1.size() < DATAMINSIZE)
+	{
+		return;
+	}
+	unsigned int biggercount = 0;
+	unsigned int lesscount = 0;
+	VStockData::const_iterator iteMA1 = _madata1.begin();
+	VStockData::const_iterator iteMA2 = _madata2.begin();
+	while (iteMA1 != _madata1.end())
+	{
+		if (*iteMA1 >= *iteMA2)
+		{
+			biggercount++;
+			if (lesscount > 0)
+				_UpCloseresult.push_back(lesscount);
+			lesscount = 0;
+		}
+		else
+		{
+			lesscount++;
+			if (biggercount > 0)
+				_DownCloseresult.push_back(biggercount);
+			biggercount = 0;
+		}
+		iteMA1++;
+		iteMA2++;
+	}
+	int groupsize = 1;
+	for (size_t i = 0; i < 240; i++)
+	{
+		_Upresult2[i*groupsize] = 0;
+		_Downresult2[i*groupsize] = 0;
+	}
+	for (size_t i = 0; i < _UpCloseresult.size(); i++)
+	{
+		unsigned int group = floor(_UpCloseresult[i] / groupsize);
+		_Upresult2[group * groupsize]++;
+	}
+	for (size_t i = 0; i < _DownCloseresult.size(); i++)
+	{
+		unsigned int group = floor(_DownCloseresult[i] / groupsize);
+		_Downresult2[group * groupsize]++;
 	}
 	return;
 }

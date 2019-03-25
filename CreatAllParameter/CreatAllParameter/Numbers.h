@@ -12,7 +12,7 @@
 #include "DMI.h"
 #include "Ma.h"
 #include "PriChag.h"
-
+#include "ARBRCRVRPSY.h"
 
 class CNumbersCalculator
 {

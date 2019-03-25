@@ -64,7 +64,7 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 }
 
 
-bool CNumberInterface::AnalyseTheFile(const string& filename, const string& FilePath)
+bool CNumberInterface::GetDataAndNumber(const string& filename, const string& FilePath)
 {
 	//清除上次分析的文件所有指标数据
 	mDayValue.clear();

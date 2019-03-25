@@ -33,7 +33,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//分析目标文件中的数据
 	//////////////////////////////////////////////////////////////////////////
-	bool AnalyseTheFile(const string& filename ,const string& FilePath);
+	bool GetDataAndNumber(const string& filename ,const string& FilePath);
 
 	//
 	const StockDataTable& GetDayValue();

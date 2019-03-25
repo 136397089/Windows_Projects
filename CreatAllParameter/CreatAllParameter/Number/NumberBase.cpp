@@ -205,7 +205,7 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 //vMACDValue:要加入的行数据
 //tittle:列名
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileRanks(string FilePath,const  VStockData vNumValue, string tittle)
+void CNumberBase::ReSavefileRanks(string FilePath,const  VStockData& vNumValue, string tittle)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(),ios::in);
@@ -257,7 +257,7 @@ void CNumberBase::ReSavefileRanks(string FilePath,const  VStockData vNumValue, s
 	outfile.close();
 }
 
-void CNumberBase::ReSavefileRanks(string FilePath, const vector<string> vNewValue, string tittle)
+void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(), ios::in);
@@ -516,11 +516,12 @@ DWORD WINAPI ThreadToUpdatefile(PVOID pvParam)
 }
 map<IndexType, string> IndexName = {
 	{_eFile_Close_INDEX , File_Close_INDEX },
-	{_eFile_Date_INDEX , File_Date_INDEX },
+ 	{_eFile_Date_INDEX , File_Date_INDEX },
 	{_eFile_Open_INDEX , File_Open_INDEX },
 	{_eFile_High_INDEX , File_High_INDEX },
 	{_eFile_Low_INDEX , File_Low_INDEX },
 	{_eFile_Volume_INDEX ,File_Volume_INDEX },
+
 	{ _eMACD_MA12, MACD_MA12 },
 	{ _eMACD_MA26, MACD_MA26 },
 	{ _eMACD_DIFF, MACD_DIFF },
@@ -548,7 +549,16 @@ map<IndexType, string> IndexName = {
 	{ _eCDP_AH, CDP_AH },
 	{ _eCDP_NH, CDP_NH },
 	{ _eCDP_NL, CDP_NL },
-	{ _eCDP_AL, CDP_AL }
+	{ _eCDP_AL, CDP_AL },
+	{ _eAR, ABVP_AR },
+	{ _eBR, ABVP_BR },
+	{ _eCR, ABVP_CR },
+	{ _eCRMA1, ABVP_CRMA1 },
+	{ _eCRMA2, ABVP_CRMA2 },
+	{ _eCRMA3, ABVP_CRMA3 },
+	{ _eCRMA4, ABVP_CRMA4 },
+	{ _eVR, ABVP_VR },
+	{ _ePSY, ABVP_PSY }
 };
 std::string GetIndexNameByIndexType(IndexType _indextype)
 {

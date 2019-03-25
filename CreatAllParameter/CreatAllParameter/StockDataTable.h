@@ -18,9 +18,9 @@ struct StockDataTable
 	//
 	bool ChackDataSize() const;
 	//
-	StockDataPointer GetAllPointer() const;
+	StockDataPointer GetAllPointerToSave() const;
 	//
-	StockDataPointer GetIndexPointer() const;
+	StockDataPointer GetNumberPointer() const;
 	//字符串形式日期转为CDate形式的日期
 	void SetDate();
 	//通过日期查找前一时刻的Index
@@ -46,6 +46,7 @@ struct StockDataTable
 	VStockData _vK, _vD, _vJ;
 	VStockData _vAsi_i, _vAsit;
 	VStockData _vCDP, _vAH_High, _vNH_NormalHigh, _vAL_Low, _vNL_NormalLow;
+	VStockData _vAR, _vBR, _vVR, _vPSY, _vCR, _vCRMA1, _vCRMA2, _vCRMA3, _vCRMA4;
 };
 
 #endif

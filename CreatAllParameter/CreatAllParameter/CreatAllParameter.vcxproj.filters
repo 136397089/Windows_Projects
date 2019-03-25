@@ -180,6 +180,15 @@
     <ClInclude Include="CcdpStatistics.h">
       <Filter>Statistics</Filter>
     </ClInclude>
+    <ClInclude Include="DFT.h">
+      <Filter>Matrix</Filter>
+    </ClInclude>
+    <ClInclude Include="ARBRCRVRPSY.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="MeanVariance.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -304,6 +313,15 @@
     </ClCompile>
     <ClCompile Include="CcdpStatistics.cpp">
       <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="DFT.cpp">
+      <Filter>Matrix</Filter>
+    </ClCompile>
+    <ClCompile Include="ARBRCRVRPSY.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="MeanVariance.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

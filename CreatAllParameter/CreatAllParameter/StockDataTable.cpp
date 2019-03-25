@@ -49,6 +49,16 @@ void StockDataTable::clear()
 	_vNH_NormalHigh.clear();
 	_vAL_Low.clear();
 	_vNL_NormalLow.clear();
+	//
+	_vAR.clear();
+	_vBR.clear();
+	_vCR.clear();
+	_vCRMA1.clear();
+	_vCRMA2.clear();
+	_vCRMA3.clear();
+	_vCRMA4.clear();
+	_vVR.clear();
+	_vPSY.clear();
 }
 
 
@@ -96,7 +106,7 @@ bool StockDataTable::ChackDataSize() const
 
 
 //
-StockDataPointer StockDataTable::GetAllPointer() const
+StockDataPointer StockDataTable::GetAllPointerToSave() const
 {
 	StockDataPointer indexPointerMap;
 	//pirce
@@ -112,8 +122,8 @@ StockDataPointer StockDataTable::GetAllPointer() const
 	indexPointerMap[_eMA_MA40] = &_vMa4;
 	//MACD
 	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
-	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
-	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
+// 	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
+// 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
 	indexPointerMap[_eMACD_DIFF] = &_vDiff;
 	indexPointerMap[_eMACD_DEA] = &_vDEA;
 	//KDJ
@@ -126,9 +136,9 @@ StockDataPointer StockDataTable::GetAllPointer() const
 	//TRIX
 	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
 	indexPointerMap[_eTRIX_MA] = &_vTRMA;
-	indexPointerMap[_eTRIX_VTR] = &_vtr;
-	indexPointerMap[_eTRIX_VTB] = &_vtb;
-	indexPointerMap[_eTRIX_VTA] = &_vta;
+// 	indexPointerMap[_eTRIX_VTR] = &_vtr;
+// 	indexPointerMap[_eTRIX_VTB] = &_vtb;
+// 	indexPointerMap[_eTRIX_VTA] = &_vta;
 	//change rate
 	indexPointerMap[_ePRICECHANGE] = &_vPriChaRate;
 	indexPointerMap[_eVOLHANGE] = &_vVolChaRate;
@@ -141,11 +151,21 @@ StockDataPointer StockDataTable::GetAllPointer() const
 	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
 	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
 	indexPointerMap[_eCDP_AL] = &_vAL_Low;
+	//AR_BR_VR_PSY
+	indexPointerMap[_eAR] = &_vAR;
+	indexPointerMap[_eBR] = &_vBR;
+	indexPointerMap[_eCR] = &_vCR;
+	indexPointerMap[_eCRMA1] = &_vCRMA1;
+	indexPointerMap[_eCRMA2] = &_vCRMA2;
+	indexPointerMap[_eCRMA3] = &_vCRMA3;
+	indexPointerMap[_eCRMA4] = &_vCRMA4;
+	indexPointerMap[_eVR] = &_vVR;
+	indexPointerMap[_ePSY] = &_vPSY;
 
 	return indexPointerMap;
 }
 //
-StockDataPointer StockDataTable::GetIndexPointer() const
+StockDataPointer StockDataTable::GetNumberPointer() const
 {
 	StockDataPointer indexPointerMap;
 	//
@@ -155,8 +175,8 @@ StockDataPointer StockDataTable::GetIndexPointer() const
 	indexPointerMap[_eMA_MA40] = &_vMa4;
 	//
 	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
-	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
-	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
+// 	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
+// 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
 	indexPointerMap[_eMACD_DIFF] = &_vDiff;
 	indexPointerMap[_eMACD_DEA] = &_vDEA;
 	//
@@ -165,9 +185,9 @@ StockDataPointer StockDataTable::GetIndexPointer() const
 	//
 	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
 	indexPointerMap[_eTRIX_MA] = &_vTRMA;
-	indexPointerMap[_eTRIX_VTR] = &_vtr;
-	indexPointerMap[_eTRIX_VTB] = &_vtb;
-	indexPointerMap[_eTRIX_VTA] = &_vta;
+// 	indexPointerMap[_eTRIX_VTR] = &_vtr;
+// 	indexPointerMap[_eTRIX_VTB] = &_vtb;
+// 	indexPointerMap[_eTRIX_VTA] = &_vta;
 	//
 	indexPointerMap[_eKDJ_K] = &_vK;
 	indexPointerMap[_eKDJ_D] = &_vD;
@@ -175,13 +195,22 @@ StockDataPointer StockDataTable::GetIndexPointer() const
 	//
 	indexPointerMap[_eASI_I] = &_vAsi_i;
 	indexPointerMap[_eASI_T] = &_vAsit;
-
+	//
 	indexPointerMap[_eCDP_CDP] = &_vCDP;
 	indexPointerMap[_eCDP_AH] = &_vAH_High;
 	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
 	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
 	indexPointerMap[_eCDP_AL] = &_vAL_Low;
-
+	//
+	indexPointerMap[_eAR] = &_vAR;
+	indexPointerMap[_eBR] = &_vBR;
+	indexPointerMap[_eCR] = &_vCR;
+	indexPointerMap[_eCRMA1] = &_vCRMA1;
+	indexPointerMap[_eCRMA2] = &_vCRMA2;
+	indexPointerMap[_eCRMA3] = &_vCRMA3;
+	indexPointerMap[_eCRMA4] = &_vCRMA4;
+	indexPointerMap[_eVR] = &_vVR;
+	indexPointerMap[_ePSY] = &_vPSY;
 	return indexPointerMap;
 }
 
@@ -204,7 +233,10 @@ unsigned int StockDataTable::GetLastTimeIndexByDate(CDate date)const
 	for (unsigned int i = 1; i < _vDate.size();i++)
 	{
 		if (_vDate[i - 1] < date && date <= _vDate[i])
+		{
+			CDate weekdata = _vDate[i - 1];
 			return i - 1;
+		}
 	}
 	//找不到目标日期，只能返回用最大index
 	return _vDate.size()-1;
@@ -214,6 +246,8 @@ unsigned int StockDataTable::GetLastTimeIndexByDate(string strDate)const
 {
 	CDate tempdate;
 	tempdate.SetDay(strDate);
+	unsigned int index = GetLastTimeIndexByDate(tempdate);
+	CDate weekdata = _vDate[index];
 	return GetLastTimeIndexByDate(tempdate);
 }
 

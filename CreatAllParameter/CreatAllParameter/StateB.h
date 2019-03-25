@@ -13,7 +13,7 @@
 #include "DMI.h"
 #include "log.h"
 #include "Ma.h"
-
+#include "ARBRCRVRPSY.h"
 //趋势判断过程中使用的指标个数
 #define MaxSizeOfIndex 7
 #define LowPriceIndex 0
@@ -51,6 +51,7 @@ struct SigDayTechIndex
 	CDP _Cdp;
 	Dmi _Dmi;
 	MA _Ma;
+	ARBRCRVRPSY _ArBrVrPsy;
 };
 // class CStatisticsB
 // {

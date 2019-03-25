@@ -55,12 +55,11 @@ void CLocalRecordTool::LocalStateRecordSingleStep(
 	LocalStateRecordSingleStep_Low( day, dayValue);
 	LocalStateRecordSingleStep_High( day, dayValue);
 }
-
+//判断有没有形成局部低点
 bool CLocalRecordTool::LocalStateRecordSingleStep_Low(
 	const string& day,
 	const tyStockData& dayValue)
 {
-	//判断有没有形成局部低点
 	if (dayValue < temporaryLowPoint._Value)
 	{
 		temporaryLowPoint._Value = dayValue;
@@ -150,7 +149,7 @@ void CLocalRecordTool::Inition(unsigned int range)
 ///////////////////////////////////////////////////////////////////////////
 //返回总结果
 //////////////////////////////////////////////////////////////////////////
-const StatePointsList& CLocalRecordTool::GetLocalResult()
+StatePointsList CLocalRecordTool::GetLocalResult()
 {
 	return _vIndexRecord_Local;
 }
@@ -158,7 +157,7 @@ const StatePointsList& CLocalRecordTool::GetLocalResult()
 ///////////////////////////////////////////////////////////////////////////
 //返回局部低点结果
 //////////////////////////////////////////////////////////////////////////
-const StatePointsList& CLocalRecordTool::GetLowLocalResult()
+StatePointsList CLocalRecordTool::GetLowLocalResult()
 {
 	return _vLowIndexRecord_Local;
 }
@@ -166,7 +165,7 @@ const StatePointsList& CLocalRecordTool::GetLowLocalResult()
 ///////////////////////////////////////////////////////////////////////////
 //返回局部高点结果
 //////////////////////////////////////////////////////////////////////////
-const StatePointsList& CLocalRecordTool::GetHighLocalResult()
+StatePointsList CLocalRecordTool::GetHighLocalResult()
 {
 	return _vHighIndexRecord_Local;
 }
@@ -189,6 +188,11 @@ void CLocalRecordTool::SetLocalStateData(const vector<string>& _day, const VStoc
 	{
 		LocalStateRecordSigPoint(_day[i], _data[i]);
 	}
+}
+//将两组局部特征点的数据组合成为一组，用于最高最低点的局部特征组合
+StatePointsList CLocalRecordTool::LocalResultCombination(StatePointsList& locallist1, StatePointsList& locallist2)
+{
+
 }
 
 

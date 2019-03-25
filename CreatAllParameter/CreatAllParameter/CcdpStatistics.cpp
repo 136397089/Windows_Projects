@@ -66,20 +66,30 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 			GetCDPDataByInedx(_data, i, LastTimeCDP);
 			continue;
 		}
-		if (_data._vJ[i - 1] - _data._vJ[i - 2]>0)
+		if (_data._vAR[i - 1] > 0 && _data._vAR[i - 1] < 50)
 		{
-			CDPHighResult.HighPriceIntervalFreq[highIndex] ++;
-			CDPHighResult.LowPriceIntervalFreq[lowIndex] ++;
-			CDPHighResult.OpenPriceIntervalFreq[openIndex]++;
-			CDPHighResult.ClosePriceIntervalFreq[closeIndex]++;
-			CDPHighResult.colseLine[lowIndex - highIndex] ++;
+			CDPGroupOneResult.HighPriceIntervalFreq[highIndex] ++;
+			CDPGroupOneResult.LowPriceIntervalFreq[lowIndex] ++;
+			CDPGroupOneResult.OpenPriceIntervalFreq[openIndex]++;
+			CDPGroupOneResult.ClosePriceIntervalFreq[closeIndex]++;
+			CDPGroupOneResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (lowIndex >= 4 /*&& _data._vMACDValue[i - 1] - _data._vMACDValue[i - 2]>0*/)
+		if (_data._vAR[i - 1] >= 50 && _data._vAR[i - 1] < 150)
 		{
-			GetProportionOfPrice(_vpositions1, _data, LastTimeCDP._NL_NormalLow, i + 1, i + 4);
-			GetRiskOfPrice(_vpositions2, _data, LastTimeCDP._NL_NormalLow, i + 1, i + 4);
+			CDPGroupTwoResult.HighPriceIntervalFreq[highIndex] ++;
+			CDPGroupTwoResult.LowPriceIntervalFreq[lowIndex] ++;
+			CDPGroupTwoResult.OpenPriceIntervalFreq[openIndex]++;
+			CDPGroupTwoResult.ClosePriceIntervalFreq[closeIndex]++;
+			CDPGroupTwoResult.colseLine[lowIndex - highIndex] ++;
 		}
-
+		if (_data._vAR[i - 1] >= 150)
+		{
+			CDPGroupThreeResult.HighPriceIntervalFreq[highIndex] ++;
+			CDPGroupThreeResult.LowPriceIntervalFreq[lowIndex] ++;
+			CDPGroupThreeResult.OpenPriceIntervalFreq[openIndex]++;
+			CDPGroupThreeResult.ClosePriceIntervalFreq[closeIndex]++;
+			CDPGroupThreeResult.colseLine[lowIndex - highIndex] ++;
+		}
 		GetCDPDataByInedx(_data, i, LastTimeCDP);
 	}
 

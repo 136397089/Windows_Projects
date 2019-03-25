@@ -61,8 +61,9 @@ public:
 	CDP LastTimeCDP;
 
 	CDPStatistics CDPStatisticeResult;
-	CDPStatistics CDPHighResult;
-	CDPStatistics CDPLowResult;
+	CDPStatistics CDPGroupOneResult;
+	CDPStatistics CDPGroupTwoResult;
+	CDPStatistics CDPGroupThreeResult;
 
 	unsigned int highIndex;
 	unsigned int lowIndex;

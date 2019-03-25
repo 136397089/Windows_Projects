@@ -51,7 +51,6 @@ void ShowDebugInformationInCon(string showInformation)
 // 	cout << "[ " << sys.wYear << "/" << sys.wMonth <<"/" << sys.wDay << " : "\
 // 		<< sys.wHour << "-" << sys.wMinute << "-" << sys.wSecond << "-" << sys.wMilliseconds<<" ]:\t";
 // 	cout <<showInformation << endl;
-
 // 	fstream outfile("d:\\stockfile\\debugfile.txt", ios::out | ios::app);
 // 	outfile << "[ " << sys.wYear << "-" << sys.wMonth << "-" << sys.wDay << " : "\
 // 		<< sys.wHour << "-" << sys.wMinute << "-" << sys.wSecond << "-" << sys.wMilliseconds << " ]:\t";

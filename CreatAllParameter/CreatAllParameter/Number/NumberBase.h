@@ -63,10 +63,19 @@ enum IndexType
 	_eCDP_AH,
 	_eCDP_NH,
 	_eCDP_NL,
-	_eCDP_AL
+	_eCDP_AL,
+	//
+	_eAR,
+	_eBR,
+	_eCR,
+	_eCRMA1,
+	_eCRMA2,
+	_eCRMA3,
+	_eCRMA4,
+	_eVR,
+	_ePSY
 
 };
-std::string GetIndexNameByIndexType(IndexType _indextype);
 //定义列标签的名称
 #define File_Close_INDEX "close"
 #define File_Date_INDEX "date"
@@ -74,46 +83,53 @@ std::string GetIndexNameByIndexType(IndexType _indextype);
 #define File_High_INDEX "high"
 #define File_Low_INDEX "low"
 #define File_Volume_INDEX "volume"
-
 //MACD
-#define MACD_MA12  "Ma12"
-#define MACD_MA26  "Ma26"
-#define MACD_DIFF "Diff"
-#define MACD_DEA "DEA"
-#define MACD_BAR "BAR"
-
+#define MACD_MA12  "MACD_Ma12"
+#define MACD_MA26  "MACD_Ma26"
+#define MACD_DIFF "MACD_Diff"
+#define MACD_DEA "MACD_DEA"
+#define MACD_BAR "MACD_BAR"
 //KDJ
-#define KDJ_K "K_OF_KDJ"
-#define KDJ_D "D_OF_KDJ"
-#define KDJ_J "J_OF_KDJ"
-
+#define KDJ_K "KDJ_K"
+#define KDJ_D "KDJ_D"
+#define KDJ_J "KDJ_J"
 //DMA
-#define  DMA_D "DMA"
-#define  DMA_A "AMA"
+#define  DMA_D "DMA_D"
+#define  DMA_A "DMA_A"
 //TRIX
-#define TRIX_TRIX "TRIX"
-#define TRIX_MA "TRMA"
-#define TRIX_VTR "tr"
-#define TRIX_VTB "tb"
-#define TRIX_VTA "ta"
-//
-#define MA_MA5 "M5"
-#define MA_MA10 "M10"
-#define MA_MA20 "M20"
-#define MA_MA40 "M40"
-
+#define TRIX_TRIX "TRIX_IX"
+#define TRIX_MA "TRIX_MA"
+#define TRIX_VTR "TRIX_tr"
+#define TRIX_VTB "TRIX_tb"
+#define TRIX_VTA "TRIX_ta"
+//MA
+#define MA_MA5 "MA_M5"
+#define MA_MA10 "MA_M10"
+#define MA_MA20 "MA_M20"
+#define MA_MA40 "MA_M40"
+//ChangeRate
 #define PRICECHANGE "pChange"
 #define VOLHANGE "volChange"
-
-#define ASI_I "ASI"
-#define ASI_T "ASIT"
-
-
-#define CDP_CDP "CDP"
-#define CDP_AH "AH"
-#define CDP_NH "NH"
-#define CDP_NL "NL"
-#define CDP_AL "AL"
+//ASI
+#define ASI_I "ASI_I"
+#define ASI_T "ASI_T"
+//CDP
+#define CDP_CDP "CDP_CDP"
+#define CDP_AH "CDP_AH"
+#define CDP_NH "CDP_NH"
+#define CDP_NL "CDP_NL"
+#define CDP_AL "CDP_AL"
+//AR_BR_VR_PSY
+#define ABVP_AR "ABVP_AR"
+#define ABVP_BR "ABVP_BR"
+#define ABVP_CR "ABVP_CR"
+#define ABVP_CRMA1 "ABVP_CRMA1"
+#define ABVP_CRMA2 "ABVP_CRMA2"
+#define ABVP_CRMA3 "ABVP_CRMA3"
+#define ABVP_CRMA4 "ABVP_CRMA4"
+#define ABVP_VR "ABVP_VR"
+#define ABVP_PSY "ABVP_PSY"
+std::string GetIndexNameByIndexType(IndexType _indextype);
 
 //线程函数
 DWORD WINAPI ThreadToUpdatefile(PVOID pvParam);
@@ -201,14 +217,14 @@ public:
 	//vMACDValue:要加入的行数据
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath,const  VStockData vNewValue, string tittle);
+	void ReSavefileRanks(string FilePath,const  VStockData& vNewValue, string tittle);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
 	//vMACDValue:要加入的行数据
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, const vector<string> vNewValue, string tittle);
+	void ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle);
 
 
 	//////////////////////////////////////////////////////////////////////////

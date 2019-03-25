@@ -87,7 +87,10 @@
     <Text Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ARBRCRVRPSY.h" />
     <ClInclude Include="CcdpStatistics.h" />
+    <ClInclude Include="DFT.h" />
+    <ClInclude Include="MeanVariance.h" />
     <ClInclude Include="StockDataTable.h" />
     <ClInclude Include="BullMarkBearMark.h" />
     <ClInclude Include="CDP.h" />
@@ -134,7 +137,10 @@
     <ClInclude Include="TrendAnal.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ARBRCRVRPSY.cpp" />
     <ClCompile Include="CcdpStatistics.cpp" />
+    <ClCompile Include="DFT.cpp" />
+    <ClCompile Include="MeanVariance.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
     <ClCompile Include="BullMarkBearMark.cpp" />
     <ClCompile Include="CDP.cpp" />
