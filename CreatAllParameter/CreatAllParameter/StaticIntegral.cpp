@@ -18,7 +18,7 @@ void CStaticIntegral::Inition()
 
 
 bool CStaticIntegral::GetsStaticIng(
-	const VStockData& _data,
+	const VStockData& _inputdata,
 	const StatePointsList& _staticPoint,
 	StatePointsList& _staticIng)
 {
@@ -28,13 +28,13 @@ bool CStaticIntegral::GetsStaticIng(
 		_LastError = "static point size error.";
 		return false;
 	}
-	if (_data.size() < 2)
+	if (_inputdata.size() < 2)
 	{
 		_LastError = "data size is less then 2.";
 		return false;
 	}
 	StatePoint LastStaticpoint = _staticPoint[_staticPoint.size() - 1];
-	unsigned int dataMaxIndex = _data.size() - 1;
+	unsigned int dataMaxIndex = _inputdata.size() - 1;
 	if (LastStaticpoint._TimeIndex > dataMaxIndex)
 	{
 		_LastError = "Static point index error.";
@@ -61,7 +61,7 @@ bool CStaticIntegral::GetsStaticIng(
 			return false;
 		}
 		for (unsigned int j = _BackIndex; j < _FrontIndex; j++)
-			tempstatePoint._Value = tempstatePoint._Value + _data[j];
+			tempstatePoint._Value = tempstatePoint._Value + _inputdata[j];
 		_staticIng.push_back(tempstatePoint);
 	}
 	return true;

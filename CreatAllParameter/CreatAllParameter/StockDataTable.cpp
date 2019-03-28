@@ -59,6 +59,9 @@ void StockDataTable::clear()
 	_vCRMA4.clear();
 	_vVR.clear();
 	_vPSY.clear();
+	//
+	_vEMV.clear();
+	_vEMVMA.clear();
 }
 
 
@@ -161,6 +164,9 @@ StockDataPointer StockDataTable::GetAllPointerToSave() const
 	indexPointerMap[_eCRMA4] = &_vCRMA4;
 	indexPointerMap[_eVR] = &_vVR;
 	indexPointerMap[_ePSY] = &_vPSY;
+	//
+	indexPointerMap[_eEMV] = &_vEMV;
+	indexPointerMap[_eEMVMA] = &_vEMVMA;
 
 	return indexPointerMap;
 }
@@ -211,6 +217,9 @@ StockDataPointer StockDataTable::GetNumberPointer() const
 	indexPointerMap[_eCRMA4] = &_vCRMA4;
 	indexPointerMap[_eVR] = &_vVR;
 	indexPointerMap[_ePSY] = &_vPSY;
+	//
+	indexPointerMap[_eEMV] = &_vEMV;
+	indexPointerMap[_eEMVMA] = &_vEMVMA;
 	return indexPointerMap;
 }
 

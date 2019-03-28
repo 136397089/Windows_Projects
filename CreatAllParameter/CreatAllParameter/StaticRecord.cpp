@@ -38,7 +38,7 @@ void CStaticRecordTool::StaticStateRecordSigPoint(
 	{
 		_NowStateChange = true;
 		mfrontStatic._Value = FrontData - BackData;
-		mfrontStatic._TimeIndex = _NextInedx;
+		mfrontStatic._TimeIndex = _CurrentInedx;
 		mfrontStatic._Date.SetDay(Day);
 		if (FrontData >= 0)
 			mfrontStatic._IndexType = _eStaticPositiveUpClose;
@@ -51,7 +51,7 @@ void CStaticRecordTool::StaticStateRecordSigPoint(
 	{
 		_NowStateChange = true;
 		mfrontStatic._Value = FrontData - BackData;
-		mfrontStatic._TimeIndex = _NextInedx;
+		mfrontStatic._TimeIndex = _CurrentInedx;
 		mfrontStatic._Date.SetDay(Day);
 		if (FrontData >= 0)
 			mfrontStatic._IndexType = _eStaticPositiveDownClose;
@@ -59,7 +59,7 @@ void CStaticRecordTool::StaticStateRecordSigPoint(
 			mfrontStatic._IndexType = _eStaticNegaTiveDownClose;
 		_vIndexRecord_State.push_back(mfrontStatic);
 	}
-	_NextInedx++;
+	_CurrentInedx++;
 	return;
 }
 
@@ -68,7 +68,7 @@ void CStaticRecordTool::Inition()
 	//静态记录中使用的参数
 	_NowStateChange = false;
 	_vIndexRecord_State.clear();
-	_NextInedx = 0;
+	_CurrentInedx = 0;
 
 }
 

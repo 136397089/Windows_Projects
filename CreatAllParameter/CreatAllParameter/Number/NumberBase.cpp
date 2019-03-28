@@ -8,7 +8,7 @@
 
 static string logPath("D:\\StockFile\\Log");
 static string plotPath("D:\\StockFile\\PlotFile");
-
+const static string Separator(",");
 
 
 CNumberBase::CNumberBase(void)
@@ -43,7 +43,7 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 	{
 		return Tagevalue;
 	}
-	StringList TittleValues = CutString(linestring, ",");
+	StringList TittleValues = CutString(linestring, Separator);
 
 	unsigned int index = 0;
 	for (StringList::iterator ite = TittleValues.begin(); ite != TittleValues.end(); ite++)
@@ -58,7 +58,7 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 
 	while(getline(file,linestring))
 	{
-		StringList StockValues = CutString(linestring, ",");
+		StringList StockValues = CutString(linestring, Separator);
 		if (StockValues.size() < index)
 		{
 			break;
@@ -99,12 +99,12 @@ void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string
 	//如果没有找到写入的目标列，则在后面添加
 	if (buffer[0].find(tittle) > buffer[0].size())
 	{
-		buffer[0] += ",";
+		buffer[0] += Separator;
 		buffer[0] +=tittle;
 		for (k=1; k<i;k++)
 		{
 			ostringstream Macd_buffer;
-			Macd_buffer<<","<<vNumValue[k-1];
+			Macd_buffer<<Separator<<vNumValue[k-1];
 			MACDValue = Macd_buffer.str();
 			buffer[k] += MACDValue;
 		}
@@ -112,7 +112,7 @@ void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string
 	//如果找到写入的目标列，则修改原数据
 	else
 	{
-		StringList vAllTittle = CutString(buffer[0], ",");
+		StringList vAllTittle = CutString(buffer[0], Separator);
 		if (vAllTittle.size()<4)
 		{
 			return;
@@ -134,13 +134,13 @@ void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string
 		//修改对应的列数据
 		for (k=1; k<i;k++)
 		{
-			StringList vIndexData = CutString(buffer[k], ",");
+			StringList vIndexData = CutString(buffer[k], Separator);
 			if (TageTittle >= vIndexData.size())
 			{
 				return;
 			}
 			vIndexData[TageTittle] = vNumValue[k-1];
-			buffer[k] = AssembleString(vIndexData,",");
+			buffer[k] = AssembleString(vIndexData,Separator);
 		}
 	}
 	outfile.close();
@@ -184,7 +184,7 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 		return Tagevalue;//说明找不到对应的目标行数据
 	}
 
-	StringList TittleValues = CutString(linestring, ",");//每行都是用','分割各个数据
+	StringList TittleValues = CutString(linestring, Separator);//每行都是用','分割各个数据
 	if (TittleValues.size()<3)
 	{
 		return Tagevalue;//找到的行数据太少
@@ -198,118 +198,78 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 	}
 	return Tagevalue;
 }
+//////////////////////////////////////////////////////////////////////////
+//调用ReSavefileRanks之前运行
+//////////////////////////////////////////////////////////////////////////
+void CNumberBase::ReSavefileRanksBegin(string FilePath)
+{
+	CLocker(_StockCSVFileMutex, INFINITE);
+	fstream infile(FilePath.c_str(), ios::in);
+	string tempstringg;
+	//将文件全部内容读出到buffer[]数据中
+	buffer.clear();
+	newBuffer.clear();
+	while (getline(infile, tempstringg))
+	{
+		buffer.push_back(tempstringg);
+	}
+	infile.close();
+}
+
+//////////////////////////////////////////////////////////////////////////
+//调用ReSavefileRanks之后运行
+//////////////////////////////////////////////////////////////////////////
+void CNumberBase::ReSavefileRanksEnd(string FilePath)
+{
+	CLocker(_StockCSVFileMutex, INFINITE);
+	fstream outfile(FilePath.c_str(), ios::out | ios::app);
+	for (unsigned int lineNumber = 0; lineNumber < newBuffer.size(); lineNumber++)
+	{
+		outfile << newBuffer[lineNumber] << endl;
+	}
+	buffer.clear();
+	newBuffer.clear();
+	outfile.close();
+}
 
 //////////////////////////////////////////////////////////////////////////
 //增加对应的行保存到CSV文件中
 //FilePath：文件路径
-//vMACDValue:要加入的行数据
+//vNumValue:要加入的行数据
 //tittle:列名
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileRanks(string FilePath,const  VStockData& vNumValue, string tittle)
+void CNumberBase::ReSavefileRanks(string FilePath, const  VStockData& vNewValue, string tittle)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
-	fstream infile(FilePath.c_str(),ios::in);
-	string ch;
-	string buffer[MAX_FILE_LINE_READFROM_RANK];
-	//数据太少，不做操作
-	if (vNumValue.size() < 3)
-	{
-		cout << "Size is too small.";
-		return;
+	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
+	{//如果tittle已经存在于数据当中，则不将当前数据加入到buffer当中，返回
+		if (buffer[lineNumber].find(tittle) != string::npos && buffer[lineNumber].find(Separator) == tittle.size())
+			return;
 	}
-
-	//将文件全部内容读出到buffer[]数据中
-	int lineIndex = 0;
-	while (getline(infile, buffer[lineIndex]))
+	ostringstream  oss;
+	oss << tittle;
+	for (unsigned int lineNumber = 0; lineNumber < vNewValue.size(); lineNumber++)
 	{
-		lineIndex++;
+		oss << Separator << vNewValue[lineNumber];
 	}
-	infile.close();
-	fstream outfile(FilePath.c_str(), ios::out);
-	bool addNewLine = true;//有时要保存的数据在原文件已经存在，用来标记是不是要增加新的行
-	for (int lineNumber = 0; lineNumber < lineIndex;lineNumber++)
-	{
-		if (buffer[lineNumber].find(tittle) >= buffer[lineNumber].size())//不是要保存目标行按照原数据放回
-		{
-			outfile << buffer[lineNumber]<<endl;
-		}
-		else//是目标行则把输入的数据保存
-		{
-			outfile << tittle;
-			addNewLine = false;
-			for (VStockData::const_iterator ite = vNumValue.cbegin(); ite != vNumValue.cend(); ite++)
-			{
-				outfile << "," << *ite;
-			}
-			outfile << endl;
-		}
-	}
-	if (addNewLine)//需要增加新的行
-	{
-		outfile << tittle;
-		for (VStockData::const_iterator ite = vNumValue.cbegin(); ite != vNumValue.cend(); ite++)
-		{
-			outfile << "," << *ite;
-		}
-		outfile << endl;
-	}
-
-	outfile.close();
+	newBuffer.push_back(oss.str());
 }
 
 void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
-	fstream infile(FilePath.c_str(), ios::in);
-	string ch;
-	string buffer[MAX_FILE_LINE_READFROM_RANK];
-	//数据太少，不做操作
-	if (vNewValue.size() < 3)
-	{
-		cout << "Size is too small.";
-		return;
+	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
+	{//如果tittle已经存在于数据当中，则不将当前数据加入到buffer当中，返回
+		if (buffer[lineNumber].find(tittle) != string::npos && buffer[lineNumber].find(Separator) == tittle.size())
+			return;
 	}
-
-	//将文件全部内容读出到buffer[]数据中
-	int lineIndex = 0;
-	while (getline(infile, buffer[lineIndex]))
+	ostringstream  oss;
+	oss << tittle;
+	for (unsigned int lineNumber = 0; lineNumber < vNewValue.size(); lineNumber++)
 	{
-		lineIndex++;
+		oss << Separator << vNewValue[lineNumber];
 	}
-	infile.close();
-
-	fstream outfile(FilePath.c_str(), ios::out);
-	bool addNewLine = true;//有时要保存的数据在原文件已经存在，用来标记是不是要增加新的行
-	for (int lineNumber = 0; lineNumber < lineIndex; lineNumber++)
-	{
-		if (buffer[lineNumber].find(tittle) >= buffer[lineNumber].size())//不是要保存的目标行，原数据放回
-		{
-			outfile << buffer[lineNumber] << endl;
-		}
-		else//是目标行则把输入的数据保存
-		{
-			outfile << tittle;
-			addNewLine = false;
-			for (vector<string>::const_iterator ite = vNewValue.cbegin(); ite != vNewValue.cend(); ite++)
-			{
-				outfile << "," << *ite;
-			}
-			outfile << endl;
-		}
-	}
-
-	if (addNewLine)//需要增加新的行
-	{
-		outfile << tittle;
-		for (vector<string>::const_iterator ite = vNewValue.cbegin(); ite != vNewValue.cend(); ite++)
-		{
-			outfile << "," << *ite;
-		}
-		outfile << endl;
-	}
-
-	outfile.close();
-
+	newBuffer.push_back(oss.str());
 }
 
 
@@ -491,7 +451,7 @@ bool CNumberBase::SaveDataToCSVFile(const string& fullFilePath, const StringBloc
 	{
 		for (StringList::const_iterator ite = lineNumber->begin(); ite != lineNumber->end(); ite++)
 		{
-			outfile << "," << *ite;
+			outfile << Separator << *ite;
 		}
 		outfile << endl;
 	}
@@ -499,6 +459,7 @@ bool CNumberBase::SaveDataToCSVFile(const string& fullFilePath, const StringBloc
 	outfile.close();
 	return true;
 }
+
 
 //////////////////////////////////////////////////////////////////////////
 //线程函数
@@ -558,7 +519,9 @@ map<IndexType, string> IndexName = {
 	{ _eCRMA3, ABVP_CRMA3 },
 	{ _eCRMA4, ABVP_CRMA4 },
 	{ _eVR, ABVP_VR },
-	{ _ePSY, ABVP_PSY }
+	{ _ePSY, ABVP_PSY },
+	{ _eEMV, EMV_EMV },
+	{ _eEMVMA, EMV_EMVMA }
 };
 std::string GetIndexNameByIndexType(IndexType _indextype)
 {

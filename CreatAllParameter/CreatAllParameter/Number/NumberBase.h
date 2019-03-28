@@ -27,7 +27,9 @@ enum IndexType
 	_eFile_Open_INDEX,
 	_eFile_High_INDEX,
 	_eFile_Low_INDEX,
+	_eFile_HighLow_INDEX,
 	_eFile_Volume_INDEX,
+	_Debug_Index,
 	//MACD
 	_eMACD_MA12,
 	_eMACD_MA26,
@@ -73,8 +75,10 @@ enum IndexType
 	_eCRMA3,
 	_eCRMA4,
 	_eVR,
-	_ePSY
-
+	_ePSY,
+	//
+	_eEMV,
+	_eEMVMA
 };
 //定义列标签的名称
 #define File_Close_INDEX "close"
@@ -129,6 +133,9 @@ enum IndexType
 #define ABVP_CRMA4 "ABVP_CRMA4"
 #define ABVP_VR "ABVP_VR"
 #define ABVP_PSY "ABVP_PSY"
+#define EMV_EMV "EMV_EMV"
+#define EMV_EMVMA "EMV_EMVMA"
+
 std::string GetIndexNameByIndexType(IndexType _indextype);
 
 //线程函数
@@ -211,6 +218,11 @@ public:
 	//strTittle：需要读出的行名
 	//////////////////////////////////////////////////////////////////////////
 	VStockData  ReadRanksStringFormFile(string filepath, string strTittle);
+
+	//////////////////////////////////////////////////////////////////////////
+	//调用ReSavefileRanks之前运行
+	//////////////////////////////////////////////////////////////////////////
+	void ReSavefileRanksBegin(string FilePath);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
@@ -225,6 +237,10 @@ public:
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
 	void ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle);
+	//////////////////////////////////////////////////////////////////////////
+	//调用ReSavefileRanks之后运行
+	//////////////////////////////////////////////////////////////////////////
+	void ReSavefileRanksEnd(string FilePath);
 
 
 	//////////////////////////////////////////////////////////////////////////
@@ -260,6 +276,11 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	void RunTread(string filePath);
 	HANDLE _StockCSVFileMutex;
+
+	//ReSavefileRanks使用参数
+	vector<string> buffer;
+	vector<string> newBuffer;
+
 public:
 	int _TreadNum;
 };

@@ -90,7 +90,9 @@
     <ClInclude Include="ARBRCRVRPSY.h" />
     <ClInclude Include="CcdpStatistics.h" />
     <ClInclude Include="DFT.h" />
+    <ClInclude Include="EMV.h" />
     <ClInclude Include="MeanVariance.h" />
+    <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
     <ClInclude Include="BullMarkBearMark.h" />
     <ClInclude Include="CDP.h" />
@@ -140,7 +142,9 @@
     <ClCompile Include="ARBRCRVRPSY.cpp" />
     <ClCompile Include="CcdpStatistics.cpp" />
     <ClCompile Include="DFT.cpp" />
+    <ClCompile Include="EMV.cpp" />
     <ClCompile Include="MeanVariance.cpp" />
+    <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
     <ClCompile Include="BullMarkBearMark.cpp" />
     <ClCompile Include="CDP.cpp" />

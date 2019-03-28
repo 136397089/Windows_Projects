@@ -11,25 +11,25 @@ CcdpStatistics::~CcdpStatistics()
 {
 }
 
-bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
+bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
 {
-	const VStockData& AH = _data._vAH_High;
-	const VStockData& NH = _data._vNH_NormalHigh;
-	const VStockData& CDP = _data._vCDP;
-	const VStockData& NL = _data._vNL_NormalLow;
-	const VStockData& AL = _data._vAL_Low;
-	const VStockData& high = _data._vHigh;
-	const VStockData& low = _data._vLow;
-	const VStockData& _vopen = _data._vOpen;
-	const VStockData& _vclose = _data._vClose;
+	const VStockData& AH = _inputdata._vAH_High;
+	const VStockData& NH = _inputdata._vNH_NormalHigh;
+	const VStockData& CDP = _inputdata._vCDP;
+	const VStockData& NL = _inputdata._vNL_NormalLow;
+	const VStockData& AL = _inputdata._vAL_Low;
+	const VStockData& high = _inputdata._vHigh;
+	const VStockData& low = _inputdata._vLow;
+	const VStockData& _vopen = _inputdata._vOpen;
+	const VStockData& _vclose = _inputdata._vClose;
 
-	if (!CheckCDPData(_data))
+	if (!CheckCDPData(_inputdata))
 	{
 		_LastError = "CDP Data size error in function(CountCDPData).";
 		return false;
 	}
 
-	GetCDPDataByInedx(_data, 0, LastTimeCDP);
+	GetCDPDataByInedx(_inputdata, 0, LastTimeCDP);
 	unsigned int j = 0;
 	highIndex = 0;
 	lowIndex = 0;
@@ -63,10 +63,10 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 		{
 			_LastError = "highIndex less than lowIndex.";
 			CDPStatisticeResult.colseLine[0]++;
-			GetCDPDataByInedx(_data, i, LastTimeCDP);
+			GetCDPDataByInedx(_inputdata, i, LastTimeCDP);
 			continue;
 		}
-		if (_data._vAR[i - 1] > 0 && _data._vAR[i - 1] < 50)
+		if (_inputdata._vAR[i - 1] > 0 && _inputdata._vAR[i - 1] < 50)
 		{
 			CDPGroupOneResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupOneResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -74,7 +74,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 			CDPGroupOneResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPGroupOneResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (_data._vAR[i - 1] >= 50 && _data._vAR[i - 1] < 150)
+		if (_inputdata._vAR[i - 1] >= 50 && _inputdata._vAR[i - 1] < 150)
 		{
 			CDPGroupTwoResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupTwoResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -82,7 +82,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 			CDPGroupTwoResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPGroupTwoResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (_data._vAR[i - 1] >= 150)
+		if (_inputdata._vAR[i - 1] >= 150)
 		{
 			CDPGroupThreeResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupThreeResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -90,23 +90,23 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _data)
 			CDPGroupThreeResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPGroupThreeResult.colseLine[lowIndex - highIndex] ++;
 		}
-		GetCDPDataByInedx(_data, i, LastTimeCDP);
+		GetCDPDataByInedx(_inputdata, i, LastTimeCDP);
 	}
 
 	return true;
 }
 
-bool CcdpStatistics::CheckCDPData(const StockDataTable& _data)
+bool CcdpStatistics::CheckCDPData(const StockDataTable& _inputdata)
 {
-	const VStockData& CDP = _data._vCDP;
+	const VStockData& CDP = _inputdata._vCDP;
 
-	if (_data._vAH_High.size() != CDP.size() ||
-		_data._vNH_NormalHigh.size() != CDP.size() ||
-		_data._vNL_NormalLow.size() != CDP.size() ||
-		_data._vAL_Low.size() != CDP.size() ||
-		_data._vHigh.size() != CDP.size() ||
-		_data._vLow.size() != CDP.size() ||
-		_data._vClose.size() != CDP.size() ||
+	if (_inputdata._vAH_High.size() != CDP.size() ||
+		_inputdata._vNH_NormalHigh.size() != CDP.size() ||
+		_inputdata._vNL_NormalLow.size() != CDP.size() ||
+		_inputdata._vAL_Low.size() != CDP.size() ||
+		_inputdata._vHigh.size() != CDP.size() ||
+		_inputdata._vLow.size() != CDP.size() ||
+		_inputdata._vClose.size() != CDP.size() ||
 		CDP.size() == 0)
 	{
 		_LastError = "CDP Data size error in function(CountCDPData).";
@@ -116,18 +116,18 @@ bool CcdpStatistics::CheckCDPData(const StockDataTable& _data)
 }
 
 
-bool CcdpStatistics::GetCDPDataByInedx(const StockDataTable& _data, unsigned int index, CDP& CDPdata)
+bool CcdpStatistics::GetCDPDataByInedx(const StockDataTable& _inputdata, unsigned int index, CDP& CDPdata)
 {
-	if (index > _data._vCDP.size())
+	if (index > _inputdata._vCDP.size())
 	{
 		_LastError = "Index out of cdp size in function(GetCDPDataByInedx).";
 		return false;
 	}
-	const VStockData& AH = _data._vAH_High;
-	const VStockData& NH = _data._vNH_NormalHigh;
-	const VStockData& CDP = _data._vCDP;
-	const VStockData& NL = _data._vNL_NormalLow;
-	const VStockData& AL = _data._vAL_Low;
+	const VStockData& AH = _inputdata._vAH_High;
+	const VStockData& NH = _inputdata._vNH_NormalHigh;
+	const VStockData& CDP = _inputdata._vCDP;
+	const VStockData& NL = _inputdata._vNL_NormalLow;
+	const VStockData& AL = _inputdata._vAL_Low;
 
 	CDPdata._AH_High = AH[index];
 	CDPdata._NH_NormalHigh = NH[index];
@@ -175,54 +175,54 @@ void CcdpStatistics::Initon()
 	CDPStatisticeResult.clear();
 }
 
-tyStockData CcdpStatistics::FindMax(const VStockData& _data, unsigned int beginIndex, unsigned int endIndex)
+tyStockData CcdpStatistics::FindMax(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
 {
-	if (endIndex >= _data.size())
-		endIndex = _data.size();
+	if (endIndex >= _inputdata.size())
+		endIndex = _inputdata.size();
 	if (beginIndex >= endIndex)
 		return 0;
-	tyStockData maxData = _data[beginIndex];
+	tyStockData maxData = _inputdata[beginIndex];
 	for (unsigned int i = beginIndex; i < endIndex;i++)
 	{
-		if (_data[i] > maxData)
-			maxData = _data[i];
+		if (_inputdata[i] > maxData)
+			maxData = _inputdata[i];
 	}
 	return maxData;
 }
 
-tyStockData CcdpStatistics::FindMin(const VStockData& _data, unsigned int beginIndex, unsigned int endIndex)
+tyStockData CcdpStatistics::FindMin(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
 {
-	if (endIndex >= _data.size())
-		endIndex = _data.size();
+	if (endIndex >= _inputdata.size())
+		endIndex = _inputdata.size();
 	if (beginIndex >= endIndex)
 		return 0;
-	tyStockData minData = _data[beginIndex];
+	tyStockData minData = _inputdata[beginIndex];
 	for (unsigned int i = beginIndex; i < endIndex; i++)
 	{
-		if (_data[i] < minData)
-			minData = _data[i];
+		if (_inputdata[i] < minData)
+			minData = _inputdata[i];
 	}
 	return minData;
 }
 
 bool CcdpStatistics::GetProportionOfPrice(
 	VStockData& Proportionlist,//保存的结果
-	const StockDataTable& _data,//所有的数据
+	const StockDataTable& _inputdata,//所有的数据
 	tyStockData price,//目标价格
 	unsigned int beginIndex,//开始位置
 	unsigned int endIndex)//结束位置
 {
-	tyStockData maxdata = FindMax(_data._vHigh, beginIndex, endIndex);
-	tyStockData mindata = FindMin(_data._vLow, beginIndex, endIndex);
+	tyStockData maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
+	tyStockData mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
 	tyStockData Proportion = (maxdata - price) *100 / price;
 	Proportionlist.push_back(Proportion);
 	return true;
 }
 
-bool CcdpStatistics::GetRiskOfPrice(VStockData& Proportionlist, const StockDataTable& _data, tyStockData price, unsigned int beginIndex, unsigned int endIndex)
+bool CcdpStatistics::GetRiskOfPrice(VStockData& Proportionlist, const StockDataTable& _inputdata, tyStockData price, unsigned int beginIndex, unsigned int endIndex)
 {
-	tyStockData maxdata = FindMax(_data._vHigh, beginIndex, endIndex);
-	tyStockData mindata = FindMin(_data._vLow, beginIndex, endIndex);
+	tyStockData maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
+	tyStockData mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
 	tyStockData Proportion = (mindata - price) *100 / price;
 	Proportionlist.push_back(Proportion);
 	return true;

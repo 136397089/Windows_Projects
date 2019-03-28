@@ -13,7 +13,7 @@
 #include "Ma.h"
 #include "PriChag.h"
 #include "ARBRCRVRPSY.h"
-
+#include "EMV.h"
 class CNumbersCalculator
 {
 public:

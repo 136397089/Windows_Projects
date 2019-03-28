@@ -41,7 +41,7 @@ public:
 	//
 	vector<StatePoint> _vIndexRecord_State;
 	//单日分析中，记录当前的Mark
-	unsigned int _NextInedx;
+	unsigned int _CurrentInedx;
 
 };
 

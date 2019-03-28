@@ -14,6 +14,7 @@
 #include "log.h"
 #include "Ma.h"
 #include "ARBRCRVRPSY.h"
+#include "EMV.h"
 //趋势判断过程中使用的指标个数
 #define MaxSizeOfIndex 7
 #define LowPriceIndex 0
@@ -52,6 +53,7 @@ struct SigDayTechIndex
 	Dmi _Dmi;
 	MA _Ma;
 	ARBRCRVRPSY _ArBrVrPsy;
+	EMV _Emv;
 };
 // class CStatisticsB
 // {
@@ -92,10 +94,10 @@ enum CharaPointType
 struct StatePoint
 {
 	unsigned int _TimeIndex;
-	unsigned int _OtherSideIndex;
-	CDate _Date;
 	tyStockData _Value;
 	CharaPointType _IndexType;
+	unsigned int _OtherSideIndex;
+	CDate _Date;
 	StatePoint()
 	{
 		_TimeIndex = 0;

@@ -12,7 +12,7 @@ struct MarketTypeIndex
 {
 	MarketType _markettype;
 	CDate _day;
-	tyStockData _data;
+	tyStockData _mdata;
 	CDate _relativeDate;
 	tyStockData _relativeData;
 };

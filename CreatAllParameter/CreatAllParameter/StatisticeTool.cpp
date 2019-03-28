@@ -29,22 +29,22 @@ bool CStatisticeTool::GetMaxChangeRates(const VStockData& priceChangeRate, Stati
 	maxChangeRate.FallRate2 = priceChangeRate[0];
 	maxChangeRate.FallRate3 = priceChangeRate[0];
 
-	tyStockData _data = 0;
+	tyStockData _tempdata = 0;
 	for (unsigned int i = 0; i < priceChangeRate.size(); i++)
 	{
-		_data = priceChangeRate[i];
-		if (_data > maxChangeRate.RiseRate1 && i < _statisDaySize1)
-			maxChangeRate.RiseRate1 = _data;
-		if (_data > maxChangeRate.RiseRate2 && i < _statisDaySize2)
-			maxChangeRate.RiseRate2 = _data;
-		if (_data > maxChangeRate.RiseRate3 && i < _statisDaySize3)
-			maxChangeRate.RiseRate3 = _data;
-		if (_data < maxChangeRate.FallRate1 && i < _statisDaySize1)
-			maxChangeRate.FallRate1 = _data;
-		if (_data < maxChangeRate.FallRate2 && i < _statisDaySize2)
-			maxChangeRate.FallRate2 = _data;
-		if (_data < maxChangeRate.FallRate3 && i < _statisDaySize3)
-			maxChangeRate.FallRate3 = _data;
+		_tempdata = priceChangeRate[i];
+		if (_tempdata > maxChangeRate.RiseRate1 && i < _statisDaySize1)
+			maxChangeRate.RiseRate1 = _tempdata;
+		if (_tempdata > maxChangeRate.RiseRate2 && i < _statisDaySize2)
+			maxChangeRate.RiseRate2 = _tempdata;
+		if (_tempdata > maxChangeRate.RiseRate3 && i < _statisDaySize3)
+			maxChangeRate.RiseRate3 = _tempdata;
+		if (_tempdata < maxChangeRate.FallRate1 && i < _statisDaySize1)
+			maxChangeRate.FallRate1 = _tempdata;
+		if (_tempdata < maxChangeRate.FallRate2 && i < _statisDaySize2)
+			maxChangeRate.FallRate2 = _tempdata;
+		if (_tempdata < maxChangeRate.FallRate3 && i < _statisDaySize3)
+			maxChangeRate.FallRate3 = _tempdata;
 	}
 
 	return true;
@@ -72,22 +72,22 @@ bool CStatisticeTool::GetEveryDayChangeRate(const VStockData& vdatalist, VStockD
 
 }
 
-tyStockData CStatisticeTool::GetPricePosition(const StockDataTable& _data)
+tyStockData CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata)
 {
 	//输入检查
-	if (!_data.ChackDataSize())
+	if (!_inputdata.ChackDataSize())
 		return -1;
 	//查找期间的最大最小值
-	VStockData::const_iterator maxHigh = max_element(_data._vHigh.begin(), _data._vHigh.end());
-	VStockData::const_iterator minLow = min_element(_data._vLow.begin(), _data._vLow.end());
+	VStockData::const_iterator maxHigh = max_element(_inputdata._vHigh.begin(), _inputdata._vHigh.end());
+	VStockData::const_iterator minLow = min_element(_inputdata._vLow.begin(), _inputdata._vLow.end());
 
-	if (_data._vHigh.end() == maxHigh ||
-		_data._vLow.end() == minLow ||
+	if (_inputdata._vHigh.end() == maxHigh ||
+		_inputdata._vLow.end() == minLow ||
 		*maxHigh - *minLow <= 0.00001f){
 		return -1.0f;
 	}
 	//计算第一天收盘价在后面几天中的比例
-	tyStockData positionRate = (1.0f - (_data._vClose[0] - *minLow) / (*maxHigh - *minLow));
+	tyStockData positionRate = (1.0f - (_inputdata._vClose[0] - *minLow) / (*maxHigh - *minLow));
 	return positionRate;
 }
 

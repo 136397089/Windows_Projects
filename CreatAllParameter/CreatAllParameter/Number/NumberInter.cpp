@@ -47,12 +47,12 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 	{
 		IsLongitudinal  = true;
 	}
-	StringList vOneLinedata;
+	StringList vSigLinedata;
 	for (StringList::iterator ite = lineString.begin(); ite != lineString.end(); ite++)
 	{
-		vOneLinedata = CutString(*ite, ",");
-		AllString.push_back(vOneLinedata);
-		vOneLinedata.clear();
+		vSigLinedata = CutString(*ite, ",");
+		AllString.push_back(vSigLinedata);
+		vSigLinedata.clear();
 	}
 	//只处理日期是横向排列的文件
 	if (!IsLongitudinal )

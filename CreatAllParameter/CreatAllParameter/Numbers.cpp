@@ -23,6 +23,7 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& datas)
 	CCDP hCdp;
 	CDMI hDmi;
 	CMa hma(5, 10, 20, 60);
+	CEMV hemv;
 	CArBrCrVrPsy ArBrVrPsy;
 	//结果输出
 	SigDayTechIndex currentIndex;
@@ -64,6 +65,7 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& datas)
 		ArBrVrPsy.GetNextArBrVrPsy(thisDayPrice, currentIndex._ArBrVrPsy);
 		hPriChaRate.GetNextChangeRate(thisDayPrice._Close, currentIndex._Pchangerate);
 		hVolChaRate.GetNextChangeRate(thisDayPrice._Volume, currentIndex._Volchagrate);
+		hemv.GetNextEmv(thisDayPrice, currentIndex._Emv);
 		//1.4保存计算完的各类指标数据到对应的Vector当中
 		PushBackIndex(currentIndex, datas);
 	}
@@ -117,4 +119,7 @@ void CNumbersCalculator::PushBackIndex(const SigDayTechIndex& AllIndex, StockDat
 	datas._vCRMA4.push_back(AllIndex._ArBrVrPsy.CRMa4);
 	datas._vVR.push_back(AllIndex._ArBrVrPsy.VR);
 	datas._vPSY.push_back(AllIndex._ArBrVrPsy.PSY);
+	//
+	datas._vEMV.push_back(AllIndex._Emv.emv);
+	datas._vEMVMA.push_back(AllIndex._Emv.emvma);
 }

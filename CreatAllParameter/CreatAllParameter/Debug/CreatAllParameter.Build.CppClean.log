@@ -14,7 +14,6 @@ d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\d
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\statisticetool.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\statisticeinter.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\stateb.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\stateinter.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\stockaccountnum.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\tinystr.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\tinyxml.obj
@@ -22,7 +21,7 @@ d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\d
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\tinyxmlparser.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\trandrecord.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\trendanal.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\ccdpstatistics.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\meanvariance.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\stockdatatable.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\bullmarkbearmark.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\cdp.obj
@@ -30,7 +29,6 @@ d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\d
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\datasizeswich.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\datetool.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\dmi.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\clocalrecordtool.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\freqstatistice.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\locker.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\log.obj
@@ -42,10 +40,13 @@ d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\d
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\commonfunction.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\numberinter.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\staterecords.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\arbrvrpsy.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\dft.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\arbrcrvrpsy.obj
-d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\meanvariance.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\ccdpstatistics.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\dft.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\clocalrecordtool.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\stateinter.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\emv.obj
+d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\debug\statemachineinter.obj
 d:\myprojects\win_project\windows_projects\creatallparameter\debug\creatallparameter.ilk
 d:\myprojects\win_project\windows_projects\creatallparameter\debug\creatallparameter.exe
 d:\myprojects\win_project\windows_projects\creatallparameter\debug\creatallparameter.pdb

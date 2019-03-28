@@ -52,8 +52,8 @@ bool CMainLoop::RunLoop(string strFolderPath)
 	{
 		numberTool.GetDataAndNumber(p.cFileName, strFolderPath);
 		//stockdata = numberTool.GetMonthValue();
-		//SaveDataToFile(strFolderPath + "//" + p.cFileName, numberTool.GetDayValue());
-		//SaveDataToFile(strFolderPath + "//" + "W_" + p.cFileName, numberTool.GetDayValue());
+		SaveDataToFile(strFolderPath + "//" + p.cFileName, numberTool.GetDayValue());
+		SaveDataToFile(strFolderPath + "//" + "W_" + p.cFileName, numberTool.GetWeekValue());
 		daystate.Inter(numberTool.GetDayValue(), p.cFileName);
 		weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
 		monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
@@ -100,12 +100,13 @@ bool CMainLoop::StatisticalFileQuantity(string strPath)
 bool CMainLoop::SaveDataToFile(const string& strFilePath, const StockDataTable & allData)
 {
 	//FileTool.ReSavefileRanks(strFilePath, allData._vTimeDay, GetIndexNameByIndexType(_eFile_Date_INDEX));
+	FileTool.ReSavefileRanksBegin(strFilePath);
 	StockDataPointer pointers = allData.GetAllPointerToSave();
 	for (StockDataPointer::const_iterator ite = pointers.cbegin(); ite != pointers.cend(); ite++)
 	{
 		FileTool.ReSavefileRanks(strFilePath, *(ite->second), GetIndexNameByIndexType(ite->first));
 	}
-
+	FileTool.ReSavefileRanksEnd(strFilePath);
 	return true;
 }
 

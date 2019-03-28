@@ -19,15 +19,12 @@ void CLocalRecordTool::LocalStateRecordSigPoint(
 	const string strday,
 	const tyStockData& OneDayData)
 {
-	_CurrentMark++;
 	//记录下这一天的数据到列表中，用于后期分析
 	StatePoint thedata;
 	thedata._TimeIndex = _CurrentMark;
 	thedata._Value = OneDayData;
 	thedata._Date.SetDay(strday);
 	_lTempValue.push_back(thedata);
-
-
 
 	if (_lTempValue.size() > _Parameter_Local)
 	{
@@ -40,6 +37,7 @@ void CLocalRecordTool::LocalStateRecordSigPoint(
 	_frontPoint._TimeIndex = _CurrentMark;
 	_frontPoint._Date.SetDay(strday);
 
+	_CurrentMark++;
 	return;
 }
 
@@ -170,29 +168,81 @@ StatePointsList CLocalRecordTool::GetHighLocalResult()
 	return _vHighIndexRecord_Local;
 }
 
-void CLocalRecordTool::SetLocalStateData(const vector<string>& _day, const VStockData& _data)
+void CLocalRecordTool::SetLocalStateData(const vector<string>& _day, const VStockData& _inputdata)
 {
-	if (_data.size() != _day.size())
+	if (_inputdata.size() != _day.size())
 		return;
-	temporaryHighPoint._Value = _data[0];
+	temporaryHighPoint._Value = _inputdata[0];
 	temporaryHighPoint._Date.SetDay(_day[0]);
 	temporaryHighPoint._TimeIndex = 0;
 	temporaryHighPoint._IndexType = _eLocalHigh;
 
-	temporaryLowPoint._Value = _data[0];
+	temporaryLowPoint._Value = _inputdata[0];
 	temporaryLowPoint._Date.SetDay(_day[0]);
 	temporaryLowPoint._TimeIndex = 0;
 	temporaryLowPoint._IndexType = _eLocalHigh;
 
-	for (unsigned int i = 0; i < _data.size(); i++)
+	for (unsigned int i = 0; i < _inputdata.size(); i++)
 	{
-		LocalStateRecordSigPoint(_day[i], _data[i]);
+		LocalStateRecordSigPoint(_day[i], _inputdata[i]);
 	}
 }
 //将两组局部特征点的数据组合成为一组，用于最高最低点的局部特征组合
-StatePointsList CLocalRecordTool::LocalResultCombination(StatePointsList& locallist1, StatePointsList& locallist2)
+StatePointsList CLocalRecordTool::LocalResultCombination(
+	const StatePointsList& locallist1
+	, const StatePointsList& locallist2)
 {
+	StatePointsList::const_iterator ite1 = locallist1.cbegin();
+	StatePointsList::const_iterator ite2 = locallist2.cbegin();
+	StatePointsList tempList;
+	while (ite1 != locallist1.cend() && ite2 != locallist2.cend())
+	{
+		if (ite1 == locallist1.cend())
+		{
+			tempList.push_back(*ite2);
+			ite2++;
+			continue;
+		}
+		if (ite2 == locallist2.cend())
+		{
+			tempList.push_back(*ite1);
+			ite1++;
+			continue;
+		}
+		if (ite1->_TimeIndex <= ite2->_TimeIndex)
+		{
+			tempList.push_back(*ite1);
+			ite1++;
+			continue;
+		}
+		if (ite1->_TimeIndex > ite2->_TimeIndex)
+		{
+			tempList.push_back(*ite2);
+			ite2++;
+			continue;
+		}
+	}
+	StatePointsList newList;
+	for (unsigned int i = 1; i < tempList.size();i++)
+	{
+		if (tempList[i]._IndexType == _eLocalHigh
+			&& tempList[i-1]._IndexType == _eLocalHigh
+			&& tempList[i]._TimeIndex - tempList[i - 1]._TimeIndex < 10)
+			if (tempList[i]._Value > tempList[i-1]._Value)
+				newList.push_back(tempList[i]);
+			else
+				newList.push_back(tempList[i - 1]);
+		if (tempList[i]._IndexType == _eLocalLow 
+			&& tempList[i - 1]._IndexType == _eLocalLow 
+			&& tempList[i]._TimeIndex - tempList[i-1]._TimeIndex < 10)
+			if (tempList[i]._Value < tempList[i-1]._Value)
+				newList.push_back(tempList[i]);
+			else
+				newList.push_back(tempList[i - 1]);
+	}
 
+
+	return newList;
 }
 
 

@@ -22,6 +22,12 @@ void CStateInter::Inter(const StockDataTable& allnumber,const string filename)
 	_vTimeDay = allnumber._vTimeDay;
 	allIndexStates[_eFile_High_INDEX] = GetOneNumberState(allnumber._vHigh, emptydate);
 	allIndexStates[_eFile_Low_INDEX] = GetOneNumberState(allnumber._vLow, emptydate);
+	CLocalRecordTool localRecord;
+	localRecord.Inition();
+	allIndexStates[_eFile_HighLow_INDEX]._localstate = 
+		localRecord.LocalResultCombination(
+		allIndexStates[_eFile_High_INDEX]._localstate,
+		allIndexStates[_eFile_Low_INDEX]._localstate);
 
 	allIndexStates[_eMACD_DIFF] = GetOneNumberState(allnumber._vDiff, emptydate);
 	allIndexStates[_eMACD_DEA] = GetOneNumberState(allnumber._vDiff, emptydate);
@@ -47,12 +53,10 @@ StateTable CStateInter::GetOneNumberState( const VStockData& _datafast, const VS
 	CStaticRecordTool staticrecord;
 	staticrecord.Inition();
 	for (unsigned int i = 0; i < _datafast.size(); i++)
-	{
 		if (isTwoPieceOfData)
 			staticrecord.StaticStateRecordSigPoint(_vTimeDay[i], _datafast[i], _dataslow[i]);
 		else
 			staticrecord.StaticStateRecordSigPoint(_vTimeDay[i], _datafast[i], 0);
-	}
 	_statetable._staticstate = staticrecord.GetStaticState();
 	//¾²Ì¬·Ö¶Î»ý·Ö
 	CStaticIntegral IngTool;

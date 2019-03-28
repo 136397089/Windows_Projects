@@ -47,7 +47,7 @@ public:
 	//统计每天相对于第一天的变化率
 	bool GetEveryDayChangeRate(const VStockData& vdatalist, VStockData& chanRate);
 	//统计第一天在后面所有时间里的价格百分比
-	tyStockData GetPricePosition(const StockDataTable& _data);
+	tyStockData GetPricePosition(const StockDataTable& _inputdata);
 	//返回收率的均值
 	bool GetRateOfReturn(const VStockData& priceChangeResult,tyStockData returnrate);
 	//GetMaxChangeRates当中使用的参数，DaySize代表不同的统计时间段

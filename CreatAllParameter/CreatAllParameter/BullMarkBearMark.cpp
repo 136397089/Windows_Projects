@@ -38,7 +38,7 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 			FrontDay = day[i];
 			tempmarkindex._markettype = BullMarket;
 			tempmarkindex._day.SetDay(day[i]);
-			tempmarkindex._data = pricedata[i];
+			tempmarkindex._mdata = pricedata[i];
 			tempmarkindex._relativeDate.SetDay(day[0]);
 			tempmarkindex._relativeData = FrontData;
 			templist.push_back(tempmarkindex);
@@ -52,7 +52,7 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 			FrontDay = day[i];
 			tempmarkindex._markettype = BearMarket;
 			tempmarkindex._day.SetDay(day[i]);
-			tempmarkindex._data = pricedata[i];
+			tempmarkindex._mdata = pricedata[i];
 			tempmarkindex._relativeDate.SetDay(day[0]);
 			tempmarkindex._relativeData = FrontData;
 			templist.push_back(tempmarkindex);
@@ -64,7 +64,7 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 			if (!findBull && (pricedata[i] - FrontData) * 100 >= BULLMARKET * FrontData){// 找牛市点
 				tempmarkindex._markettype = BullMarket;
 				tempmarkindex._day.SetDay(day[i]);
-				tempmarkindex._data = pricedata[i];
+				tempmarkindex._mdata = pricedata[i];
 				tempmarkindex._relativeDate.SetDay(FrontDay);
 				tempmarkindex._relativeData = FrontData;
 				templist.push_back(tempmarkindex);
@@ -79,7 +79,7 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 			if (findBull && (pricedata[i] - FrontData) * 100 <= -BULLMARKET *FrontData){//找熊市场点
 				tempmarkindex._markettype = BearMarket;
 				tempmarkindex._day.SetDay(day[i]);
-				tempmarkindex._data = pricedata[i];
+				tempmarkindex._mdata = pricedata[i];
 				tempmarkindex._relativeDate.SetDay(FrontDay);
 				tempmarkindex._relativeData = FrontData;
 				templist.push_back(tempmarkindex);
@@ -98,7 +98,7 @@ MarketTypeList CBullMarkBearMark::GetMarketTypes(const VStockData& pricedata, co
 	LOG(INFO) << "MarketData";
 	for (unsigned int i = 1; i < templist.size();i++)
 	{
-		LOG(INFO) << "FrontData:" << int(templist[i]._data) << "   \t"
+		LOG(INFO) << "FrontData:" << int(templist[i]._inputdata) << "   \t"
 			<< "FrontDay:" << templist[i]._day.GetDay() << "   \t"
 			<< "RelativeData:" << int(templist[i]._relativeData) << "   \t"
 			<< "RelativeDay:" << templist[i]._relativeDate.GetDay() << "   \t"

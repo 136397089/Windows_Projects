@@ -47,6 +47,7 @@ struct StockDataTable
 	VStockData _vAsi_i, _vAsit;
 	VStockData _vCDP, _vAH_High, _vNH_NormalHigh, _vAL_Low, _vNL_NormalLow;
 	VStockData _vAR, _vBR, _vVR, _vPSY, _vCR, _vCRMA1, _vCRMA2, _vCRMA3, _vCRMA4;
+	VStockData _vEMV,_vEMVMA;
 };
 
 #endif

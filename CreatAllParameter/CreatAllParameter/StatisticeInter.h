@@ -37,16 +37,35 @@ public:
 	bool Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result);
 	//
 	bool Ma5_Ma30_Statistice(const StockDataTable& allnumber, const StatePointsList& StateList);
-	//
+	//////////////////////////////////////////////////////////////////////////
+	//根据模拟CDP的高低点来买卖股票
 	void simulation(const StockDataTable& daynumber,const StockDataTable& weeknumber);
-	//
-	void MALineStatistice(const VStockData& _data1, const VStockData& _data2, vector<unsigned int>& _result);
-	tyStockData Autocorrelation(const VStockData& _data, unsigned int interval);
+	//对均线_madata1在均线_madata2之上和之下的时长进行统计
+	void MALineStatistice(
+		const VStockData& _inputdata1,
+		const VStockData& _inputdata2,
+		vector<unsigned int>& _UpCloseresult,
+		vector<unsigned int>& _DownCloseresult);
+	//分组进行统计
+	template <class T>
+	void GroupStatistice(const vector<T>& _inputdata1, T GroupSize, map<T, unsigned int>& _result);
+	//void GroupStatistice(const vector<unsigned int>& _inputdata1, unsigned int GroupSize, map<unsigned int, unsigned int>& _result);
+	tyStockData Autocorrelation(const VStockData& _inputdata, unsigned int interval);
 	//unsigned int GetIndexFromTimeList(vector<string> _vTimeDay, string time1);
 	//
 private:
 	string _LastError;
 };
+
+template <class T>
+void CStatisticeInter::GroupStatistice(const vector<T>& _inputdata1, T GroupSize, map<T, unsigned int>& _result)
+{
+	for (size_t i = 0; i < _inputdata1.size(); i++)
+	{
+		unsigned int group = floor(_inputdata1[i] / GroupSize);
+		_result[group * GroupSize]++;
+	}
+}
 
 
 

@@ -40,6 +40,9 @@
     <Filter Include="XML">
       <UniqueIdentifier>{b5ccfb4e-e441-4b67-9b86-323785d5fb8e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="StateMachine">
+      <UniqueIdentifier>{8bb866bc-b490-4e0f-a268-7532f2468ee8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -189,6 +192,12 @@
     <ClInclude Include="MeanVariance.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="EMV.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="StateMachineInter.h">
+      <Filter>StateMachine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -322,6 +331,12 @@
     </ClCompile>
     <ClCompile Include="MeanVariance.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="EMV.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="StateMachineInter.cpp">
+      <Filter>StateMachine</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

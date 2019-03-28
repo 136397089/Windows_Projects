@@ -1,5 +1,190 @@
-﻿生成启动时间为 2019/3/25 23:57:24。
+﻿生成启动时间为 2019/3/26 10:24:33。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\CL.exe /c /I.\eigen3 /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"Release\CreatAllParameter.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         D:\Program Files\VC\bin\CL.exe /c /I.\eigen3 /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\CreatAllParameter.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt ARBRCRVRPSY.cpp CcdpStatistics.cpp DFT.cpp MeanVariance.cpp StockDataTable.cpp BullMarkBearMark.cpp CDP.cpp CreatAllParameter.cpp DataSizeSwich.cpp DateTool.cpp DMI.cpp CLocalRecordTool.cpp FreqStatistice.cpp Locker.cpp Log.cpp Ma.cpp MainLoop.cpp Matrix.cpp Numbers.cpp Number\ASI.cpp Number\CommonFunction.cpp Number\NumberInter.cpp Number\StateRecords.cpp Number\TRIX.cpp Number\_DMA.cpp Number\NumberBase.cpp Number\KDJ.cpp Number\Macd.cpp PriChag.cpp PythonInterface.cpp StaticIntegral.cpp StaticRecord.cpp StatisticeTool.cpp StatisticeInter.cpp StateB.cpp StateInter.cpp StockAccountNum.cpp tinyxml\tinystr.cpp tinyxml\tinyxml.cpp tinyxml\tinyxmlerror.cpp tinyxml\tinyxmlparser.cpp TrandRecord.cpp TrendAnal.cpp
+         ARBRCRVRPSY.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         CcdpStatistics.cpp
+         DFT.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+     1>DFT.cpp(147): warning C4018: “<”: 有符号/无符号不匹配
+     1>DFT.cpp(150): warning C4018: “<”: 有符号/无符号不匹配
+     1>DFT.cpp(163): warning C4018: “<”: 有符号/无符号不匹配
+         MeanVariance.cpp
+         StockDataTable.cpp
+         BullMarkBearMark.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         CDP.cpp
+         CreatAllParameter.cpp
+         DataSizeSwich.cpp
+         DateTool.cpp
+     1>DateTool.cpp(266): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+     1>DateTool.cpp(267): warning C4244: “初始化”: 从“double”转换到“int”，可能丢失数据
+         DMI.cpp
+         CLocalRecordTool.cpp
+         FreqStatistice.cpp
+     1>FreqStatistice.cpp(49): warning C4244: “初始化”: 从“float”转换到“int”，可能丢失数据
+         Locker.cpp
+         Log.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         Ma.cpp
+     1>Ma.cpp(28): warning C4018: “>”: 有符号/无符号不匹配
+     1>Ma.cpp(29): warning C4018: “>”: 有符号/无符号不匹配
+     1>Ma.cpp(30): warning C4018: “>”: 有符号/无符号不匹配
+     1>D:\Program Files\VC\include\numeric(20): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+                 D:\Program Files\VC\include\numeric(31): 参见对正在编译的函数 模板 实例化“_Ty std::_Accumulate<std::_List_unchecked_iterator<std::_List_val<std::_List_simple_types<float>>>,_Ty,_Fn2>(_InIt,_InIt,_Ty,_Fn2)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _Fn2=std::plus<void>
+         ,            _InIt=std::_List_unchecked_iterator<std::_List_val<std::_List_simple_types<float>>>
+                 ]
+                 D:\Program Files\VC\include\numeric(39): 参见对正在编译的函数 模板 实例化“_Ty std::accumulate<_InIt,_Ty,std::plus<void>>(_InIt,_InIt,_Ty,_Fn2)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _InIt=std::_List_iterator<std::_List_val<std::_List_simple_types<float>>>
+         ,            _Fn2=std::plus<void>
+                 ]
+                 Ma.cpp(59): 参见对正在编译的函数 模板 实例化“_Ty std::accumulate<std::_List_iterator<std::_List_val<std::_List_simple_types<float>>>,int>(_InIt,_InIt,_Ty)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _InIt=std::_List_iterator<std::_List_val<std::_List_simple_types<float>>>
+                 ]
+         MainLoop.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         Matrix.cpp
+         Numbers.cpp
+         ASI.cpp
+         正在编译...
+         CommonFunction.cpp
+         NumberInter.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\number\..\glog\logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\number\..\glog\logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         StateRecords.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\number\../glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\number\../glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         TRIX.cpp
+         _DMA.cpp
+         NumberBase.cpp
+     1>Number\NumberBase.cpp(142): warning C4244: “参数”: 从“float”转换到“char”，可能丢失数据
+         KDJ.cpp
+         Macd.cpp
+         PriChag.cpp
+         PythonInterface.cpp
+         StaticIntegral.cpp
+         StaticRecord.cpp
+         StatisticeTool.cpp
+         StatisticeInter.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+     1>StatisticeInter.cpp(107): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+     1>StatisticeInter.cpp(108): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+     1>StatisticeInter.cpp(241): warning C4244: “初始化”: 从“unsigned int”转换到“tyStockData”，可能丢失数据
+     1>StatisticeInter.cpp(308): warning C4244: “初始化”: 从“double”转换到“unsigned int”，可能丢失数据
+     1>StatisticeInter.cpp(313): warning C4244: “初始化”: 从“double”转换到“unsigned int”，可能丢失数据
+     1>D:\Program Files\VC\include\numeric(20): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+                 D:\Program Files\VC\include\numeric(31): 参见对正在编译的函数 模板 实例化“_Ty std::_Accumulate<const float*,_Ty,_Fn2>(_InIt,_InIt,_Ty,_Fn2)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _Fn2=std::plus<void>
+         ,            _InIt=const float *
+                 ]
+                 D:\Program Files\VC\include\numeric(39): 参见对正在编译的函数 模板 实例化“_Ty std::accumulate<_InIt,_Ty,std::plus<void>>(_InIt,_InIt,_Ty,_Fn2)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _InIt=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<float>>>
+         ,            _Fn2=std::plus<void>
+                 ]
+                 StatisticeInter.cpp(241): 参见对正在编译的函数 模板 实例化“_Ty std::accumulate<std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<float>>>,int>(_InIt,_InIt,_Ty)”的引用
+                 with
+                 [
+                     _Ty=int
+         ,            _InIt=std::_Vector_const_iterator<std::_Vector_val<std::_Simple_types<float>>>
+                 ]
+         StateB.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         StateInter.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+         StockAccountNum.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+     1>StockAccountNum.cpp(108): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(124): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(167): warning C4244: “=”: 从“const float”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(168): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(177): warning C4244: “=”: 从“const float”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(178): warning C4244: “=”: 从“double”转换到“int”，可能丢失数据
+     1>StockAccountNum.cpp(273): warning C4244: “=”: 从“float”转换到“int”，可能丢失数据
+         tinystr.cpp
+         tinyxml.cpp
+         tinyxmlerror.cpp
+         正在编译...
+         tinyxmlparser.cpp
+         TrandRecord.cpp
+         TrendAnal.cpp
+       Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib python36.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.lib" /MACHINE:X86 /SAFESEH Release\ARBRCRVRPSY.obj
+         Release\CcdpStatistics.obj
+         Release\DFT.obj
+         Release\MeanVariance.obj
+         Release\StockDataTable.obj
+         Release\BullMarkBearMark.obj
+         Release\CDP.obj
+         Release\CreatAllParameter.obj
+         Release\DataSizeSwich.obj
+         Release\DateTool.obj
+         Release\DMI.obj
+         Release\CLocalRecordTool.obj
+         Release\FreqStatistice.obj
+         Release\Locker.obj
+         Release\Log.obj
+         Release\Ma.obj
+         Release\MainLoop.obj
+         Release\Matrix.obj
+         Release\Numbers.obj
+         Release\ASI.obj
+         Release\CommonFunction.obj
+         Release\NumberInter.obj
+         Release\StateRecords.obj
+         Release\TRIX.obj
+         Release\_DMA.obj
+         Release\NumberBase.obj
+         Release\KDJ.obj
+         Release\Macd.obj
+         Release\PriChag.obj
+         Release\PythonInterface.obj
+         Release\StaticIntegral.obj
+         Release\StaticRecord.obj
+         Release\StatisticeTool.obj
+         Release\StatisticeInter.obj
+         Release\StateB.obj
+         Release\StateInter.obj
+         Release\stdafx.obj
+         Release\StockAccountNum.obj
+         Release\tinystr.obj
+         Release\tinyxml.obj
+         Release\tinyxmlerror.obj
+         Release\tinyxmlparser.obj
+         Release\TrandRecord.obj
+         Release\TrendAnal.obj
+         正在生成代码
+         已完成代码的生成
+         CreatAllParameter.vcxproj -> D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.exe
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.03
+已用时间 00:00:24.97

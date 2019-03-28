@@ -31,15 +31,14 @@ bool CStatisticeInter::Inter(
 {
 	Inition();
 
-	vector<unsigned int> MALineResult;
-	MALineStatistice(daydata._vMa1, daydata._vMa4, MALineResult);
+	vector<unsigned int> MALineResult1;
+	vector<unsigned int> MALineResult2;
+	MALineStatistice(daydata._vMa1, daydata._vMa4, MALineResult1, MALineResult2);
 	return true;
-
 
 	CcdpStatistics CDPStaTool;
 	CDPStaTool.CountCDPData(weekdata);
 	simulation(daydata,weekdata);
-
 
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
@@ -165,6 +164,7 @@ bool CStatisticeInter::Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults
 	return true;
 }
 
+//根据模拟CDP的高低点来买卖股票
 void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDataTable& weeknumber)
 {
 	const VStockData &dayclose = daynumber._vClose;
@@ -232,44 +232,37 @@ void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDa
 	return;
 }
 
-tyStockData CStatisticeInter::Autocorrelation(const VStockData& _data, unsigned int interval)
+tyStockData CStatisticeInter::Autocorrelation(const VStockData& _inputdata, unsigned int interval)
 {
-	if (interval >= _data.size())
+	if (interval >= _inputdata.size())
 	{
 		return 0;
 	}
-	tyStockData Average = accumulate(_data.begin(), _data.end(), 0) / _data.size();
+	tyStockData Average = accumulate(_inputdata.begin(), _inputdata.end(), 0) / _inputdata.size();
 
 	tyStockData Var = 0;
-	for (unsigned int i = 0; i < _data.size();i++)
+	for (unsigned int i = 0; i < _inputdata.size();i++)
 	{
-		Var = Var + (_data[i] - Average)*(_data[i] - Average);
+		Var = Var + (_inputdata[i] - Average)*(_inputdata[i] - Average);
 	}
 
-	for (unsigned int i = interval; i < _data.size(); i++)
+	for (unsigned int i = interval; i < _inputdata.size(); i++)
 	{
 
 	}
 	return 0;
 }
-
+//对均线_madata1在均线_madata2之上和之下的时长进行统计
+//返回的结果放在_UpCloseresult，_DownCloseresult当中
 void CStatisticeInter::MALineStatistice(
 	const VStockData& _madata1,
 	const VStockData& _madata2,
-	vector<unsigned int>& _result)
+	vector<unsigned int>& _UpCloseresult,
+	vector<unsigned int>& _DownCloseresult)
 {
-	_result.clear();
-
-	vector<unsigned int> _UpCloseresult;
-	vector<unsigned int> _DownCloseresult;
-	map<unsigned int, int> _Upresult2;
-	map<unsigned int, int> _Downresult2;
-
+	//
 	_UpCloseresult.clear();
 	_DownCloseresult.clear();
-	_Upresult2.clear();
-	_Downresult2.clear();
-
 	if (_madata1.size() != _madata2.size() && _madata1.size() < DATAMINSIZE)
 	{
 		return;
@@ -278,17 +271,14 @@ void CStatisticeInter::MALineStatistice(
 	unsigned int lesscount = 0;
 	VStockData::const_iterator iteMA1 = _madata1.begin();
 	VStockData::const_iterator iteMA2 = _madata2.begin();
-	while (iteMA1 != _madata1.end())
-	{
-		if (*iteMA1 >= *iteMA2)
-		{
+	while (iteMA1 != _madata1.end()){
+		if (*iteMA1 >= *iteMA2){
 			biggercount++;
 			if (lesscount > 0)
 				_UpCloseresult.push_back(lesscount);
 			lesscount = 0;
 		}
-		else
-		{
+		else{
 			lesscount++;
 			if (biggercount > 0)
 				_DownCloseresult.push_back(biggercount);
@@ -297,24 +287,24 @@ void CStatisticeInter::MALineStatistice(
 		iteMA1++;
 		iteMA2++;
 	}
-	int groupsize = 1;
+
+	//对不同的时长进行分组统计
+	unsigned int groupsize = 2;
+	map<unsigned int, unsigned int> _Upresult2;
+	map<unsigned int, unsigned int> _Downresult2;
+	_Upresult2.clear();
+	_Downresult2.clear();
 	for (size_t i = 0; i < 240; i++)
 	{
 		_Upresult2[i*groupsize] = 0;
 		_Downresult2[i*groupsize] = 0;
 	}
-	for (size_t i = 0; i < _UpCloseresult.size(); i++)
-	{
-		unsigned int group = floor(_UpCloseresult[i] / groupsize);
-		_Upresult2[group * groupsize]++;
-	}
-	for (size_t i = 0; i < _DownCloseresult.size(); i++)
-	{
-		unsigned int group = floor(_DownCloseresult[i] / groupsize);
-		_Downresult2[group * groupsize]++;
-	}
+	GroupStatistice(_UpCloseresult, groupsize, _Upresult2);
+	GroupStatistice(_DownCloseresult, groupsize, _Downresult2);
 	return;
 }
+
+
 
 
 
