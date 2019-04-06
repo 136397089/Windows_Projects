@@ -1,5 +1,62 @@
-﻿生成启动时间为 2019/3/28 22:37:58。
+﻿生成启动时间为 2019/4/3 23:13:42。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\CL.exe /c /I.\eigen3 /I"D:\MySql\mysql-5.7.25-win32\include" /ZI /nologo /W3 /WX- /sdl /Od /Oy- /D WIN32 /D _DEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Debug\CreatAllParameter.pch" /Fo"Debug\\" /Fd"Debug\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt MainLoop.cpp
+         MainLoop.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog\logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog\logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+       Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Debug\CreatAllParameter.exe" /INCREMENTAL /NOLOGO /LIBPATH:"D:\MySql\mysql-5.7.25-winx32\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib python36.lib libmysql.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Debug\CreatAllParameter.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Debug\CreatAllParameter.lib" /MACHINE:X86 Debug\ARBRCRVRPSY.obj
+         Debug\CcdpStatistics.obj
+         Debug\DFT.obj
+         Debug\EMV.obj
+         Debug\MeanVariance.obj
+         Debug\MySQLInterFace.obj
+         Debug\SearchStock.obj
+         Debug\StateMachineInter.obj
+         Debug\StockDataTable.obj
+         Debug\BullMarkBearMark.obj
+         Debug\CDP.obj
+         Debug\CreatAllParameter.obj
+         Debug\DataSizeSwich.obj
+         Debug\DateTool.obj
+         Debug\DMI.obj
+         Debug\CLocalRecordTool.obj
+         Debug\FreqStatistice.obj
+         Debug\Locker.obj
+         Debug\Log.obj
+         Debug\Ma.obj
+         Debug\MainLoop.obj
+         Debug\Matrix.obj
+         Debug\Numbers.obj
+         Debug\ASI.obj
+         Debug\CommonFunction.obj
+         Debug\NumberInter.obj
+         Debug\StateRecords.obj
+         Debug\TRIX.obj
+         Debug\_DMA.obj
+         Debug\NumberBase.obj
+         Debug\KDJ.obj
+         Debug\Macd.obj
+         Debug\PriChag.obj
+         Debug\PythonInterface.obj
+         Debug\StaticIntegral.obj
+         Debug\StaticRecord.obj
+         Debug\StatisticeTool.obj
+         Debug\StatisticeInter.obj
+         Debug\StateB.obj
+         Debug\StateInter.obj
+         Debug\stdafx.obj
+         Debug\StockAccountNum.obj
+         Debug\tinystr.obj
+         Debug\tinyxml.obj
+         Debug\tinyxmlerror.obj
+         Debug\tinyxmlparser.obj
+         Debug\TrandRecord.obj
+         Debug\TrendAnal.obj
+         CreatAllParameter.vcxproj -> D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Debug\CreatAllParameter.exe
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:00.05
+已用时间 00:00:02.07

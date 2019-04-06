@@ -20,6 +20,7 @@ void CStateInter::Inter(const StockDataTable& allnumber,const string filename)
 	emptydate.clear();
 	_vTimeDay.clear();
 	_vTimeDay = allnumber._vTimeDay;
+
 	allIndexStates[_eFile_High_INDEX] = GetOneNumberState(allnumber._vHigh, emptydate);
 	allIndexStates[_eFile_Low_INDEX] = GetOneNumberState(allnumber._vLow, emptydate);
 	CLocalRecordTool localRecord;
@@ -34,7 +35,7 @@ void CStateInter::Inter(const StockDataTable& allnumber,const string filename)
 	allIndexStates[_eMACD_BAR] = GetOneNumberState( allnumber._vMACDValue, emptydate);
 	allIndexStates[_eKDJ_J] = GetOneNumberState( allnumber._vJ, allnumber._vD);
 	allIndexStates[_eASI_I] = GetOneNumberState( allnumber._vAsi_i, emptydate);
-	allIndexStates[_eMA_MA5] = GetOneNumberState( allnumber._vMa1, allnumber._vMa2);
+	allIndexStates[_eMA_MA5] = GetOneNumberState(allnumber._vMa1, allnumber._vMa2);
 
 	return;
 }

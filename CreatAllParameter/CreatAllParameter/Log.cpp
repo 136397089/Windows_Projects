@@ -20,7 +20,6 @@ CLog::CLog()
 			google::SetLogDestination(google::GLOG_WARNING, "D:\\StockFile\\Log\\WarningLog");
 			google::SetLogDestination(google::GLOG_ERROR, "D:\\StockFile\\ErrorLog");
 			google::SetLogDestination(google::GLOG_FATAL, "D:\\StockFile\\FatalLog");
-
 		}
 	}
 	catch (exception)
@@ -35,7 +34,6 @@ CLog::~CLog()
 	if (0 == OpenNumber)
 		google::ShutdownGoogleLogging();
 }
-
 
 
 

@@ -1,0 +1,57 @@
+﻿生成启动时间为 2019/3/31 16:07:04。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
+     1>Link:
+         D:\Program Files\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\x64\DebugWithMysql\CreatAllParameter.exe" /INCREMENTAL /NOLOGO /LIBPATH:"D:\MySql\mysql-5.7.25-winx64\lib" kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib python36.lib libmysql.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\x64\DebugWithMysql\CreatAllParameter.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\x64\DebugWithMysql\CreatAllParameter.lib" /MACHINE:X64 /machine:X64 /debug x64\DebugWithMysql\ARBRCRVRPSY.obj
+         x64\DebugWithMysql\CcdpStatistics.obj
+         x64\DebugWithMysql\DFT.obj
+         x64\DebugWithMysql\EMV.obj
+         x64\DebugWithMysql\MeanVariance.obj
+         x64\DebugWithMysql\MySQLInterFace.obj
+         x64\DebugWithMysql\SearchStock.obj
+         x64\DebugWithMysql\StateMachineInter.obj
+         x64\DebugWithMysql\StockDataTable.obj
+         x64\DebugWithMysql\BullMarkBearMark.obj
+         x64\DebugWithMysql\CDP.obj
+         x64\DebugWithMysql\CreatAllParameter.obj
+         x64\DebugWithMysql\DataSizeSwich.obj
+         x64\DebugWithMysql\DateTool.obj
+         x64\DebugWithMysql\DMI.obj
+         x64\DebugWithMysql\CLocalRecordTool.obj
+         x64\DebugWithMysql\FreqStatistice.obj
+         x64\DebugWithMysql\Locker.obj
+         x64\DebugWithMysql\Log.obj
+         x64\DebugWithMysql\Ma.obj
+         x64\DebugWithMysql\MainLoop.obj
+         x64\DebugWithMysql\Matrix.obj
+         x64\DebugWithMysql\Numbers.obj
+         x64\DebugWithMysql\ASI.obj
+         x64\DebugWithMysql\CommonFunction.obj
+         x64\DebugWithMysql\NumberInter.obj
+         x64\DebugWithMysql\StateRecords.obj
+         x64\DebugWithMysql\TRIX.obj
+         x64\DebugWithMysql\_DMA.obj
+         x64\DebugWithMysql\NumberBase.obj
+         x64\DebugWithMysql\KDJ.obj
+         x64\DebugWithMysql\Macd.obj
+         x64\DebugWithMysql\PriChag.obj
+         x64\DebugWithMysql\PythonInterface.obj
+         x64\DebugWithMysql\StaticIntegral.obj
+         x64\DebugWithMysql\StaticRecord.obj
+         x64\DebugWithMysql\StatisticeTool.obj
+         x64\DebugWithMysql\StatisticeInter.obj
+         x64\DebugWithMysql\StateB.obj
+         x64\DebugWithMysql\StateInter.obj
+         x64\DebugWithMysql\stdafx.obj
+         x64\DebugWithMysql\StockAccountNum.obj
+         x64\DebugWithMysql\tinystr.obj
+         x64\DebugWithMysql\tinyxml.obj
+         x64\DebugWithMysql\tinyxmlerror.obj
+         x64\DebugWithMysql\tinyxmlparser.obj
+         x64\DebugWithMysql\TrandRecord.obj
+         x64\DebugWithMysql\TrendAnal.obj
+     1>libglog.lib(libglog.dll) : fatal error LNK1112: 模块计算机类型“X86”与目标计算机类型“x64”冲突
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作 - 失败。
+
+生成失败。
+
+已用时间 00:00:00.27

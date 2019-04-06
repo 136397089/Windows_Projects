@@ -43,6 +43,9 @@
     <Filter Include="StateMachine">
       <UniqueIdentifier>{8bb866bc-b490-4e0f-a268-7532f2468ee8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Mysql">
+      <UniqueIdentifier>{4631924e-c097-40ed-96c3-348f8d427d70}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />
@@ -189,14 +192,20 @@
     <ClInclude Include="ARBRCRVRPSY.h">
       <Filter>Number\SingleNumber</Filter>
     </ClInclude>
-    <ClInclude Include="MeanVariance.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="EMV.h">
       <Filter>Number\SingleNumber</Filter>
     </ClInclude>
     <ClInclude Include="StateMachineInter.h">
       <Filter>StateMachine</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchStock.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="MySQLInterFace.h">
+      <Filter>Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="MeanVariance.h">
+      <Filter>Statistics</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -329,14 +338,20 @@
     <ClCompile Include="ARBRCRVRPSY.cpp">
       <Filter>Number\SingleNumber</Filter>
     </ClCompile>
-    <ClCompile Include="MeanVariance.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="EMV.cpp">
       <Filter>Number\SingleNumber</Filter>
     </ClCompile>
     <ClCompile Include="StateMachineInter.cpp">
       <Filter>StateMachine</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchStock.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="MySQLInterFace.cpp">
+      <Filter>Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="MeanVariance.cpp">
+      <Filter>Statistics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

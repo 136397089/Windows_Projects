@@ -28,13 +28,13 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	DatePriceData refData = *RecordData.begin();
 	frontVolSum = frontVolSum + TodayDayData._Volume;
 	frontHighToHLMaSum = frontHighToHLMaSum + TodayDayData._High - TodayDayData._Low;
-	RecordData.push_front(TodayDayData);
-	if (RecordData.size() > EMVPara)
+	if (RecordData.size() == EMVPara)
 	{
 		frontVolSum = frontVolSum - RecordData.back()._Volume;
 		frontHighToHLMaSum = frontHighToHLMaSum - RecordData.back()._High + RecordData.back()._Low;
 		RecordData.pop_back();
 	}
+	RecordData.push_front(TodayDayData);
 
 	tyStockData TodayHighToHLMaSum = frontHighToHLMaSum;
 	tyStockData TodayVolSum = frontVolSum;
@@ -46,7 +46,7 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	if (TodayDayData._High != TodayDayData._Low)
 		_data.TemporaryVariable = MID * volME * (TodayDayData._High - TodayDayData._Low);
 
-	if (EMVList.size() > EMVPara)
+	if (EMVList.size() == EMVPara)
 	{
 		frontHighDivideLowSum = frontHighDivideLowSum - EMVList.back().TemporaryVariable / EMVList.back().highToLowMa;
 		frontEMVSum = frontEMVSum - EMVList.back().emv;
@@ -62,6 +62,13 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	_data.emvma = TodayEMVSun / MaPara;
 	EMVList.push_front(_data);
 	
-
 	return true;
+}
+
+void CEMV::Inition()
+{
+	frontEMVSum = 0;
+	frontHighDivideLowSum = 0;
+	frontHighToHLMaSum = 0;
+	frontVolSum = 0;
 }

@@ -47,7 +47,7 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 		_vSIList.pop_front();
 	}
 //	mFrontASI._asi = accumulate(_vSIList.begin(), _vSIList.end(), 0.0f);
-	mFrontASI._asi = mFrontASI._asi - fristSI + SI;
+	mFrontASI._asi = (mFrontASI._asi - fristSI + SI) / _M1;
 
 	_vASIList.push_back(mFrontASI._asi);
 	tyStockData fristASI = 0;
@@ -57,7 +57,7 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 		_vASIList.pop_front();
 	}
 // 	mFrontASI._asit = accumulate(_vASIList.begin(), _vASIList.end(), 0.0f) / _vASIList.size();
-	mFrontASI._asit = mFrontASI._asit - (fristASI - mFrontASI._asi) / _M2;
+	mFrontASI._asit = (mFrontASI._asit - fristASI - mFrontASI._asi) / _M2;
 
 	_YesterdayData = TodayData;
 	return true;

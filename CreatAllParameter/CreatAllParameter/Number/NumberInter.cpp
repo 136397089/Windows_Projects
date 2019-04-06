@@ -10,14 +10,12 @@ CNumberInterface::CNumberInterface()
 {
 	//FileNumber = 0;
 }
-
+//所有分析开始的时间
+CDate BeginDate(1997,1,1);
 
 CNumberInterface::~CNumberInterface()
 {
 }
-
-
-
 
 
 ////////////////////////////////////////////////////////////////////////
@@ -79,6 +77,8 @@ bool CNumberInterface::GetDataAndNumber(const string& filename, const string& Fi
 		<< "************************************"
 		<< filename
 		<< "************************************" << endl;
+	mDayValue.SetDate();
+	ResizeData(BeginDate);
 	CNumbersCalculator numbercal;
 	CDataSizeSwich datasizetool;
 	numbercal.GetAllNumbers(mDayValue);
@@ -133,7 +133,7 @@ void CNumberInterface::ProcessingTransverseData(const StringBlock& AllString)
 // 		if (*(iteB->begin()) == "v_ma5")
 // 			plist = &mAll._vMa5;
 
-		if (*(iteB->begin()) == "")//开头是空字符串的为日期行
+		if (*(iteB->begin()) == "date")//开头是空字符串的为日期行
 		{
 			for (StringList::const_iterator iteL = (++iteB->begin()); iteL != iteB->end(); iteL++)
 			{
@@ -169,5 +169,21 @@ const StockDataTable& CNumberInterface::GetWeekValue()
 const StockDataTable& CNumberInterface::GetMonthValue()
 {
 	return mMonthValue;
+}
+
+bool CNumberInterface::ResizeData(CDate beginData)
+{
+	unsigned int i = 0;
+	if (mDayValue._vDate[0] >= beginData)
+	{
+		return true;
+	}
+	for (i = 0; i < mDayValue._vDate.size(); i++)
+	{
+		if (mDayValue._vDate[i] >= beginData)
+			break;
+	}
+	mDayValue = mDayValue.NewDataByIndex(i, mDayValue._vDate.size());
+	return true;
 }
 

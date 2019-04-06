@@ -16,6 +16,7 @@ class CEMV
 public:
 	CEMV();
 	~CEMV();
+	void Inition();
 	bool GetNextEmv(const DatePriceData& OneDayData,EMV& _data);
 	unsigned int EMVPara;
 	unsigned int MaPara;

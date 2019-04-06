@@ -14,7 +14,6 @@ struct StaticResult
 };
 
 
-
 class CStatisticeInter
 {
 public:
@@ -46,7 +45,7 @@ public:
 		const VStockData& _inputdata2,
 		vector<unsigned int>& _UpCloseresult,
 		vector<unsigned int>& _DownCloseresult);
-	//分组进行统计
+	//分组统计频次
 	template <class T>
 	void GroupStatistice(const vector<T>& _inputdata1, T GroupSize, map<T, unsigned int>& _result);
 	//void GroupStatistice(const vector<unsigned int>& _inputdata1, unsigned int GroupSize, map<unsigned int, unsigned int>& _result);

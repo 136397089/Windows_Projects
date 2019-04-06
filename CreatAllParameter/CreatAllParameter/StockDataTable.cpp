@@ -88,7 +88,7 @@ StockDataTable StockDataTable::NewDataByIndex(unsigned int beginindex, unsigned 
 	COPYVECTOR(_vHigh, beginindex, endindex);
 	COPYVECTOR(_vLow, beginindex, endindex);
 	COPYVECTOR(_vVolume, beginindex, endindex);
-	COPYVECTOR(_vPriChaRate, beginindex, endindex);
+//	COPYVECTOR(_vPriChaRate, beginindex, endindex);
 	COPYVECTOR(_vDate, beginindex, endindex);
 
 	return temp;

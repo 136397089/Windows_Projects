@@ -39,12 +39,9 @@ class CStatisticeTool
 public:
 	CStatisticeTool();
 	~CStatisticeTool();
-	//统计不同时间段的最大变化量
+	//查找不同时间段内priceChangeRate的单日最大最小值
 	bool GetMaxChangeRates(const VStockData& priceChangeRate, StaticResults& maxChangeRate);
-
-// 	//统计第一天在后面所有时间里的价格百分比
-// 	float FristDayPricePosition(const AllStockData& newdata);
-	//统计每天相对于第一天的变化率
+	//计算每天相对于第一天的变化率
 	bool GetEveryDayChangeRate(const VStockData& vdatalist, VStockData& chanRate);
 	//统计第一天在后面所有时间里的价格百分比
 	tyStockData GetPricePosition(const StockDataTable& _inputdata);

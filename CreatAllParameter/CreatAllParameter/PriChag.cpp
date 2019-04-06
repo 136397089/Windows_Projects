@@ -24,7 +24,7 @@ bool CChagRate::GetNextChangeRate(const tyStockData& OneDayData, float& changeRa
 	//frontValue不等于0的时候计算价格变化
 	else
 	{
-		changeRate = (OneDayData - frontValue) / frontValue;
+		changeRate = (OneDayData - frontValue) / frontValue * 100;
 		frontValue = OneDayData;
 		return true;
 	}

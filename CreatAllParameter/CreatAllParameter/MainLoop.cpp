@@ -8,7 +8,9 @@
 #include "PythonInterface.h"
 #include "BullMarkBearMark.h"
 #include "DataSizeSwich.h"
-
+#include "SearchStock.h"
+#include "MeanVariance.h"
+#include "MySQLInterFace.h"
 
 CMainLoop::CMainLoop()
 {
@@ -24,6 +26,8 @@ CMainLoop::~CMainLoop()
 
 bool CMainLoop::RunLoop(string strFolderPath)
 {
+	//MySQLInterFace tools;
+	//tools.Inition();
 
 #ifdef _MYDEBUG
 	CPythonInterface tempinterface;
@@ -47,30 +51,33 @@ bool CMainLoop::RunLoop(string strFolderPath)
 	CStateInter monthstate;
 	CStatisticeInter statisticeInter;
 	map<float, int> vfreqlist;
+	CSearchStock SearchTool;
+	CMeanVariance meanTool;
+	string outPath = "D:\\StockFile\\OutPutFile\\";
 	//遍历所有文件
 	do
 	{
 		numberTool.GetDataAndNumber(p.cFileName, strFolderPath);
-		//stockdata = numberTool.GetMonthValue();
-		SaveDataToFile(strFolderPath + "//" + p.cFileName, numberTool.GetDayValue());
-		SaveDataToFile(strFolderPath + "//" + "W_" + p.cFileName, numberTool.GetWeekValue());
 		daystate.Inter(numberTool.GetDayValue(), p.cFileName);
 		weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
 		monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
+//		SaveDataToFile(outPath + p.cFileName, numberTool.GetDayValue());
+// 		if (SearchTool.Inter(numberTool.GetDayValue(),
+// 			numberTool.GetWeekValue(),
+// 			numberTool.GetMonthValue(),
+// 			daystate, weekstate, monthstate))
+// 		{
+// 			LOG(INFO) << "Find Stock: " << p.cFileName;
+// 			LOG(ERROR) << "Find Stock: " << p.cFileName;
+// 		}
+		LOG(ERROR) << p.cFileName << "Finished";
+		continue;
 		statisticeInter.Inter(
 			numberTool.GetDayValue(),
 			numberTool.GetWeekValue(),
 			numberTool.GetMonthValue(),
 			daystate,weekstate,monthstate);
 		return true;
-#ifdef _MYDEBUG
-		CBullMarkBearMark tempmatket;
-		MarketTypeList templist = tempmatket.GetMarketTypes(stockdata._vClose, stockdata._vTimeDay);
-		string logfailepath = "D:\\StockFile\\Log\\";
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetLocalDay(), "Day");
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetLocalStatePointsValue(), "Localstate");
-		FileTool.ReSavefileRanks(logfailepath + p.cFileName, daystate.allIndexStates[_eMACD_DEA].GetTrendStatePointsValue(), "LowTrendstate");
-#endif
 	} while (FindNextFile(h, &p));
 	return true;
 }
@@ -99,8 +106,8 @@ bool CMainLoop::StatisticalFileQuantity(string strPath)
 
 bool CMainLoop::SaveDataToFile(const string& strFilePath, const StockDataTable & allData)
 {
-	//FileTool.ReSavefileRanks(strFilePath, allData._vTimeDay, GetIndexNameByIndexType(_eFile_Date_INDEX));
 	FileTool.ReSavefileRanksBegin(strFilePath);
+	FileTool.ReSavefileRanks(strFilePath, allData._vTimeDay, GetIndexNameByIndexType(_eFile_Date_INDEX));
 	StockDataPointer pointers = allData.GetAllPointerToSave();
 	for (StockDataPointer::const_iterator ite = pointers.cbegin(); ite != pointers.cend(); ite++)
 	{

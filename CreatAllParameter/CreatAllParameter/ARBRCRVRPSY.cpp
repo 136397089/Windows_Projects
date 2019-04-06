@@ -104,7 +104,7 @@ tyStockData CArBrCrVrPsy::GetAR()
 	}
 	if (sum_open_low == 0)
 	{
-		LOG(ERROR) << "sum_open_low is 0.";
+		//LOG(ERROR) << "sum_open_low is 0.";
 		return 0;
 	}
 
@@ -125,7 +125,7 @@ tyStockData CArBrCrVrPsy::GetBR()
 	lastTimeIte++;
 	while (lastTimeIte != TemporaryStorageData.end())
 	{
-		sum_high_pcolse = sum_high_pcolse + (currentIte->_High - lastTimeIte->_Close);
+		sum_high_pcolse = sum_high_pcolse + max(0.0f,(currentIte->_High - lastTimeIte->_Close));
 		sum_pcolse_low = sum_pcolse_low + max(0.0f,(lastTimeIte->_Close - currentIte->_Low));
 
 		if (j >= ARBRParameter)
@@ -138,7 +138,7 @@ tyStockData CArBrCrVrPsy::GetBR()
 	}
 	if (sum_pcolse_low == 0)
 	{
-		LOG(ERROR) << "sum_pcolse_low is 0.";
+		//LOG(ERROR) << "sum_pcolse_low is 0.";
 		return 0;
 	}
 
@@ -175,7 +175,7 @@ tyStockData CArBrCrVrPsy::GetVR()
 	}
 	if (BVS+CVS == 0)
 	{
-		LOG(ERROR) << "BV+CV is 0.";
+		//LOG(ERROR) << "BV+CV is 0.";
 		return 0;
 	}
 

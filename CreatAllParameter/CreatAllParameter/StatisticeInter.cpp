@@ -41,8 +41,6 @@ bool CStatisticeInter::Inter(
 	simulation(daydata,weekdata);
 
 	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
-	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
-	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	//GroupFreqStatistice(allnumber, stateinter);
 	return true;
 }

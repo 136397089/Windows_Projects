@@ -24,7 +24,7 @@ bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 {
 	MA TempMa = mFrontMa;
 	closedatas.push_back(OneDayData._Close);
-	if (closedatas.size() > M1_Par 
+	if (  closedatas.size() > M1_Par 
 		&&closedatas.size() > M2_Par
 		&&closedatas.size() > M3_Par
 		&&closedatas.size() > M4_Par)//由于所有可以比较的数据都是大于0，忽略类型不匹配的警告
@@ -40,17 +40,14 @@ bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 		Ma1Begin = closedatas.begin();
 	else
 		advance(Ma1Begin, - M1_Par);
-
 	if (day < M2_Par)
 		Ma2Begin = closedatas.begin();
 	else
 		advance(Ma2Begin, - M2_Par);
-
 	if (day < M3_Par)
 		Ma3Begin = closedatas.begin();
 	else
 		advance(Ma3Begin, - M3_Par);
-
 	if (day < M4_Par)
 		Ma4Begin = closedatas.begin();
 	else
