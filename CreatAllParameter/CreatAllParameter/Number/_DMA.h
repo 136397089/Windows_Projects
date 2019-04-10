@@ -10,8 +10,8 @@
 struct DMA_DATA/*:public IndexBaseType*/
 {
 	DMA_DATA() :_DDD(0), _AMA(0){}
-	tyStockData _AMA;
-	tyStockData _DDD;
+	StockDataType _AMA;
+	StockDataType _DDD;
 // 	DMA_DATA& operator = (const DMA_DATA& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -48,8 +48,8 @@ public:
 	void GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& _Dma);
 	void Inition();
 private:
-	list<tyStockData> closelyData50;
-	list<tyStockData> frontDMAData;
+	list<StockDataType> closelyData50;
+	list<StockDataType> frontDMAData;
 	unsigned int Paremeter50;
 	unsigned int Paremeter10;
 };

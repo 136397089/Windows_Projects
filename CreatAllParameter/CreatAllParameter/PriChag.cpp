@@ -12,7 +12,7 @@ CChagRate::~CChagRate()
 {
 }
 
-bool CChagRate::GetNextChangeRate(const tyStockData& OneDayData, float& changeRate)
+bool CChagRate::GetNextChangeRate(const StockDataType& OneDayData, float& changeRate)
 {
 	//当frontValue等于0的时候认为当前输入的是第一个数据
 	if (frontValue <= 0.001)

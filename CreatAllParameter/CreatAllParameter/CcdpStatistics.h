@@ -35,25 +35,25 @@ public:
 	//通过index提取一天的CDP值，保存在CDPdata中
 	bool GetCDPDataByInedx(const StockDataTable& _inputdata, unsigned int index, CDP& CDPdata);
 	//获得当日最高价处于CDP的哪个区间
-	unsigned int GetHighIntervalIndex(tyStockData highData);
+	unsigned int GetHighIntervalIndex(StockDataType highData);
 	//获得当日最低价处于CDP的哪个区间
-	unsigned int GetLowIntervalIndex(tyStockData lowData);
+	unsigned int GetLowIntervalIndex(StockDataType lowData);
 	//查找_inputdata中从beginIndex到endIndex的最大值
-	tyStockData FindMax(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex);
+	StockDataType FindMax(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex);
 	//查找_inputdata中从beginIndex到endIndex的最大值
-	tyStockData FindMin(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex);
+	StockDataType FindMin(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex);
 	//计算输入价格在beginIndex到endIndex价格当中的比例
 	bool GetProportionOfPrice(
 		VStockData& Proportionlist,
 		const StockDataTable& _inputdata,
-		tyStockData price,
+		StockDataType price,
 		unsigned int beginIndex,
 		unsigned int endIndex);
 	//计算需要承受的风险范围
 	bool GetRiskOfPrice(
 		VStockData& Proportionlist,
 		const StockDataTable& _inputdata,
-		tyStockData price,
+		StockDataType price,
 		unsigned int beginIndex,
 		unsigned int endIndex);
 	string _LastError;

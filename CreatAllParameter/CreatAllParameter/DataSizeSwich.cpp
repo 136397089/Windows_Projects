@@ -29,11 +29,11 @@ bool CDataSizeSwich::DayToWeek(const StockDataTable& allstockdata, StockDataTabl
 	FrontDate.SetDay(allstockdata._vTimeDay[0]);
 	BackDate.SetDay(allstockdata._vTimeDay[0]);
 
-	tyStockData WeekOpen = allstockdata._vOpen[0];
-	tyStockData WeekClose = allstockdata._vClose[0];
-	tyStockData WeekHigh = allstockdata._vHigh[0];
-	tyStockData WeekLow = allstockdata._vLow[0];
-	tyStockData WeekVolume = allstockdata._vVolume[0];
+	StockDataType WeekOpen = allstockdata._vOpen[0];
+	StockDataType WeekClose = allstockdata._vClose[0];
+	StockDataType WeekHigh = allstockdata._vHigh[0];
+	StockDataType WeekLow = allstockdata._vLow[0];
+	StockDataType WeekVolume = allstockdata._vVolume[0];
 	for (unsigned int i = 1; i < allstockdata._vTimeDay.size(); i++)
 	{
 		FrontDate.SetDay(allstockdata._vTimeDay[i]);
@@ -88,11 +88,11 @@ bool CDataSizeSwich::DayToMonth(const StockDataTable& allstockdata, StockDataTab
 	FrontDate.SetDay(allstockdata._vTimeDay[0]);
 	BackDate.SetDay(allstockdata._vTimeDay[0]);
 
-	tyStockData MonthOpen = allstockdata._vOpen[0];
-	tyStockData MonthClose = allstockdata._vClose[0];
-	tyStockData MonthHigh = allstockdata._vHigh[0];
-	tyStockData MonthLow = allstockdata._vLow[0];
-	tyStockData MonthVolume = allstockdata._vVolume[0];
+	StockDataType MonthOpen = allstockdata._vOpen[0];
+	StockDataType MonthClose = allstockdata._vClose[0];
+	StockDataType MonthHigh = allstockdata._vHigh[0];
+	StockDataType MonthLow = allstockdata._vLow[0];
+	StockDataType MonthVolume = allstockdata._vVolume[0];
 	for (unsigned int i = 1; i < allstockdata._vTimeDay.size(); i++)
 	{
 		FrontDate.SetDay(allstockdata._vTimeDay[i]);

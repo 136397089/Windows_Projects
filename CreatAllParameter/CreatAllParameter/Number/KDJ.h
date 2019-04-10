@@ -9,9 +9,9 @@ struct KDJ/*:public IndexBaseType*/
 {
 public:
 	KDJ() :K_OF_KDJ(0), D_OF_KDJ(0), J_OF_KDJ(0){}
-	tyStockData K_OF_KDJ;
-	tyStockData D_OF_KDJ;
-	tyStockData J_OF_KDJ;
+	StockDataType K_OF_KDJ;
+	StockDataType D_OF_KDJ;
+	StockDataType J_OF_KDJ;
 // 	KDJ operator = (const KDJ& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -29,7 +29,7 @@ class CKDJ
 	//public CNumberManager
 {
 public:
-	CKDJ(tyStockData day1, tyStockData day2, tyStockData day3);
+	CKDJ(StockDataType day1, StockDataType day2, StockDataType day3);
 	~CKDJ(void);
 // 	//////////////////////////////////////////////////////////////////////////
 // 	//更新目录下所有CSV文件里的KDJ值(数据按列排)
@@ -54,10 +54,10 @@ public:
 	void Inition();
 private:
 	CKDJ();
-	void StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList);
-	list<tyStockData> _lHigh;
-	list<tyStockData> _lLow;
-	list<tyStockData> _lClose;
+	void StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList);
+	list<StockDataType> _lHigh;
+	list<StockDataType> _lLow;
+	list<StockDataType> _lClose;
 	//KDJ指标的参数
 	const float _Nday, _M1, _M2;
 };

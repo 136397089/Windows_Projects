@@ -20,11 +20,11 @@ struct Macd/*:public IndexBaseType*/
 {
 public:
 	Macd() :m12(0), m26(0), diff(0), dea(0), bar(0){}
-	tyStockData m12;
-	tyStockData m26;
-	tyStockData diff;
-	tyStockData dea;
-	tyStockData bar;
+	StockDataType m12;
+	StockDataType m26;
+	StockDataType diff;
+	StockDataType dea;
+	StockDataType bar;
 // 		Macd& operator = (const Macd& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -44,7 +44,7 @@ public:
 class CMacdManager// : public CNumberManager
 {
 public:
-	CMacdManager(tyStockData shortsmoothness, tyStockData longsmoothness,tyStockData m);
+	CMacdManager(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m);
 	~CMacdManager(void);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -54,9 +54,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool GetNextMacd(const DatePriceData& OneDayData, Macd& mMacd);
 private:
-	const tyStockData shortSmoothness;
-	const tyStockData longSmoothness;
-	const tyStockData M;
+	const StockDataType shortSmoothness;
+	const StockDataType longSmoothness;
+	const StockDataType M;
 };
 
 

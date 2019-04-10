@@ -45,13 +45,13 @@ void CTRIX::GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix)
 
 }
 
-float CTRIX::GetEMA(const list<tyStockData>& dataList)
+float CTRIX::GetEMA(const list<StockDataType>& dataList)
 {
 	float addIn = 0;
-	list<tyStockData>::const_iterator ite = dataList.begin();
+	list<StockDataType>::const_iterator ite = dataList.begin();
 	float i = 1;
 	float iAdd = 0;
-	for (list<tyStockData>::const_iterator ite = dataList.begin(); ite != dataList.end(); ite++)
+	for (list<StockDataType>::const_iterator ite = dataList.begin(); ite != dataList.end(); ite++)
 	{
 		addIn = addIn + i*(*ite);
 		iAdd = iAdd + i;
@@ -60,7 +60,7 @@ float CTRIX::GetEMA(const list<tyStockData>& dataList)
 	return addIn / iAdd;
 }
 
-void CTRIX::StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList)
+void CTRIX::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
 {
 	mList.push_back(mdata);
 	if (mList.size() > msize)

@@ -4,7 +4,7 @@
 
 CMeanVariance::CMeanVariance()
 {
-	nNumber = 0;
+	//nNumber = 0;
 }
 
 
@@ -12,19 +12,23 @@ CMeanVariance::~CMeanVariance()
 {
 }
 
-bool CMeanVariance::GetNextMeanVar(tyStockData newData, MeanVar& reasultMV)
+bool CMeanVariance::GetNextMeanVar(
+	StockDataType newData,
+	MeanVar& reasultMV)const
 {
-	nNumber++;
+	reasultMV.n++;
 	MeanVar lastData = reasultMV;
-	reasultMV.mean = lastData.mean + (newData - lastData.mean) / nNumber;
+	reasultMV.mean = lastData.mean + (newData - lastData.mean) / reasultMV.n;
 
 	reasultMV.Fn = reasultMV.Fn + (newData - lastData.mean)*(newData - reasultMV.mean);
-	reasultMV.var = reasultMV.Fn / nNumber;
+	reasultMV.var = reasultMV.Fn / reasultMV.n;
 
 	return true;
 }
 
-bool CMeanVariance::GetChangeRateMeanVar(const VStockData& datalist, MeanVar& meanVar)
+bool CMeanVariance::GetChangeRateMeanVar(
+	const VStockData& datalist,
+	MeanVar& meanVar)const
 {
 	for (unsigned int i = 0; i < datalist.size();i++)
 	{
@@ -33,7 +37,10 @@ bool CMeanVariance::GetChangeRateMeanVar(const VStockData& datalist, MeanVar& me
 	return true;
 }
 
-bool CMeanVariance::GetChangeRateMeanVar(const VStockData::iterator beginIte, const VStockData::iterator endIte, MeanVar& meanVar)
+bool CMeanVariance::GetChangeRateMeanVar(
+	const VStockData::iterator beginIte, 
+	const VStockData::iterator endIte,
+	MeanVar& meanVar)const
 {
 	for (VStockData::iterator ite = beginIte; ite != endIte; ite++)
 	{
@@ -42,7 +49,9 @@ bool CMeanVariance::GetChangeRateMeanVar(const VStockData::iterator beginIte, co
 	return true;
 }
 
-bool CMeanVariance::GetChangeRateMeanVar(const StockDataTable& datalist, MeanVar& meanVar)
+bool CMeanVariance::GetChangeRateMeanVar(
+	const StockDataTable& datalist,
+	MeanVar& meanVar)const
 {
 	for (unsigned int i = 1; i < datalist._vTimeDay.size(); i++)
 	{
@@ -52,3 +61,34 @@ bool CMeanVariance::GetChangeRateMeanVar(const StockDataTable& datalist, MeanVar
 	}
 	return true;
 }
+
+bool CMeanVariance::GetMeanVarRemoveData(
+	StockDataType removeData, 
+	MeanVar& meanVar) const
+{
+	MeanVar fromData;
+	fromData.n = meanVar.n - 1;
+	fromData.mean = (meanVar.n * meanVar.mean - removeData) / fromData.n;
+	fromData.Fn = meanVar.Fn - (removeData - fromData.mean)*(removeData - meanVar.mean);
+	fromData.var = fromData.Fn / fromData.n;
+	meanVar = fromData;
+	return true;
+}
+
+bool CMeanVariance::MeanVarDebugFunction(
+	const StockDataTable& datalist,
+	MeanVar& meanVar)const
+{
+	for (unsigned int i = 0; i < datalist._vHigh.size();i++)
+	{
+		GetNextMeanVar(datalist._vHigh[i], meanVar);
+		if (i >= 10)
+		{
+			GetMeanVarRemoveData(datalist._vHigh[i], meanVar);
+		}
+	}
+	return true;
+}
+
+
+

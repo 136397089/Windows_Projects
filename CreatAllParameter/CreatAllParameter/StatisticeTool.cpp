@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StatisticeTool.h"
-
+#include <cmath>
 using namespace std;
 CStatisticeTool::CStatisticeTool()
 {
@@ -29,7 +29,7 @@ bool CStatisticeTool::GetMaxChangeRates(const VStockData& priceChangeRate, Stati
 	maxChangeRate.FallRate2 = priceChangeRate[0];
 	maxChangeRate.FallRate3 = priceChangeRate[0];
 
-	tyStockData _tempdata = 0;
+	StockDataType _tempdata = 0;
 	for (unsigned int i = 0; i < priceChangeRate.size(); i++)
 	{
 		_tempdata = priceChangeRate[i];
@@ -59,7 +59,7 @@ bool CStatisticeTool::GetEveryDayChangeRate(const VStockData& vdatalist, VStockD
 		return false;
 	}
 	//第一个参数如果是0则无法进行后面的运算
-	tyStockData begindata = vdatalist[0];
+	StockDataType begindata = vdatalist[0];
 	if (begindata < 0.001 && begindata > -0.001)
 		return false;
 	chanRate.clear();
@@ -72,7 +72,7 @@ bool CStatisticeTool::GetEveryDayChangeRate(const VStockData& vdatalist, VStockD
 
 }
 
-tyStockData CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata)
+StockDataType CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata)
 {
 	//输入检查
 	if (!_inputdata.ChackDataSize())
@@ -87,7 +87,7 @@ tyStockData CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata)
 		return -1.0f;
 	}
 	//计算第一天收盘价在后面几天中的比例
-	tyStockData positionRate = (1.0f - (_inputdata._vClose[0] - *minLow) / (*maxHigh - *minLow));
+	StockDataType positionRate = (1.0f - (_inputdata._vClose[0] - *minLow) / (*maxHigh - *minLow));
 	return positionRate;
 }
 
@@ -96,6 +96,7 @@ tyStockData CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata)
 // {
 // 	return 0.0f;
 // }
+
 
 
 

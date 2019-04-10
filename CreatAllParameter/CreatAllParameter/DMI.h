@@ -3,10 +3,10 @@
 
 struct  Dmi
 {
-	tyStockData _PDI;
-	tyStockData _NDI;
-	tyStockData _ADX;
-	tyStockData _ADXR;
+	StockDataType _PDI;
+	StockDataType _NDI;
+	StockDataType _ADX;
+	StockDataType _ADXR;
 	Dmi()
 	{
 		_PDI = 0.0f;
@@ -17,10 +17,10 @@ struct  Dmi
 };
 struct DMTR
 {
-	tyStockData PDM;
-	tyStockData NDM;
-	tyStockData TR;
-	tyStockData ADX;
+	StockDataType PDM;
+	StockDataType NDM;
+	StockDataType TR;
+	StockDataType ADX;
 	DMTR()
 	{
 		PDM = 0.0f;
@@ -62,9 +62,9 @@ private:
 	//list<DMTR> _vFrontDMTRList;
 	Dmi _FrontDMI;
 	DMTR _FrontAvgDMTR;
-	tyStockData M1;
-	tyStockData M2;
-	tyStockData _FrontDay;//之前已经加入数据的天数
-	tyStockData _FrontADXDay;
+	StockDataType M1;
+	StockDataType M2;
+	StockDataType _FrontDay;//之前已经加入数据的天数
+	StockDataType _FrontADXDay;
 };
 

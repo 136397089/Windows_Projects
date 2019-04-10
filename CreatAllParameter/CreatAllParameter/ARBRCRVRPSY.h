@@ -5,15 +5,15 @@
 
 struct ARBRCRVRPSY
 {
-	tyStockData AR;
-	tyStockData BR;
-	tyStockData VR;
-	tyStockData CR;
-	tyStockData CRMa1;
-	tyStockData CRMa2;
-	tyStockData CRMa3;
-	tyStockData CRMa4;
-	tyStockData PSY;
+	StockDataType AR;
+	StockDataType BR;
+	StockDataType VR;
+	StockDataType CR;
+	StockDataType CRMa1;
+	StockDataType CRMa2;
+	StockDataType CRMa3;
+	StockDataType CRMa4;
+	StockDataType PSY;
 };
 
 class CArBrCrVrPsy
@@ -23,12 +23,12 @@ public:
 	~CArBrCrVrPsy();
 	bool GetNextArBrVrPsy(const DatePriceData& OneDayData, ARBRCRVRPSY& mLastData);
 
-	tyStockData GetAR();
-	tyStockData GetBR();
-	tyStockData GetCR();
-	tyStockData GetCRMA(unsigned int maPara,list<tyStockData>& crmalist);
-	tyStockData GetVR();
-	tyStockData GetPSY();
+	StockDataType GetAR();
+	StockDataType GetBR();
+	StockDataType GetCR();
+	StockDataType GetCRMA(unsigned int maPara,list<StockDataType>& crmalist);
+	StockDataType GetVR();
+	StockDataType GetPSY();
 
 	list<DatePriceData> TemporaryStorageData;
 	unsigned int VRParameter;
@@ -44,11 +44,11 @@ public:
 	unsigned int CR_MA2Para;
 	unsigned int CR_MA3Para;
 	unsigned int CR_MA4Para;
-	list<tyStockData> CR_List;
-	list<tyStockData> CRMa1_List;
-	list<tyStockData> CRMa2_List;
-	list<tyStockData> CRMa3_List;
-	list<tyStockData> CRMa4_List;
+	list<StockDataType> CR_List;
+	list<StockDataType> CRMa1_List;
+	list<StockDataType> CRMa2_List;
+	list<StockDataType> CRMa3_List;
+	list<StockDataType> CRMa4_List;
 
 };
 

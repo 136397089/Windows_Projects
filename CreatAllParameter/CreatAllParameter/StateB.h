@@ -42,8 +42,8 @@ enum IndexGenre
 //所有的指标－－单日分析时的入参
 struct SigDayTechIndex
 {
-	tyStockData _Pchangerate;
-	tyStockData _Volchagrate;
+	StockDataType _Pchangerate;
+	StockDataType _Volchagrate;
 	DMA_DATA _DMAData;
 	Macd _MacdData;
 	TRIX _TrixData;
@@ -94,10 +94,10 @@ enum CharaPointType
 struct StatePoint
 {
 	unsigned int _TimeIndex;
-	tyStockData _Value;
+	CDate _Date;
+	StockDataType _Value;
 	CharaPointType _IndexType;
 	unsigned int _OtherSideIndex;
-	CDate _Date;
 	StatePoint()
 	{
 		_TimeIndex = 0;

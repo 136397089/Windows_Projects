@@ -4,11 +4,11 @@
 struct TRIX /*: public IndexBaseType*/
 {
 	TRIX() :_TRIX(0), _TRMA(0),_AX(0), _BX(0), _TR(0){}
-	tyStockData _TRIX;
-	tyStockData _TRMA;
-	tyStockData _AX;
-	tyStockData _BX;
-	tyStockData _TR;
+	StockDataType _TRIX;
+	StockDataType _TRMA;
+	StockDataType _AX;
+	StockDataType _BX;
+	StockDataType _TR;
 
 // 	TRIX& operator = (const TRIX& rhs){
 // 		_Index1 = rhs._Index1;
@@ -26,16 +26,16 @@ public:
 	~CTRIX();
 	void GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix);
 private:
-	float GetEMA(const list<tyStockData>& dataList);
+	float GetEMA(const list<StockDataType>& dataList);
 	float _ParameterN;
 	float _ParameterM;
 	float _EMADenominator;
-	list<tyStockData> frontClose;
-	list<tyStockData> frontTA;
-	list<tyStockData> frontTB;
-	list<tyStockData> frontTR;
+	list<StockDataType> frontClose;
+	list<StockDataType> frontTA;
+	list<StockDataType> frontTB;
+	list<StockDataType> frontTR;
 	// vector<TRIX> _vTrix;
-	list<tyStockData> TrixData;
-	void StaticSizePush(tyStockData mdata, float msize, list<tyStockData>& mList);
+	list<StockDataType> TrixData;
+	void StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList);
 };
 

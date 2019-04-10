@@ -256,7 +256,7 @@ bool CStockAccount::BuyStock(const TransactionData& mbusiness)
 		_LastError = "Lack of Available Capital.";
 		return false;
 	}
-
+	return true;
 }
 
 bool CStockAccount::SellStock(const TransactionData& mbusiness)
@@ -272,7 +272,7 @@ bool CStockAccount::SellStock(const TransactionData& mbusiness)
 	{
 		business._Volume = _StockQuantityOwned;
 	}
-
+	return true;
 }
 
 float CStockAccount::GetStockQuantityOwned()

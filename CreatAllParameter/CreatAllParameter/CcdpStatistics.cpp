@@ -137,7 +137,7 @@ bool CcdpStatistics::GetCDPDataByInedx(const StockDataTable& _inputdata, unsigne
 	return true;
 }
 
-unsigned int CcdpStatistics::GetHighIntervalIndex(tyStockData highData)
+unsigned int CcdpStatistics::GetHighIntervalIndex(StockDataType highData)
 {
 	if (highData >= LastTimeCDP._AH_High)
 		return 0;
@@ -154,7 +154,7 @@ unsigned int CcdpStatistics::GetHighIntervalIndex(tyStockData highData)
 
 }
 
-unsigned int CcdpStatistics::GetLowIntervalIndex(tyStockData lowData)
+unsigned int CcdpStatistics::GetLowIntervalIndex(StockDataType lowData)
 {
 	if (lowData <= LastTimeCDP._AL_Low)
 		return 5;
@@ -175,13 +175,13 @@ void CcdpStatistics::Initon()
 	CDPStatisticeResult.clear();
 }
 
-tyStockData CcdpStatistics::FindMax(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
+StockDataType CcdpStatistics::FindMax(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
 {
 	if (endIndex >= _inputdata.size())
 		endIndex = _inputdata.size();
 	if (beginIndex >= endIndex)
 		return 0;
-	tyStockData maxData = _inputdata[beginIndex];
+	StockDataType maxData = _inputdata[beginIndex];
 	for (unsigned int i = beginIndex; i < endIndex;i++)
 	{
 		if (_inputdata[i] > maxData)
@@ -190,13 +190,13 @@ tyStockData CcdpStatistics::FindMax(const VStockData& _inputdata, unsigned int b
 	return maxData;
 }
 
-tyStockData CcdpStatistics::FindMin(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
+StockDataType CcdpStatistics::FindMin(const VStockData& _inputdata, unsigned int beginIndex, unsigned int endIndex)
 {
 	if (endIndex >= _inputdata.size())
 		endIndex = _inputdata.size();
 	if (beginIndex >= endIndex)
 		return 0;
-	tyStockData minData = _inputdata[beginIndex];
+	StockDataType minData = _inputdata[beginIndex];
 	for (unsigned int i = beginIndex; i < endIndex; i++)
 	{
 		if (_inputdata[i] < minData)
@@ -208,22 +208,22 @@ tyStockData CcdpStatistics::FindMin(const VStockData& _inputdata, unsigned int b
 bool CcdpStatistics::GetProportionOfPrice(
 	VStockData& Proportionlist,//保存的结果
 	const StockDataTable& _inputdata,//所有的数据
-	tyStockData price,//目标价格
+	StockDataType price,//目标价格
 	unsigned int beginIndex,//开始位置
 	unsigned int endIndex)//结束位置
 {
-	tyStockData maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
-	tyStockData mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
-	tyStockData Proportion = (maxdata - price) *100 / price;
+	StockDataType maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
+	StockDataType mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
+	StockDataType Proportion = (maxdata - price) *100 / price;
 	Proportionlist.push_back(Proportion);
 	return true;
 }
 
-bool CcdpStatistics::GetRiskOfPrice(VStockData& Proportionlist, const StockDataTable& _inputdata, tyStockData price, unsigned int beginIndex, unsigned int endIndex)
+bool CcdpStatistics::GetRiskOfPrice(VStockData& Proportionlist, const StockDataTable& _inputdata, StockDataType price, unsigned int beginIndex, unsigned int endIndex)
 {
-	tyStockData maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
-	tyStockData mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
-	tyStockData Proportion = (mindata - price) *100 / price;
+	StockDataType maxdata = FindMax(_inputdata._vHigh, beginIndex, endIndex);
+	StockDataType mindata = FindMin(_inputdata._vLow, beginIndex, endIndex);
+	StockDataType Proportion = (mindata - price) *100 / price;
 	Proportionlist.push_back(Proportion);
 	return true;
 

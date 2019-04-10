@@ -15,7 +15,7 @@ struct TransactionData
 	int _iStockCode;
 	string _strStockCode;
 	CDate _Date;
-	int _Volume;//交易量,小于0表示卖出，大于0表示买入
+	float _Volume;//交易量,小于0表示卖出，大于0表示买入
 	float _Price;//交易价格
 };
 //类只对一个股票操作

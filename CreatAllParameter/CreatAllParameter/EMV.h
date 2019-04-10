@@ -4,10 +4,10 @@
 
 struct EMV
 {
-	tyStockData emv;
-	tyStockData emvma;
-	tyStockData TemporaryVariable;
-	tyStockData highToLowMa;
+	StockDataType emv;
+	StockDataType emvma;
+	StockDataType TemporaryVariable;
+	StockDataType highToLowMa;
 	EMV():emv(0),emvma(0),TemporaryVariable(1),highToLowMa(1){}
 };
 
@@ -21,10 +21,10 @@ public:
 	unsigned int EMVPara;
 	unsigned int MaPara;
 
-	tyStockData frontHighToHLMaSum;
-	tyStockData frontEMVSum;
-	tyStockData frontHighDivideLowSum;
-	tyStockData frontVolSum;
+	StockDataType frontHighToHLMaSum;
+	StockDataType frontEMVSum;
+	StockDataType frontHighDivideLowSum;
+	StockDataType frontVolSum;
 	list<EMV> EMVList;
 	list<DatePriceData> RecordData;
 };

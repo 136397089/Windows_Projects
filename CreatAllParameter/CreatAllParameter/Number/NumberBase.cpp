@@ -63,7 +63,7 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 		{
 			break;
 		}
-		Tagevalue.push_back((tyStockData)atof(StockValues[index].c_str()));
+		Tagevalue.push_back((StockDataType)atof(StockValues[index].c_str()));
 	}
 
 	file.close();
@@ -194,7 +194,7 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 	beginite++;
 	for (StringList::iterator ite = beginite; ite != TittleValues.end(); ite++)
 	{
-		Tagevalue.push_back((tyStockData)atof(ite->c_str()));
+		Tagevalue.push_back((StockDataType)atof(ite->c_str()));
 	}
 	return Tagevalue;
 }
@@ -205,13 +205,13 @@ void CNumberBase::ReSavefileRanksBegin(string FilePath)
 {
 	CLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(), ios::in);
-	string tempstringg;
+	string fileLineStringg;
 	//将文件全部内容读出到buffer[]数据中
 	buffer.clear();
 	newBuffer.clear();
-	while (getline(infile, tempstringg))
+	while (getline(infile, fileLineStringg))
 	{
-		buffer.push_back(tempstringg);
+		buffer.push_back(fileLineStringg);
 	}
 	infile.close();
 }
@@ -270,6 +270,20 @@ void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewVal
 		oss << Separator << vNewValue[lineNumber];
 	}
 	newBuffer.push_back(oss.str());
+}
+
+void CNumberBase::ReSavefileRanks(string FilePath, const map<string, StockDataType>& vNewValue)
+{
+	CLocker(_StockCSVFileMutex, INFINITE);
+	ostringstream  tittleoss;
+	ostringstream  dataoss;
+	for (map<string, StockDataType>::const_iterator ite = vNewValue.begin(); ite != vNewValue.end(); ite++)
+	{
+		tittleoss << ite->first<<",";
+		dataoss << ite->second<<",";
+	}
+	newBuffer.push_back(tittleoss.str());
+	newBuffer.push_back(dataoss.str());
 }
 
 

@@ -12,9 +12,9 @@ struct MarketTypeIndex
 {
 	MarketType _markettype;
 	CDate _day;
-	tyStockData _mdata;
+	StockDataType _mdata;
 	CDate _relativeDate;
-	tyStockData _relativeData;
+	StockDataType _relativeData;
 };
 typedef vector<MarketTypeIndex> MarketTypeList;
 

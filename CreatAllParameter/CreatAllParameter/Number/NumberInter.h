@@ -24,6 +24,9 @@ typedef map<IndexType, const StateTable*> IndexStateConstPointer;
 #define KDJ_INDEX2 3.0f
 #define KDJ_INDEX3 3.0f
 
+
+
+
 class StateRecords;
 class CNumberInterface //:protected CNumberManager
 {

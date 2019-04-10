@@ -9,6 +9,7 @@
 #include "number/NumberInter.h"
 
 
+
 class CStateInter
 {
 public:
@@ -24,7 +25,8 @@ public:
 
 	vector<string> _vTimeDay;
 	StatePointsList _priceLocalState;
-// 	AllState MACDState;
+	vector<MeanVarPoint> moveMeanList;
+	// 	AllState MACDState;
 // 	AllState DEAState;
 
 };

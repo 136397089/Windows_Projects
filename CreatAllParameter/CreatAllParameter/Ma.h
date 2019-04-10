@@ -5,10 +5,10 @@
 struct MA
 {
 	MA() :Ma1(0), Ma2(0), Ma3(0), Ma4(0) {}
-	tyStockData Ma1;
-	tyStockData Ma2;
-	tyStockData Ma3;
-	tyStockData Ma4;
+	StockDataType Ma1;
+	StockDataType Ma2;
+	StockDataType Ma3;
+	StockDataType Ma4;
 };
 
 class CMa
@@ -20,7 +20,7 @@ public:
 
 	bool Inition();
 private:
-	list<tyStockData> closedatas;
+	list<StockDataType> closedatas;
 	int M1_Par, M2_Par, M3_Par, M4_Par;
 	int day;
 	CMa();

@@ -40,7 +40,7 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 	float SI = 16 * X * K / R;
 
 	_vSIList.push_back(SI);
-	tyStockData fristSI = 0; 
+	StockDataType fristSI = 0; 
 	if (_vSIList.size() > _M1)
 	{
 		fristSI = *_vSIList.begin();
@@ -50,7 +50,7 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 	mFrontASI._asi = (mFrontASI._asi - fristSI + SI) / _M1;
 
 	_vASIList.push_back(mFrontASI._asi);
-	tyStockData fristASI = 0;
+	StockDataType fristASI = 0;
 	if (_vASIList.size() > _M2)
 	{
 		fristASI = *_vASIList.begin();

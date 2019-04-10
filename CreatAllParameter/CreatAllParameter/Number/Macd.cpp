@@ -4,7 +4,7 @@
 
 
 
-CMacdManager::CMacdManager(tyStockData shortsmoothness, tyStockData longsmoothness,tyStockData m)
+CMacdManager::CMacdManager(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m)
 :shortSmoothness(shortsmoothness),
 longSmoothness(longsmoothness),
 M(m)

@@ -60,11 +60,11 @@ bool CArBrCrVrPsy::GetNextArBrVrPsy(const DatePriceData& OneDayData, ARBRCRVRPSY
 	return true;
 }
 
-tyStockData CArBrCrVrPsy::GetCRMA(unsigned int maPara, list<tyStockData>& crmalist)
+StockDataType CArBrCrVrPsy::GetCRMA(unsigned int maPara, list<StockDataType>& crmalist)
 {
-	tyStockData Sum = 0;
+	StockDataType Sum = 0;
 	unsigned int j = 1;
-	list<tyStockData>::iterator currentIte = CR_List.begin();
+	list<StockDataType>::iterator currentIte = CR_List.begin();
 	while (currentIte != CR_List.end())
 	{
 		Sum += *currentIte;
@@ -81,13 +81,13 @@ tyStockData CArBrCrVrPsy::GetCRMA(unsigned int maPara, list<tyStockData>& crmali
 	return crmalist.front();
 }
 
-tyStockData CArBrCrVrPsy::GetAR()
+StockDataType CArBrCrVrPsy::GetAR()
 {
 	if (TemporaryStorageData.size() == 0)
 		return 0.0f;
 
-	tyStockData sum_high_open = 0;
-	tyStockData sum_open_low = 0;
+	StockDataType sum_high_open = 0;
+	StockDataType sum_open_low = 0;
 	unsigned int j = 1;
 	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
 	while (currentIte != TemporaryStorageData.end())
@@ -111,13 +111,13 @@ tyStockData CArBrCrVrPsy::GetAR()
 	return sum_high_open / sum_open_low * 100;
 }
 
-tyStockData CArBrCrVrPsy::GetBR()
+StockDataType CArBrCrVrPsy::GetBR()
 {
 	if (TemporaryStorageData.size() <= 1)
 		return 0.0f;
 
-	tyStockData sum_high_pcolse = 0;
-	tyStockData sum_pcolse_low = 0;
+	StockDataType sum_high_pcolse = 0;
+	StockDataType sum_pcolse_low = 0;
 
 	unsigned int j = 1;
 	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
@@ -145,14 +145,14 @@ tyStockData CArBrCrVrPsy::GetBR()
 	return sum_high_pcolse / sum_pcolse_low * 100;
 }
 
-tyStockData CArBrCrVrPsy::GetVR()
+StockDataType CArBrCrVrPsy::GetVR()
 {
 	if (TemporaryStorageData.size() == 0)
 		return 0.0f;
 
-	tyStockData AVS = 0;
-	tyStockData BVS = 0;
-	tyStockData CVS = 0;
+	StockDataType AVS = 0;
+	StockDataType BVS = 0;
+	StockDataType CVS = 0;
 	unsigned int j = 1;
 	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
 	list<DatePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
@@ -183,7 +183,7 @@ tyStockData CArBrCrVrPsy::GetVR()
 
 }
 
-tyStockData CArBrCrVrPsy::GetPSY()
+StockDataType CArBrCrVrPsy::GetPSY()
 {
 	if (TemporaryStorageData.size() == 0)
 		return 0.0f;
@@ -211,17 +211,17 @@ tyStockData CArBrCrVrPsy::GetPSY()
 	return PSY *100.f / PSYParameter;
 }
 
-tyStockData CArBrCrVrPsy::GetCR()
+StockDataType CArBrCrVrPsy::GetCR()
 {
 	if (TemporaryStorageData.size() <= 1)
 	{
 		return 0.0f;
 	}
 
-	tyStockData PSY = 0;
-	tyStockData YesterdayM = 0;
-	tyStockData P1 = 0;
-	tyStockData P2 = 0;
+	StockDataType PSY = 0;
+	StockDataType YesterdayM = 0;
+	StockDataType P1 = 0;
+	StockDataType P2 = 0;
 
 	unsigned int j = 1;
 	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();

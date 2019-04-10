@@ -3,8 +3,8 @@
 struct ASI/*:public IndexBaseType*/
 {
 	ASI() :_asi(0), _asit(0){}
-	tyStockData _asi;//
-	tyStockData _asit;//均值
+	StockDataType _asi;//
+	StockDataType _asit;//均值
 // 	ASI& operator = (const ASI& rhs){
 // 		_Index1 = rhs._Index1;
 // 		_Index2 = rhs._Index2;
@@ -28,8 +28,8 @@ public:
 	bool Inition();
 private:
 	DatePriceData _YesterdayData;
-	list<tyStockData> _vSIList;
-	list<tyStockData> _vASIList;
+	list<StockDataType> _vSIList;
+	list<StockDataType> _vASIList;
 
 	unsigned int _M1;
 	unsigned int _M2;

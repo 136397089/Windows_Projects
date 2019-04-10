@@ -53,14 +53,26 @@ bool CMainLoop::RunLoop(string strFolderPath)
 	map<float, int> vfreqlist;
 	CSearchStock SearchTool;
 	CMeanVariance meanTool;
+	MeanVar meanData;
 	string outPath = "D:\\StockFile\\OutPutFile\\";
+	FileTool.ReSavefileRanksBegin("D:\\StockFile\\returnrate\\returerate.csv");
 	//遍历所有文件
 	do
 	{
 		numberTool.GetDataAndNumber(p.cFileName, strFolderPath);
-		daystate.Inter(numberTool.GetDayValue(), p.cFileName);
-		weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
-		monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
+		//daystate.Inter(numberTool.GetDayValue(), p.cFileName);
+		//weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
+		//monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
+		vector<MeanVarPoint> moveMeanVarList;
+		statisticeInter.StatisticeDebugFunstion(
+			numberTool.GetDayValue(),
+			numberTool.GetWeekValue(),
+			numberTool.GetMonthValue(),
+			daystate,
+			weekstate,
+			monthstate,
+			p.cFileName);
+
 //		SaveDataToFile(outPath + p.cFileName, numberTool.GetDayValue());
 // 		if (SearchTool.Inter(numberTool.GetDayValue(),
 // 			numberTool.GetWeekValue(),
@@ -79,6 +91,11 @@ bool CMainLoop::RunLoop(string strFolderPath)
 			daystate,weekstate,monthstate);
 		return true;
 	} while (FindNextFile(h, &p));
+	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.allDataVarList);
+	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.allDataMeanList);
+	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.filterDataVarList);
+	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.filterDataMeanList);
+	FileTool.ReSavefileRanksEnd("D:\\StockFile\\returnrate\\returerate.csv");
 	return true;
 }
 

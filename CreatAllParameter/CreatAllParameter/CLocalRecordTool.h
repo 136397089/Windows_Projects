@@ -34,7 +34,7 @@ struct index_and_value
 {
 	int index;
 	string date;
-	tyStockData value;
+	StockDataType value;
 	bool ispush;
 };
 #define  LOCALSTARTINDEX 60
@@ -75,27 +75,27 @@ private:
 	void LocalStateRecordSigPoint(
 		/*const SigDayTechIndex& dayIndex,*/
 		const string strday,
-		const tyStockData& OneDayData);	//////////////////////////////////////////////////////////////////////////
+		const StockDataType& OneDayData);	//////////////////////////////////////////////////////////////////////////
 	//进行单日单指标局部分析
 	//////////////////////////////////////////////////////////////////////////
 	void LocalStateRecordSingleStep(
 		/*const IndexGenre& valueType,*/
 		const string& day,
-		const tyStockData& dayValue);
+		const StockDataType& dayValue);
 	//////////////////////////////////////////////////////////////////////////
 	//单日单指标局部分析中的局部最低点分析
 	//////////////////////////////////////////////////////////////////////////
 	bool LocalStateRecordSingleStep_Low(
 		/*const IndexGenre& valueType,*/
 		const string& day	,
-		const tyStockData& dayValue);
+		const StockDataType& dayValue);
 	//////////////////////////////////////////////////////////////////////////
 	//单日单指标局部分析中的局部最高点分析
 	//////////////////////////////////////////////////////////////////////////
 	bool LocalStateRecordSingleStep_High(
 		/*const IndexGenre& valueType,*/
 		const string& day,
-		const tyStockData& dayValue);
+		const StockDataType& dayValue);
 
 	/*
 	局部分析中，局部特征点的历史记录

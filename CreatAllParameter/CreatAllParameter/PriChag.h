@@ -11,7 +11,7 @@ public:
 	CChagRate();
 	~CChagRate();
 
-	bool GetNextChangeRate(const tyStockData& OneDayData, float& changeRate);
+	bool GetNextChangeRate(const StockDataType& OneDayData, float& changeRate);
 
 	bool Inition();
 private:

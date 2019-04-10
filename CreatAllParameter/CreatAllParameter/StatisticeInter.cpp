@@ -1,14 +1,17 @@
 #include "stdafx.h"
 #include <numeric>
 #include <complex>//复数
+#include <cmath>
 #include "Number/NumberInter.h"
 #include "StatisticeInter.h"
 #include "DFT.h"//快速傅立叶
 #include "glog/logging.h"//Log工具
 #include "CcdpStatistics.h"
 #include "StockAccountNum.h"
-CStatisticeInter::CStatisticeInter()
+CStatisticeInter::CStatisticeInter():
+moveVarDaySize(100)
 {
+
 }
 
 
@@ -230,15 +233,15 @@ void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDa
 	return;
 }
 
-tyStockData CStatisticeInter::Autocorrelation(const VStockData& _inputdata, unsigned int interval)
+StockDataType CStatisticeInter::Autocorrelation(const VStockData& _inputdata, unsigned int interval)
 {
 	if (interval >= _inputdata.size())
 	{
 		return 0;
 	}
-	tyStockData Average = accumulate(_inputdata.begin(), _inputdata.end(), 0) / _inputdata.size();
+	StockDataType Average = accumulate(_inputdata.begin(), _inputdata.end(), 0) / _inputdata.size();
 
-	tyStockData Var = 0;
+	StockDataType Var = 0;
 	for (unsigned int i = 0; i < _inputdata.size();i++)
 	{
 		Var = Var + (_inputdata[i] - Average)*(_inputdata[i] - Average);
@@ -285,7 +288,6 @@ void CStatisticeInter::MALineStatistice(
 		iteMA1++;
 		iteMA2++;
 	}
-
 	//对不同的时长进行分组统计
 	unsigned int groupsize = 2;
 	map<unsigned int, unsigned int> _Upresult2;
@@ -300,6 +302,89 @@ void CStatisticeInter::MALineStatistice(
 	GroupStatistice(_UpCloseresult, groupsize, _Upresult2);
 	GroupStatistice(_DownCloseresult, groupsize, _Downresult2);
 	return;
+}
+
+
+bool CStatisticeInter::StatisticeDebugFunstion(
+	const StockDataTable& daynumber,
+	const StockDataTable& weeknumber,
+	const StockDataTable& mounthnumber,
+	CStateInter& daystate,
+	CStateInter& weekstate,
+	CStateInter& monthstate,
+	string Stockcode)
+{
+	if (!daynumber.ChackDataSize()
+		/*|| !weeknumber.ChackDataSize()*/
+		/*|| !mounthnumber.ChackDataSize()*/)
+	{
+		return false;
+	}
+	MeanVarPoint _tempMeanVarData;//用于暂存移动方差和移动均值
+	CMeanVariance moveMeanVarTool;//用于全部计算方差和均值的工具
+	MeanVar _moveMeanVar;//moveMeanVarTool迭代计算移动方差和均值的返回变量
+	MeanVar _lastMeanVar;//moveMeanVarTool迭代总移动方差和均值的返回变量
+	MeanVar _allDataMeanVar;//moveMeanVarTool迭代总移动方差和均值的返回变量
+	daystate.moveMeanList.clear();//
+	DayPrice oneDayPrice;//用于暂存日价格数据
+	list <DayPrice> movePriceList;//平移方差计算时保存之前价格的价格
+	_tempMeanVarData._TimeIndex = 0;
+	_tempMeanVarData._Date = daynumber._vDate[0];
+	daystate.moveMeanList.push_back(_tempMeanVarData);
+	//遍历所有的数据，计算方差和均值
+	for (unsigned int i = 50; i < daynumber._vTimeDay.size();i++)
+	{
+		oneDayPrice._openData = daynumber._vOpen[i];
+		oneDayPrice._closeData = daynumber._vClose[i];
+		oneDayPrice._highData = daynumber._vHigh[i];
+		oneDayPrice._lowData = daynumber._vLow[i];
+		oneDayPrice._frontopen = daynumber._vOpen[i-1];
+		oneDayPrice._frontclose = daynumber._vClose[i-1];
+		oneDayPrice._fronthigh = daynumber._vHigh[i-1];
+		oneDayPrice._frontlow = daynumber._vLow[i-1];
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _allDataMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _allDataMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _allDataMeanVar);
+		unsigned int monthIndex = mounthnumber.GetLastTimeIndexByDate(daynumber._vDate[i]);
+		if (  mounthnumber._vDiff[monthIndex] - mounthnumber._vDiff[monthIndex - 1] < 0
+			||daynumber._vDiff[i-1] - daynumber._vDiff[i - 2] < 0
+			|| daynumber._vD[i - 1] - daynumber._vD[i - 2] < 0
+			|| daynumber._vD[i - 1]>80
+			)
+		{
+			continue;
+		}
+		movePriceList.push_back(oneDayPrice);
+		//迭代计算全部数据的方差和均值
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _lastMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _lastMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _lastMeanVar);
+		//计算移动方差和均值
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _moveMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _moveMeanVar);
+		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _moveMeanVar);
+		if (i >= moveVarDaySize)
+		{
+		//计算移动方差和均值，去除最开始的数据
+			oneDayPrice = movePriceList.front();
+			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_H(oneDayPrice), _moveMeanVar);
+			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_C(oneDayPrice), _moveMeanVar);
+			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_L(oneDayPrice), _moveMeanVar);
+			movePriceList.pop_front();
+		}
+		//将移动方差和均值保存到moveMeanVarList当中
+		_tempMeanVarData._TimeIndex = i;
+		_tempMeanVarData._Date = daynumber._vDate[i];
+		_tempMeanVarData._Mean = _moveMeanVar.mean;
+		_tempMeanVarData._Var = _moveMeanVar.var;
+		_tempMeanVarData._MeanToVarRatio = _moveMeanVar.mean / _moveMeanVar.var;
+		daystate.moveMeanList.push_back(_tempMeanVarData);
+	}
+	allDataVarList[Stockcode] = _allDataMeanVar.var;
+	allDataMeanList[Stockcode] = _allDataMeanVar.mean;
+	filterDataVarList[Stockcode] = _lastMeanVar.var;
+	filterDataMeanList[Stockcode] = _lastMeanVar.mean;
+	return true;
 }
 
 

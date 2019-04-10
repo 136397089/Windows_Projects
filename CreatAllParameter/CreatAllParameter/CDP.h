@@ -4,11 +4,11 @@
 
 struct CDP
 {
-	tyStockData _CDP;
-	tyStockData _AH_High;
-	tyStockData _NH_NormalHigh;
-	tyStockData _AL_Low;
-	tyStockData _NL_NormalLow;
+	StockDataType _CDP;
+	StockDataType _AH_High;
+	StockDataType _NH_NormalHigh;
+	StockDataType _AL_Low;
+	StockDataType _NL_NormalLow;
 
 };
 class CCDP// :public CNumberManager

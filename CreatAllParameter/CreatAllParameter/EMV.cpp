@@ -36,12 +36,12 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	}
 	RecordData.push_front(TodayDayData);
 
-	tyStockData TodayHighToHLMaSum = frontHighToHLMaSum;
-	tyStockData TodayVolSum = frontVolSum;
+	StockDataType TodayHighToHLMaSum = frontHighToHLMaSum;
+	StockDataType TodayVolSum = frontVolSum;
 
-	tyStockData volME = TodayVolSum / TodayDayData._Volume;
+	StockDataType volME = TodayVolSum / TodayDayData._Volume;
 	_data.highToLowMa = TodayHighToHLMaSum / RecordData.size();
-	tyStockData MID = 100 * (TodayDayData._High + TodayDayData._Low - (refData._High + refData._Low)) / (TodayDayData._High + TodayDayData._Low);
+	StockDataType MID = 100 * (TodayDayData._High + TodayDayData._Low - (refData._High + refData._Low)) / (TodayDayData._High + TodayDayData._Low);
 	_data.TemporaryVariable = 0;
 	if (TodayDayData._High != TodayDayData._Low)
 		_data.TemporaryVariable = MID * volME * (TodayDayData._High - TodayDayData._Low);
@@ -55,8 +55,8 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	frontHighDivideLowSum = frontHighDivideLowSum + _data.TemporaryVariable / _data.highToLowMa;
 	frontEMVSum = frontEMVSum + TodayHighToHLMaSum / EMVPara;
 
-	tyStockData TodayEMVSun = frontEMVSum;
-	tyStockData TodayHighDivideLowSum = frontHighDivideLowSum;
+	StockDataType TodayEMVSun = frontEMVSum;
+	StockDataType TodayHighDivideLowSum = frontHighDivideLowSum;
 
 	_data.emv = TodayHighDivideLowSum / EMVPara;
 	_data.emvma = TodayEMVSun / MaPara;

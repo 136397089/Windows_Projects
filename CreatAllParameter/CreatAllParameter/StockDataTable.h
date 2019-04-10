@@ -12,14 +12,15 @@ typedef map<IndexType, const VStockData*> StockDataPointer;
 //单个股票有所有交易数据和指标
 struct StockDataTable
 {
+	//
 	void clear();
 	//
 	StockDataTable NewDataByIndex(unsigned int beginindex, unsigned int endindex) const;
 	//
 	bool ChackDataSize() const;
-	//
+	//返回所有数据的指针，用于保存数据到文件夹中，
 	StockDataPointer GetAllPointerToSave() const;
-	//
+	//返回所有指标的指针
 	StockDataPointer GetNumberPointer() const;
 	//字符串形式日期转为CDate形式的日期
 	void SetDate();

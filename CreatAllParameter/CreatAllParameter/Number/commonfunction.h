@@ -26,7 +26,6 @@ string AssembleString(vector<string>inputstring,string Index);
 
 
 
-
 //////////////////////////////////////////////////////////////////////////
 //在控制台显示调试信息
 //showInformation -- string :要显示的信息字符串
@@ -53,8 +52,8 @@ if (!_bool_)\
 #define TO_STRING(n,str){str="";stringstream ss;ss  n;	ss >> str;}
 
 
-typedef  float tyStockData;
-typedef vector < tyStockData > VStockData;
+typedef  float StockDataType;
+typedef vector < StockDataType > VStockData;
 typedef vector<string> StringList;
 typedef vector<StringList> StringBlock;
 

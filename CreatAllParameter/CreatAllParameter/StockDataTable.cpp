@@ -99,7 +99,8 @@ bool StockDataTable::ChackDataSize() const
 	if (_vClose.size() != _vOpen.size()
 		|| _vClose.size() != _vHigh.size()
 		|| _vClose.size() != _vLow.size()
-		|| _vClose.size() != _vTimeDay.size())
+		|| _vClose.size() != _vTimeDay.size()
+		|| _vClose.size() <= 10)
 	{
 		return false;
 	}
@@ -248,7 +249,7 @@ unsigned int StockDataTable::GetLastTimeIndexByDate(CDate date)const
 		}
 	}
 	//找不到目标日期，只能返回用最大index
-	return _vDate.size()-1;
+	return 0;
 }
 
 unsigned int StockDataTable::GetLastTimeIndexByDate(string strDate)const

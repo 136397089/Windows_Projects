@@ -10,6 +10,7 @@
 #include <list>
 #include <sstream>
 #include <algorithm>
+#include <map>
 #include "CommonFunction.h"
 #include "../DateTool.h"
 
@@ -153,23 +154,23 @@ public:
 	int DateIndex;
 	DatePriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f),DateIndex(0){}
 	CDate mDate;
-	tyStockData _Open;
-	tyStockData _Close;
-	tyStockData _High;
-	tyStockData _Low;
-	tyStockData _Volume;
-	tyStockData _Ma5;
-	tyStockData _Ma10;
-	tyStockData _Ma20;
-	tyStockData operator [] (string index);
+	StockDataType _Open;
+	StockDataType _Close;
+	StockDataType _High;
+	StockDataType _Low;
+	StockDataType _Volume;
+	StockDataType _Ma5;
+	StockDataType _Ma10;
+	StockDataType _Ma20;
+	StockDataType operator [] (string index);
 };
 struct IndexBaseType
 {
-	tyStockData _Index1;
-	tyStockData _Index2;
-	tyStockData _Index3;
-	tyStockData _Index4;
-	tyStockData _Index5;
+	StockDataType _Index1;
+	StockDataType _Index2;
+	StockDataType _Index3;
+	StockDataType _Index4;
+	StockDataType _Index5;
 	IndexBaseType& operator = (const IndexBaseType& rhs)
 	{
 		_Index1 = rhs._Index1;
@@ -178,6 +179,21 @@ struct IndexBaseType
 		_Index4 = rhs._Index4;
 		_Index5 = rhs._Index5;
 		return *this;
+	}
+};
+
+struct MeanVarPoint
+{
+	StockDataType _MeanToVarRatio;
+	StockDataType _Var;
+	StockDataType _Mean;
+	unsigned int _TimeIndex;
+	CDate _Date;
+	MeanVarPoint()
+	{
+		_TimeIndex = 0;
+		_Var = 0;
+		_Mean = 0;
 	}
 };
 //////////////////////////////////////////////////////////////////////////
@@ -226,14 +242,21 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
-	//vMACDValue:要加入的行数据
+	//
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath,const  VStockData& vNewValue, string tittle);
+	void ReSavefileRanks(string FilePath, const  VStockData& vNewValue, string tittle);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
-	//vMACDValue:要加入的行数据
+	//
+	//tittle:行名
+	//////////////////////////////////////////////////////////////////////////
+	void ReSavefileRanks(string FilePath, const  map<string,StockDataType>& vNewValue);
+	//////////////////////////////////////////////////////////////////////////
+	//增加对应的行保存到CSV文件中
+	//FilePath：文件路径
+	//
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
 	void ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle);

@@ -28,8 +28,8 @@ StatePoint CStaticRecordTool::GetNowStaticState()
 void CStaticRecordTool::StaticStateRecordSigPoint(
 //	const IndexGenre& valueType,
 	const string& Day,
-	const tyStockData& FrontData,
-	const tyStockData& BackData)
+	const StockDataType& FrontData,
+	const StockDataType& BackData)
 {
 	//unsigned int& mFrontIndex = _FrontCloseMark_Static[valueType];
 	StatePoint& mfrontStatic = _StateStatic;// [valueType];

@@ -17,7 +17,7 @@ CLocalRecordTool::~CLocalRecordTool()
 
 void CLocalRecordTool::LocalStateRecordSigPoint(
 	const string strday,
-	const tyStockData& OneDayData)
+	const StockDataType& OneDayData)
 {
 	//记录下这一天的数据到列表中，用于后期分析
 	StatePoint thedata;
@@ -43,7 +43,7 @@ void CLocalRecordTool::LocalStateRecordSigPoint(
 
 void CLocalRecordTool::LocalStateRecordSingleStep(
 	const string& day,
-	const tyStockData& dayValue)
+	const StockDataType& dayValue)
 {
 	//输入防错
 	if (_lTempValue.size() < 3)
@@ -56,7 +56,7 @@ void CLocalRecordTool::LocalStateRecordSingleStep(
 //判断有没有形成局部低点
 bool CLocalRecordTool::LocalStateRecordSingleStep_Low(
 	const string& day,
-	const tyStockData& dayValue)
+	const StockDataType& dayValue)
 {
 	if (dayValue < temporaryLowPoint._Value)
 	{
@@ -91,7 +91,7 @@ bool CLocalRecordTool::LocalStateRecordSingleStep_Low(
 
 bool CLocalRecordTool::LocalStateRecordSingleStep_High(
 	const string& day,
-	const tyStockData& dayValue)
+	const StockDataType& dayValue)
 {
 	//判断有没有形成局部高点
 	if (dayValue > temporaryHighPoint._Value)
