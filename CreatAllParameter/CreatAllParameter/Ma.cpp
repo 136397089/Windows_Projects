@@ -4,23 +4,23 @@
 
 
 
-CMa::CMa(int M1, int M2, int M3, int M4)
+CMaCal::CMaCal(int M1, int M2, int M3, int M4)
 	:M1_Par(M1), M2_Par(M2), M3_Par(M3), M4_Par(M4)
 {
 	day = 0;
 	closedatas.clear();
 }
 
-CMa::CMa()
+CMaCal::CMaCal()
 {
 }
 
 
-CMa::~CMa()
+CMaCal::~CMaCal()
 {
 }
 
-bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
+bool CMaCal::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 {
 	MA TempMa = mFrontMa;
 	closedatas.push_back(OneDayData._Close);
@@ -60,7 +60,7 @@ bool CMa::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
 	return true;
 }
 
-bool CMa::Inition()
+bool CMaCal::Inition()
 {
 	day = 0;
 	closedatas.clear();

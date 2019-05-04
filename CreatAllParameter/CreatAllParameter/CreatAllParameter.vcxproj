@@ -236,7 +236,9 @@
     <ClInclude Include="DFT.h" />
     <ClInclude Include="EMV.h" />
     <ClInclude Include="MeanVariance.h" />
+    <ClInclude Include="Morphological.h" />
     <ClInclude Include="MySQLInterFace.h" />
+    <ClInclude Include="NumbersToSql.h" />
     <ClInclude Include="SearchStock.h" />
     <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
@@ -290,7 +292,9 @@
     <ClCompile Include="DFT.cpp" />
     <ClCompile Include="EMV.cpp" />
     <ClCompile Include="MeanVariance.cpp" />
+    <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="MySQLInterFace.cpp" />
+    <ClCompile Include="NumbersToSql.cpp" />
     <ClCompile Include="SearchStock.cpp" />
     <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />

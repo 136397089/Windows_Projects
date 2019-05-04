@@ -80,28 +80,28 @@ inline StockDataType GetLogarithmicReturnRate_L(DayPrice oneDayPrice);
 inline StockDataType GetLogarithmicReturnRate_C(DayPrice oneDayPrice);
 inline StockDataType GetLogarithmicReturnRate_O(DayPrice oneDayPrice);
 StockDataType GetReturnRate_H(DayPrice oneDayPrice){
-	StockDataType frontRealPrice = (oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
+	StockDataType frontRealPrice = oneDayPrice._frontclose;//(oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
 	StockDataType ReturnRate = (oneDayPrice._highData - frontRealPrice) / frontRealPrice * 100;
 	if (ReturnRate >= 11.0f || ReturnRate <= -11.0f)
 		return 0;
 	return ReturnRate;
 }
 StockDataType GetReturnRate_L(DayPrice oneDayPrice){
-	StockDataType frontRealPrice = (oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
+	StockDataType frontRealPrice = oneDayPrice._frontclose;//(oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
 	StockDataType ReturnRate = (oneDayPrice._lowData - frontRealPrice) * 100 / frontRealPrice;
 	if (ReturnRate >= 11.0f || ReturnRate <= -11.0f)
 		return 0;
 	return ReturnRate;
 }
 StockDataType GetReturnRate_C(DayPrice oneDayPrice){
-	StockDataType frontRealPrice = (oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
+	StockDataType frontRealPrice = oneDayPrice._frontclose;//(oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
 	StockDataType ReturnRate = (oneDayPrice._closeData - frontRealPrice) * 100 / frontRealPrice;
 	if (ReturnRate >= 11.0f || ReturnRate <= -11.0f)
 		return 0;
 	return ReturnRate;
 }
 StockDataType GetReturnRate_O(DayPrice oneDayPrice){
-	StockDataType frontRealPrice = (oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
+	StockDataType frontRealPrice = oneDayPrice._frontclose;//(oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
 	StockDataType ReturnRate = (oneDayPrice._openData - frontRealPrice) * 100 / frontRealPrice;
 	if (ReturnRate >= 11.0f || ReturnRate <= -11.0f)
 		return 0;

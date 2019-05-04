@@ -4,25 +4,25 @@
 #include "ASI.h"
 
 
-CAsi::CAsi()
+CAsiCal::CAsiCal()
 {
 	_M1 = 26;
 	_M2 = 10;
 }
 
 
-CAsi::~CAsi()
+CAsiCal::~CAsiCal()
 {
 }
 
 
-bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
+bool CAsiCal::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 {
 	ASI tempasi = mFrontASI;
 	float A = abs(TodayData._High - _YesterdayData._Close);
 	float B = abs(TodayData._Low - _YesterdayData._Close);
 	float C = abs(TodayData._High - _YesterdayData._Low);
-	float D = abs(_YesterdayData._Close - TodayData._Open);
+	float D = abs(_YesterdayData._Close - _YesterdayData._Open);
 
 	float R = 0;
 	if (A > B && A > C)
@@ -46,8 +46,7 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 		fristSI = *_vSIList.begin();
 		_vSIList.pop_front();
 	}
-//	mFrontASI._asi = accumulate(_vSIList.begin(), _vSIList.end(), 0.0f);
-	mFrontASI._asi = (mFrontASI._asi - fristSI + SI) / _M1;
+	mFrontASI._asi = (mFrontASI._asi - fristSI + SI);
 
 	_vASIList.push_back(mFrontASI._asi);
 	StockDataType fristASI = 0;
@@ -56,14 +55,13 @@ bool CAsi::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 		fristASI = *_vASIList.begin();
 		_vASIList.pop_front();
 	}
-// 	mFrontASI._asit = accumulate(_vASIList.begin(), _vASIList.end(), 0.0f) / _vASIList.size();
-	mFrontASI._asit = (mFrontASI._asit - fristASI - mFrontASI._asi) / _M2;
+	mFrontASI._asit = (mFrontASI._asit*_M2 - fristASI + mFrontASI._asi) / _M2;
 
 	_YesterdayData = TodayData;
 	return true;
 }
 
-bool CAsi::Inition()
+bool CAsiCal::Inition()
 {
 	_vSIList.clear();
 	_vASIList.clear();

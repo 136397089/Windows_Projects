@@ -62,6 +62,7 @@ void StockDataTable::clear()
 	//
 	_vEMV.clear();
 	_vEMVMA.clear();
+	_strStockCode = "";
 }
 
 
@@ -248,8 +249,8 @@ unsigned int StockDataTable::GetLastTimeIndexByDate(CDate date)const
 			return i - 1;
 		}
 	}
-	//找不到目标日期，只能返回用最大index
-	return 0;
+	//找不到目标日期，只能返回用最开始的index
+	return _vDate.size() - 1;
 }
 
 unsigned int StockDataTable::GetLastTimeIndexByDate(string strDate)const

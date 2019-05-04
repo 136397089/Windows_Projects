@@ -2,14 +2,14 @@
 #include <numeric>
 #include "_DMA.h"
 
-CDMA::CDMA()
+CDMACal::CDMACal()
 {
 	Paremeter50 = 50;
 	Paremeter10 = 10;
 	closelyData50.clear();
 }
 
-CDMA::~CDMA()
+CDMACal::~CDMACal()
 {
 }
 
@@ -78,7 +78,7 @@ CDMA::~CDMA()
 // 
 // }
 
-void CDMA::GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& Dma)
+void CDMACal::GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& Dma)
 {
 	closelyData50.push_back(OneDayData._Close);
 	if (closelyData50.size() < Paremeter50)
@@ -110,7 +110,7 @@ void CDMA::GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& Dma)
 	return;
 }
 
-void CDMA::Inition()
+void CDMACal::Inition()
 {
 	closelyData50.clear();
 	frontDMAData.clear();

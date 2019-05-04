@@ -13,7 +13,6 @@
 // 	unsigned int _freqcy;
 // 	Freq_OneGroup() :_freqcy(0), _downValue(0), _upValue(0){}
 // };
-typedef map<float, int> changeRateStatis;
 
 class CFreqStatistice
 {
@@ -24,22 +23,28 @@ public:
 
 	bool Inition();
 
-	//统计vdatalist在不同分组中出现的频次
-	bool GetGroupFrqu(const VStockData& vdatalist, const float stepsize, changeRateStatis& vfreqlist);
 	//统计vdatalist在不同分组中出现的频次,固定组距
-	bool GetGroupFrqu(const VStockData& vdatalist, map<float, int>& vfreqlist);
+	bool GetGroupFrqu(const VStockData& vdatalist, FreqListType& vfreqlist) const;
+// 	//统计vdatalist在不同分组中出现的频次,固定组距
+// 	bool GetGroupFrqu(const VStockData& vdatalist, map<float, int>& vfreqlist);
 	//计算对应值分组的下界，所有分组都以0为基准进行；
-	float GetTheGroupDownValue(const float value,const float stepsize);
+	float GetTheGroupDownValue(const float value, const float stepsize) const;
 	//
-	int GetFreqByValue(float _downValue, float _upValue);
+	int GetTheGroupIndex(const float value, const float stepsize) const;
 	//
-	//bool 
-
+	int GetFreqByValue(float _downValue, float _upValue, FreqListType _vfreqlist) const;
+	//
+	bool PushFreqData(float _downValue, FreqListType& vfreqlist) const ;
+	//
+	void SetEmptydate(FreqListType& vfreqlist) const;
 	float _stepsize;
+
+	int beginGroup;
+	int endGroup;
 
 	//const VStockData _vdatalist;
 
-	changeRateStatis _vfreqlist;
+	//changeRateStatis _vfreqlist;
 	//vector<Freq_OneGroup> vfreqlist;
 
 	

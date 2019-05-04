@@ -29,6 +29,7 @@ public:
 	//构造函数
 	CDate();
 	CDate(int year, int month, int day);
+	CDate(int year, int month, int day, int hour, int minute, int second);
 	//析构函数
 	~CDate();
 	//拷贝构造函数
@@ -45,7 +46,9 @@ public:
 	bool operator<=(const CDate& d)const; //<=
 
 
-	bool SetDay(string date);//设置日期
+	bool SetDay(const string& _date);//设置日期
+
+	bool SetTime(const string& _time);
 
 	CDate GetFrontWeekDay(int day, int week);//获得前几个星期的周几日期
 
@@ -73,9 +76,18 @@ public:
 	int _year;
 	int _month;
 	int _day;
+
+	int _hour;
+	int _minute;
+	int _second;
 private:
-	string dateTime;
+	string _strdate;
+	string _strTime;
 };
+
+
+
+
 
 
 #endif

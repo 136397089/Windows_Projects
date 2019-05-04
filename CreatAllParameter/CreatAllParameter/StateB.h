@@ -142,9 +142,9 @@ public:
 	StatePoint CloselyIntegralPoint(CDate index)const;
 	StatePoint CloselyLocalPoint(CDate index) const;
 	StatePoint CloselyTrendPoint(CDate index) const;
-	//
-	StatePoint CloselyPoint(CDate index, const StatePointsList& PointList) const;
-	StatePoint CloselyPoint(unsigned int index, const StatePointsList& PointList) const;
+	//通用的最近点函数
+	StatePoint VersatileCloselyPoint(CDate index, const StatePointsList& PointList) const;
+	StatePoint VersatileCloselyPoint(unsigned int index, const StatePointsList& PointList) const;
 };
 
 

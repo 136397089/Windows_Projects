@@ -207,6 +207,12 @@
     <ClInclude Include="MeanVariance.h">
       <Filter>Statistics</Filter>
     </ClInclude>
+    <ClInclude Include="Morphological.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="NumbersToSql.h">
+      <Filter>Mysql</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -352,6 +358,12 @@
     </ClCompile>
     <ClCompile Include="MeanVariance.cpp">
       <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="Morphological.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="NumbersToSql.cpp">
+      <Filter>Mysql</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

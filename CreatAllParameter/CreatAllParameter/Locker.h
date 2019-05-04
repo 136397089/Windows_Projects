@@ -2,17 +2,29 @@
 #define _LOCKER_H
 
 #include <windows.h>
-
-class CLocker
+#include <string>
+using namespace std;
+class CMutexLocker
 {
 public:
-	CLocker(const HANDLE& handleOfMutex, unsigned int time);
-	~CLocker();
+	CMutexLocker(const HANDLE& handleOfMutex, unsigned int time);
+	~CMutexLocker();
+	HANDLE CreateMutex(const string& MutexName);
 private:
-	CLocker();
+	CMutexLocker();
 	HANDLE _hMutex;
 };
 
+class CSectionLocker
+{
+public:
+	CSectionLocker(CRITICAL_SECTION* hSection);
+	~CSectionLocker();
+
+private:
+	CSectionLocker();
+	CRITICAL_SECTION* localSection;
+};
 
 
 

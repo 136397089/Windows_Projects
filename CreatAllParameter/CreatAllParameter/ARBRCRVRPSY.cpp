@@ -65,8 +65,7 @@ StockDataType CArBrCrVrPsy::GetCRMA(unsigned int maPara, list<StockDataType>& cr
 	StockDataType Sum = 0;
 	unsigned int j = 1;
 	list<StockDataType>::iterator currentIte = CR_List.begin();
-	while (currentIte != CR_List.end())
-	{
+	while (currentIte != CR_List.end()){
 		Sum += *currentIte;
 		if (j >= maPara)
 		{
@@ -239,8 +238,7 @@ StockDataType CArBrCrVrPsy::GetCR()
 			P1 = P1 + (currentIte->_High - YesterdayM);
 		if (YesterdayM > currentIte->_Low)
 			P2 = P2 + (YesterdayM - currentIte->_Low);
-		if (j >= CRParameter)
-		{
+		if (j >= CRParameter){
 			break;
 		}
 		currentIte++;

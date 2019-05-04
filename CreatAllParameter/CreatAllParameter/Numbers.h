@@ -20,7 +20,7 @@ public:
 	CNumbersCalculator();
 	~CNumbersCalculator();
 	//
-	bool GetAllNumbers(StockDataTable& datas);
+	bool GetAllNumbers(StockDataTable& datas,const string& dataType);
 	
 private:
 	void PushBackIndex(const SigDayTechIndex& AllIndex, StockDataTable& datas);

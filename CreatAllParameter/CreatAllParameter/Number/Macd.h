@@ -9,7 +9,7 @@
 
 
 using namespace std;
-class CMacdManager;
+class CMacdCal;
 
 //////////////////////////////////////////////////////////////////////////
 //MACD
@@ -41,11 +41,11 @@ public:
 //
 //
 //////////////////////////////////////////////////////////////////////////
-class CMacdManager// : public CNumberManager
+class CMacdCal// : public CNumberManager
 {
 public:
-	CMacdManager(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m);
-	~CMacdManager(void);
+	CMacdCal(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m);
+	~CMacdCal(void);
 
 	//////////////////////////////////////////////////////////////////////////
 	//通过前日的MACD获得今日的MACD值

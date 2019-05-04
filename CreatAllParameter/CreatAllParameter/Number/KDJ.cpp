@@ -4,18 +4,18 @@
 #include "KDJ.h"
 
 using namespace std;
-CKDJ::CKDJ(StockDataType day1, StockDataType day2, StockDataType day3)
+CKDJCal::CKDJCal(StockDataType day1, StockDataType day2, StockDataType day3)
 	:_Nday(day1),
 	_M1(day2),
 	_M2(day3)
 { 
 }
 
-CKDJ::~CKDJ(void)
+CKDJCal::~CKDJCal(void)
 {
 }
 
-bool CKDJ::GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ)
+bool CKDJCal::GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ)
 {
 	if (_lHigh.size() != _lLow.size() || _lHigh.size() != _lClose.size())
 		return false;
@@ -154,14 +154,14 @@ bool CKDJ::GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ)
 // 
 // }
 
-void CKDJ::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
+void CKDJCal::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
 {
 	mList.push_back(mdata);
 	if (mList.size() > msize)
 		mList.pop_front();
 }
 
-void CKDJ::Inition()
+void CKDJCal::Inition()
 {
 	_lHigh.clear();
 	_lLow.clear();

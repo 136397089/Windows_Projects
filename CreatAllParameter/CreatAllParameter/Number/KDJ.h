@@ -25,12 +25,13 @@ public:
 //
 //
 //////////////////////////////////////////////////////////////////////////
-class CKDJ 
+class CKDJCal 
 	//public CNumberManager
 {
+	friend class CNumbersToSql;
 public:
-	CKDJ(StockDataType day1, StockDataType day2, StockDataType day3);
-	~CKDJ(void);
+	CKDJCal(StockDataType day1, StockDataType day2, StockDataType day3);
+	~CKDJCal(void);
 // 	//////////////////////////////////////////////////////////////////////////
 // 	//更新目录下所有CSV文件里的KDJ值(数据按列排)
 // 	//strPath:目录路径
@@ -53,7 +54,7 @@ public:
 	bool GetNextKDJ(const DatePriceData& OneDayData, KDJ& mFrontKDJ);
 	void Inition();
 private:
-	CKDJ();
+	CKDJCal();
 	void StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList);
 	list<StockDataType> _lHigh;
 	list<StockDataType> _lLow;

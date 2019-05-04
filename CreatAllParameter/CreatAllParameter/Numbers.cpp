@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "Numbers.h"
-
+#include "NumbersToSql.h"
 CNumbersCalculator::CNumbersCalculator()
 {
 }
@@ -10,34 +10,36 @@ CNumbersCalculator::~CNumbersCalculator()
 {
 }
 
-bool CNumbersCalculator::GetAllNumbers(StockDataTable& datas)
+bool CNumbersCalculator::GetAllNumbers(StockDataTable& stockdatas,const string& dataType)
 {
 	//计算类
 	CChagRate hPriChaRate;
 	CChagRate hVolChaRate;
-	CMacdManager hMacd(12, 26, 9);
-	CDMA hDMA;
-	CTRIX hTRIX;
-	CKDJ hKDJ(9, 3, 3);
-	CAsi hAsi;
-	CCDP hCdp;
+	CMacdCal hMacd(12, 26, 9);
+	CDMACal hDMA;
+	CTRIXCal hTRIX;
+	CKDJCal hKDJ(9, 3, 3);
+	CAsiCal hAsi;
+	CCDPCal hCdp;
 	CDMI hDmi;
-	CMa hma(5, 10, 20, 60);
-	CEMV hemv;
+	CMaCal hma(5, 10, 20, 60);
+	CEMVCal hemv;
 	CArBrCrVrPsy ArBrVrPsy;
+	//
+	CNumbersToSql sqlTool;
 	//结果输出
 	SigDayTechIndex currentIndex;
 	//一天的价格
 	DatePriceData thisDayPrice;
 	//要遍历的所有数据
-	vector<string>::const_iterator dayIte = datas._vTimeDay.begin();
-	VStockData::const_iterator closeite = datas._vClose.begin();
-	VStockData::const_iterator highite = datas._vHigh.begin();
-	VStockData::const_iterator lowite = datas._vLow.begin();
-	VStockData::const_iterator openite = datas._vOpen.begin();
-	VStockData::const_iterator volite = datas._vVolume.begin();
+	vector<string>::const_iterator dayIte = stockdatas._vTimeDay.begin();
+	VStockData::const_iterator closeite = stockdatas._vClose.begin();
+	VStockData::const_iterator highite = stockdatas._vHigh.begin();
+	VStockData::const_iterator lowite = stockdatas._vLow.begin();
+	VStockData::const_iterator openite = stockdatas._vOpen.begin();
+	VStockData::const_iterator volite = stockdatas._vVolume.begin();
 	//1.1计算指标
-	while (closeite != datas._vClose.end() && lowite != datas._vLow.end() && highite != datas._vHigh.end())
+	while (closeite != stockdatas._vClose.end() && lowite != stockdatas._vLow.end() && highite != stockdatas._vHigh.end())
 	{
 		//1.1
 		thisDayPrice._Close = *closeite;
@@ -55,21 +57,36 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& datas)
 		++volite;
 		//1.3计算指标
 		hMacd.GetNextMacd(thisDayPrice, currentIndex._MacdData);
-		hDMA.GetNextDMA(thisDayPrice, currentIndex._DMAData);
-		hTRIX.GetNextTRIX(thisDayPrice, currentIndex._TrixData);
+		//hDMA.GetNextDMA(thisDayPrice, currentIndex._DMAData);
+		//hTRIX.GetNextTRIX(thisDayPrice, currentIndex._TrixData);
 		hKDJ.GetNextKDJ(thisDayPrice, currentIndex._Kdj);
 		hAsi.GetNextASI(thisDayPrice, currentIndex._Asi);
-		hCdp.GetNextCDP(thisDayPrice, currentIndex._Cdp);
-		hDmi.GetNextDMI(thisDayPrice, currentIndex._Dmi);
+		//hCdp.GetNextCDP(thisDayPrice, currentIndex._Cdp);
+		//hDmi.GetNextDMI(thisDayPrice, currentIndex._Dmi);
 		hma.GetNextMa(thisDayPrice, currentIndex._Ma);
 		ArBrVrPsy.GetNextArBrVrPsy(thisDayPrice, currentIndex._ArBrVrPsy);
 		hPriChaRate.GetNextChangeRate(thisDayPrice._Close, currentIndex._Pchangerate);
 		hVolChaRate.GetNextChangeRate(thisDayPrice._Volume, currentIndex._Volchagrate);
-		hemv.GetNextEmv(thisDayPrice, currentIndex._Emv);
+		if (dataType == "day" && thisDayPrice.mDate._year >= 2018)
+		{
+			sqlTool.InsertData(stockdatas._strStockCode, dataType,
+				thisDayPrice.mDate,currentIndex._MacdData);
+			sqlTool.InsertData(stockdatas._strStockCode, dataType,
+				thisDayPrice.mDate, currentIndex._Kdj, hKDJ);
+		}
+		if (dataType == "day")
+		{
+			DayHLCOV temphlcov(thisDayPrice._Open, thisDayPrice._High, thisDayPrice._Low, thisDayPrice._Close, thisDayPrice._Volume);
+			sqlTool.InsertData(stockdatas._strStockCode, dataType, thisDayPrice.mDate, temphlcov);
+		}
+		//hemv.GetNextEmv(thisDayPrice, currentIndex._Emv);
 		//1.4保存计算完的各类指标数据到对应的Vector当中
-		PushBackIndex(currentIndex, datas);
+		PushBackIndex(currentIndex, stockdatas);
 	}
-	datas.SetDate();
+	sqlTool.SaveMACDCacheData();
+ 	sqlTool.SaveKDJCacheData();
+	sqlTool.SaveDayCacheData();
+	stockdatas.SetDate();
 	return true;
 }
 

@@ -3,24 +3,46 @@
 
 
 
-CLocker::CLocker(const HANDLE& handleOfMutex, unsigned int timeOut)
+CMutexLocker::CMutexLocker(const HANDLE& handleOfMutex, unsigned int timeOut)
 {
-	if (!handleOfMutex)
+	_hMutex = NULL;
+	if (handleOfMutex != NULL)
 	{
 		_hMutex = handleOfMutex;
 		WaitForSingleObject(handleOfMutex, timeOut);
 	}
 }
 
-CLocker::CLocker()
+CMutexLocker::CMutexLocker()
 {
-	if (!_hMutex)
-	{
-		ReleaseMutex(_hMutex);
-		_hMutex = nullptr;
-	}
 }
 
-CLocker::~CLocker()
+CMutexLocker::~CMutexLocker()
 {
+	if (NULL != _hMutex)
+	{
+		ReleaseMutex(_hMutex);
+		_hMutex = NULL;
+	}
+
+}
+
+HANDLE CMutexLocker::CreateMutex(const string& MutexName)
+{
+	HANDLE _StockCSVFileMutex = CreateMutex( "StockCSVFileMutex");
+	return _StockCSVFileMutex;
+}
+
+CSectionLocker::CSectionLocker(CRITICAL_SECTION* hSection)
+{
+	if (NULL == hSection)
+		return;
+	localSection = hSection;
+	EnterCriticalSection(hSection);
+}
+
+CSectionLocker::~CSectionLocker()
+{
+	LeaveCriticalSection(localSection);
+	localSection = NULL;
 }

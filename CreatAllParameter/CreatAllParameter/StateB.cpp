@@ -149,45 +149,45 @@ IndexList StateTable::GetTrendStateIndex() const
 
 StatePoint StateTable::CloselyStaticPoint(unsigned int index) const
 {
-	return CloselyPoint(index,_staticstate);
+	return VersatileCloselyPoint(index,_staticstate);
 }
 
 StatePoint StateTable::CloselyStaticPoint(CDate index) const
 {
-	return CloselyPoint(index, _staticstate);
+	return VersatileCloselyPoint(index, _staticstate);
 }
 
 StatePoint StateTable::CloselyLocalPoint(unsigned int index) const
 {
-	return CloselyPoint(index, _localstate);
+	return VersatileCloselyPoint(index, _localstate);
 }
 
 StatePoint StateTable::CloselyLocalPoint(CDate index) const
 {
-	return CloselyPoint(index, _localstate);
+	return VersatileCloselyPoint(index, _localstate);
 }
 
 StatePoint StateTable::CloselyTrendPoint(unsigned int index) const
 {
-	return CloselyPoint(index, _trendstate);
+	return VersatileCloselyPoint(index, _trendstate);
 }
 
 StatePoint StateTable::CloselyTrendPoint(CDate index) const
 {
-	return CloselyPoint(index, _trendstate);
+	return VersatileCloselyPoint(index, _trendstate);
 }
 
 StatePoint StateTable::CloselyIntegralPoint(unsigned int index) const
 {
-	return CloselyPoint(index, _staticIng);
+	return VersatileCloselyPoint(index, _staticIng);
 }
 
 StatePoint StateTable::CloselyIntegralPoint(CDate index) const
 {
-	return CloselyPoint(index, _staticIng);
+	return VersatileCloselyPoint(index, _staticIng);
 }
 
-StatePoint StateTable::CloselyPoint(CDate index, const StatePointsList& PointList) const
+StatePoint StateTable::VersatileCloselyPoint(CDate index, const StatePointsList& PointList) const
 {
 	StatePoint frontPoint;
 	StatePoint laterPoint;
@@ -219,7 +219,7 @@ StatePoint StateTable::CloselyPoint(CDate index, const StatePointsList& PointLis
 	return frontPoint;
 }
 
-StatePoint StateTable::CloselyPoint(unsigned int index, const StatePointsList& PointList) const
+StatePoint StateTable::VersatileCloselyPoint(unsigned int index, const StatePointsList& PointList) const
 {
 	StatePoint frontPoint;
 	StatePoint laterPoint;
@@ -230,7 +230,7 @@ StatePoint StateTable::CloselyPoint(unsigned int index, const StatePointsList& P
 	if (PointList.size() == 0)//没有数据可以返回
 		return frontPoint;
 	if (index <= PointList[frontIndex]._TimeIndex)//Index在第一个数据之前
-		return frontPoint;
+		return PointList[0];
 	if (PointList[laterIndex]._TimeIndex <= index)//Index在最后一个数据之后
 		return PointList[laterIndex];
 	if (PointList.size() == 1)//只有一个数据可以返回
@@ -240,7 +240,7 @@ StatePoint StateTable::CloselyPoint(unsigned int index, const StatePointsList& P
 	{
 		frontPoint = PointList[i - 1];
 		laterPoint = PointList[i];
-		if (index >= frontPoint._TimeIndex && index < laterPoint._TimeIndex)
+		if (frontPoint._TimeIndex <= index && index < laterPoint._TimeIndex)
 			break;
 		if (frontPoint._TimeIndex > laterPoint._TimeIndex)
 		{

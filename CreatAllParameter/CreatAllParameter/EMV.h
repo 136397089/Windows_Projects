@@ -11,11 +11,11 @@ struct EMV
 	EMV():emv(0),emvma(0),TemporaryVariable(1),highToLowMa(1){}
 };
 
-class CEMV
+class CEMVCal
 {
 public:
-	CEMV();
-	~CEMV();
+	CEMVCal();
+	~CEMVCal();
 	void Inition();
 	bool GetNextEmv(const DatePriceData& OneDayData,EMV& _data);
 	unsigned int EMVPara;

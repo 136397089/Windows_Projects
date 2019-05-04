@@ -3,7 +3,7 @@
 #include "TRIX.h"
 
 
-CTRIX::CTRIX()
+CTRIXCal::CTRIXCal()
 {
 	_ParameterN = 18;
 	_ParameterM = 28;
@@ -16,11 +16,11 @@ CTRIX::CTRIX()
 }
 
 
-CTRIX::~CTRIX()
+CTRIXCal::~CTRIXCal()
 {
 }
 
-void CTRIX::GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix)
+void CTRIXCal::GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix)
 {
 // 	_vTrix.push_back(mTrix);
 	TRIX FrontTrix;
@@ -45,7 +45,7 @@ void CTRIX::GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix)
 
 }
 
-float CTRIX::GetEMA(const list<StockDataType>& dataList)
+float CTRIXCal::GetEMA(const list<StockDataType>& dataList)
 {
 	float addIn = 0;
 	list<StockDataType>::const_iterator ite = dataList.begin();
@@ -60,7 +60,7 @@ float CTRIX::GetEMA(const list<StockDataType>& dataList)
 	return addIn / iAdd;
 }
 
-void CTRIX::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
+void CTRIXCal::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
 {
 	mList.push_back(mdata);
 	if (mList.size() > msize)

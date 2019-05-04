@@ -2,6 +2,9 @@
 #include <iomanip>
 #include <string>
 #include <map>
+#include <stdio.h>
+#include <stdlib.h>
+#include "../glog/logging.h"
 #include "NumberBase.h"
 #include "../Locker.h"
 
@@ -43,7 +46,8 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 	{
 		return Tagevalue;
 	}
-	StringList TittleValues = CutString(linestring, Separator);
+	StringList TittleValues;
+	CutString(linestring, Separator, TittleValues);
 
 	unsigned int index = 0;
 	for (StringList::iterator ite = TittleValues.begin(); ite != TittleValues.end(); ite++)
@@ -58,7 +62,8 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 
 	while(getline(file,linestring))
 	{
-		StringList StockValues = CutString(linestring, Separator);
+		StringList StockValues;
+		CutString(linestring, Separator, StockValues);
 		if (StockValues.size() < index)
 		{
 			break;
@@ -112,7 +117,8 @@ void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string
 	//如果找到写入的目标列，则修改原数据
 	else
 	{
-		StringList vAllTittle = CutString(buffer[0], Separator);
+		StringList vAllTittle;
+		CutString(buffer[0], Separator, vAllTittle);
 		if (vAllTittle.size()<4)
 		{
 			return;
@@ -134,7 +140,8 @@ void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string
 		//修改对应的列数据
 		for (k=1; k<i;k++)
 		{
-			StringList vIndexData = CutString(buffer[k], Separator);
+			StringList vIndexData;
+			CutString(buffer[k], Separator, vIndexData);
 			if (TageTittle >= vIndexData.size())
 			{
 				return;
@@ -184,7 +191,8 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 		return Tagevalue;//说明找不到对应的目标行数据
 	}
 
-	StringList TittleValues = CutString(linestring, Separator);//每行都是用','分割各个数据
+	StringList TittleValues;
+	CutString(linestring, Separator, TittleValues);//每行都是用','分割各个数据
 	if (TittleValues.size()<3)
 	{
 		return Tagevalue;//找到的行数据太少
@@ -203,7 +211,7 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 //////////////////////////////////////////////////////////////////////////
 void CNumberBase::ReSavefileRanksBegin(string FilePath)
 {
-	CLocker(_StockCSVFileMutex, INFINITE);
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(), ios::in);
 	string fileLineStringg;
 	//将文件全部内容读出到buffer[]数据中
@@ -221,7 +229,7 @@ void CNumberBase::ReSavefileRanksBegin(string FilePath)
 //////////////////////////////////////////////////////////////////////////
 void CNumberBase::ReSavefileRanksEnd(string FilePath)
 {
-	CLocker(_StockCSVFileMutex, INFINITE);
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	fstream outfile(FilePath.c_str(), ios::out | ios::app);
 	for (unsigned int lineNumber = 0; lineNumber < newBuffer.size(); lineNumber++)
 	{
@@ -240,7 +248,7 @@ void CNumberBase::ReSavefileRanksEnd(string FilePath)
 //////////////////////////////////////////////////////////////////////////
 void CNumberBase::ReSavefileRanks(string FilePath, const  VStockData& vNewValue, string tittle)
 {
-	CLocker(_StockCSVFileMutex, INFINITE);
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
 	{//如果tittle已经存在于数据当中，则不将当前数据加入到buffer当中，返回
 		if (buffer[lineNumber].find(tittle) != string::npos && buffer[lineNumber].find(Separator) == tittle.size())
@@ -257,7 +265,7 @@ void CNumberBase::ReSavefileRanks(string FilePath, const  VStockData& vNewValue,
 
 void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle)
 {
-	CLocker(_StockCSVFileMutex, INFINITE);
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
 	{//如果tittle已经存在于数据当中，则不将当前数据加入到buffer当中，返回
 		if (buffer[lineNumber].find(tittle) != string::npos && buffer[lineNumber].find(Separator) == tittle.size())
@@ -274,7 +282,7 @@ void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewVal
 
 void CNumberBase::ReSavefileRanks(string FilePath, const map<string, StockDataType>& vNewValue)
 {
-	CLocker(_StockCSVFileMutex, INFINITE);
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	ostringstream  tittleoss;
 	ostringstream  dataoss;
 	for (map<string, StockDataType>::const_iterator ite = vNewValue.begin(); ite != vNewValue.end(); ite++)
@@ -284,6 +292,18 @@ void CNumberBase::ReSavefileRanks(string FilePath, const map<string, StockDataTy
 	}
 	newBuffer.push_back(tittleoss.str());
 	newBuffer.push_back(dataoss.str());
+}
+
+void CNumberBase::ReSavefileRanks(string FilePath, const FreqListType& vNewValue)
+{
+	CMutexLocker(_StockCSVFileMutex, INFINITE);
+	ostringstream  dataoss;
+	for (FreqListType::const_iterator ite = vNewValue.begin(); ite != vNewValue.end(); ite++)
+	{
+		dataoss << ite->second << ",";
+	}
+	newBuffer.push_back(dataoss.str());
+
 }
 
 
@@ -309,7 +329,7 @@ StringList CNumberBase::ReadDataFromClickBoardRanks()
 				return resivedata;
 			}
 			string tempstring(lpStr);
-			resivedata = CutString(tempstring, "\n");
+			CutString(tempstring, "\n", resivedata);
 		}
 		CloseClipboard();
 	}
@@ -327,7 +347,7 @@ StringBlock CNumberBase::ReadDataFromClickBoardAndCutRanks()
 	for (StringList::iterator ite = Tempdata.begin(); ite != Tempdata.end(); ite++)
 	{
 		LineData.clear();
-		LineData = CutString(*ite, "\t");
+		CutString(*ite, "\t", LineData);
 		ReturnData.push_back(LineData);
 	}
 	ShowDebugInformationInCon("endof ReadDataFromClickBoardAndCut");
@@ -420,22 +440,54 @@ void CNumberBase::RunTread(string filePath)
 
 StringList CNumberBase::ReadDataFromCSVFileRanks(const string& fullFilePath)
 {
-	VStockData Tagevalue;
 	string linestring;
-	ifstream file;
-	file.open(fullFilePath.c_str());
 	StringList strAllData;
 	strAllData.clear();
-	if (!file)
-	{
-		cerr << "file open fail" << endl;
+// 	ifstream file;
+// 	file.open(fullFilePath.c_str());
+// 	if (!file)
+// 	{
+// 		cerr << "Error opening file.Make sure the file exists." << endl;
+// 		system("pause");
+// 		exit(-1);
+// 	}
+// 	//getline(file, linestring);//在文件中第一行是日期，可以不用查找
+// 	while (getline(file, linestring))//第二行开始才是数据
+// 	{
+// 		strAllData.push_back(linestring);
+// 	}
+	FILE *pfile;
+	fopen_s(&pfile, fullFilePath.c_str(), "r");
+	if (NULL == pfile){
+		LOG(ERROR) << "Open data file error.";
+		return strAllData;
 		exit(-1);
 	}
-	//getline(file, linestring);//在文件中第一行是日期，可以不用查找
-	while (getline(file, linestring))//第二行开始才是数据
+	char v;
+	char buffer[1000000];
+	int i = 0;
+	while (1)
 	{
-		strAllData.push_back(linestring);
+		if (feof(pfile))
+			break;
+		if (1 == fscanf_s(pfile, "%c", &v)){
+			if (10 == v)//如果是换行符
+			{
+				buffer[i] = 0;
+				linestring = buffer;
+				strAllData.push_back(linestring);
+				i = 0;
+				continue;
+			}
+			buffer[i] = v;
+			i++;
+			if (i >= 100000)
+				break;
+		}
+		else
+			fscanf_s(pfile, "%*c", buffer);
 	}
+	fclose(pfile);
 	return strAllData;
 }
 
@@ -450,7 +502,7 @@ StringBlock CNumberBase::ReadDataFromCSVFileAndCutRanks(const string& fullFilePa
 	StringList vOneLinedata;
 	for (StringList::iterator ite = vLineData.begin(); ite != vLineData.end(); ite++)
 	{
-		vOneLinedata = CutString(*ite, strCutIndex);
+		CutString(*ite, strCutIndex, vOneLinedata);
 		ReturnData.push_back(vOneLinedata);
 		vOneLinedata.clear();
 	}

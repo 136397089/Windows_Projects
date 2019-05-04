@@ -2,7 +2,7 @@
 #include "EMV.h"
 #include "glog/logging.h"
 
-CEMV::CEMV()
+CEMVCal::CEMVCal()
 {
 	EMVPara = 14;
 	MaPara = 9;
@@ -13,11 +13,11 @@ CEMV::CEMV()
 }
 
 
-CEMV::~CEMV()
+CEMVCal::~CEMVCal()
 {
 }
 
-bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
+bool CEMVCal::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 {
 	if (RecordData.size() == 0)
 	{
@@ -65,7 +65,7 @@ bool CEMV::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 	return true;
 }
 
-void CEMV::Inition()
+void CEMVCal::Inition()
 {
 	frontEMVSum = 0;
 	frontHighDivideLowSum = 0;

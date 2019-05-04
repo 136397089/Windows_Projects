@@ -1,5 +1,7 @@
 #include "stdafx.h"
 #include "DateTool.h"
+#include <iostream>
+using namespace std;
 
 CDate::CDate()
 {
@@ -11,6 +13,11 @@ CDate::CDate(int year, int month, int day)
 	_year = year;
 	_month = month;
 	_day = day;
+	_hour = 0;
+	_minute = 0;
+	_second = 0;
+	_strdate = "";
+	_strTime = "";
 }
 //析构函数
 CDate::~CDate()
@@ -23,8 +30,23 @@ CDate::CDate(const CDate& d)//必须传引用，传值会引发无穷递归调用
 	_year = d._year;
 	_month = d._month;
 	_day = d._day;
-	dateTime = d.dateTime;
+	_strdate = d._strdate;
+	_hour = d._hour;
+	_minute = d._minute;
+	_second = d._second;
+	_strTime = d._strTime;
 }
+
+CDate::CDate(int year, int month, int day, int hour, int minute, int second)
+{
+	_year = year;
+	_month = month;
+	_day = day;
+	_hour = hour;
+	_minute = minute;
+	_second = second;
+}
+
 //赋值重载
 CDate& CDate::operator=(const CDate& d)
 {
@@ -33,10 +55,14 @@ CDate& CDate::operator=(const CDate& d)
 		this->_year = d._year;
 		this->_month = d._month;
 		this->_day = d._day;
+		this->_strdate = d._strdate;
+		this->_hour = d._hour;
+		this->_minute = d._minute;
+		this->_second = d._second;
+		this->_strTime = d._strTime;
 	}
 	return *this;
 }
-
 
 bool CDate::operator ==(const CDate& d)const//判断两个日期相等
 {
@@ -205,42 +231,58 @@ int CDate::operator-(const CDate& d) // 两个日期相隔天数
 	return day*flags;
 }
 
-bool CDate::SetDay(string date)
+bool CDate::SetDay(const string& _date)
 {
-	StringList vtimelist;
-	vtimelist.clear();
-	dateTime = date;
-	if (date.size() < 8)
+	StringList vstringlist;
+	vstringlist.clear();
+	string _time;
+	string tempdate = _date;
+	if (tempdate.size() < 8)
 	{
 		return false;
 	}
-	if (date.find("-") > 0 && date.find("-") < 20)
+	//处理有小时和分钟的情况
+	if (tempdate.find(" ") > 0 && tempdate.find(" ") < 20)
 	{
-		vtimelist = CutString(date, "-");
-		if (vtimelist.size() != 3)
+		CutString(tempdate, " ", vstringlist);
+		if (vstringlist.size()!=2)
 		{
+			cout << "Time string error"<<endl;
+			system("pause");
+			exit(-1);
 			return false;
 		}
+		SetTime(vstringlist[1]);
+		tempdate = vstringlist[0];
+		vstringlist.clear();
 	}
-	else if (date.find("/") > 0 && date.find("/") < 20)
-	{
-		vtimelist = CutString(date, "/");
-		if (vtimelist.size() != 3)
-		{
-			return false;
-		}
-	}
-	else if (date.size() == 8)
-	{
-		vtimelist.push_back(date.substr(0, 4));
-		vtimelist.push_back(date.substr(4, 2));
-		vtimelist.push_back(date.substr(6, 4));
-	}
-	_year = atoi(vtimelist[0].c_str());
-	_month = atoi(vtimelist[1].c_str());
-	_day = atoi(vtimelist[2].c_str());
 
-	int week = GetWeekDay();
+	if (tempdate.find("-") > 0 && tempdate.find("-") < 20)
+	{
+		CutString(tempdate, "-", vstringlist);
+		if (vstringlist.size() != 3)
+		{
+			return false;
+		}
+	}
+	else if (tempdate.find("/") > 0 && tempdate.find("/") < 20)
+	{
+		CutString(tempdate, "/", vstringlist);
+		if (vstringlist.size() != 3)
+		{
+			return false;
+		}
+	}
+	else if (tempdate.size() == 8)
+	{
+		vstringlist.push_back(tempdate.substr(0, 4));
+		vstringlist.push_back(tempdate.substr(4, 2));
+		vstringlist.push_back(tempdate.substr(6, 4));
+	}
+	_year = atoi(vstringlist[0].c_str());
+	_month = atoi(vstringlist[1].c_str());
+	_day = atoi(vstringlist[2].c_str());
+	_strdate = tempdate;
 	return true;
 }
 
@@ -282,3 +324,35 @@ int CDate::GetMonth()
 {
 	return _month;
 }
+
+bool CDate::SetTime(const string& _time)
+{
+	string temptime = _time;
+	if (temptime.size()<3){
+		cout << "time string error.";
+		system("pause");
+		exit(-1);
+		return false;
+	}
+	StringList timelist;
+	if (temptime.find(":") > 0 && temptime.find(":") < 20){
+		CutString(temptime, ":", timelist);
+		if (timelist.size() == 2){
+			_hour = atoi(timelist[0].c_str());
+			_minute = atoi(timelist[1].c_str());
+		}
+		else if (timelist.size() == 3){
+			_hour = atoi(timelist[0].c_str());
+			_minute = atoi(timelist[1].c_str());
+			_second = atoi(timelist[2].c_str());
+		}
+		else
+			return false;
+	}
+	else
+		return false;
+	_strTime = _time;
+	return true;
+}
+
+

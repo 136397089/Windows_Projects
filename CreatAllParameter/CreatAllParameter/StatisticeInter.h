@@ -23,14 +23,19 @@ public:
 	//
 	bool Inition();
 	//
-	bool StatisticeDebugFunstion(
+	bool StatisticeHistoryData(
 		const StockDataTable& daynumber,
 		const StockDataTable& weeknumber,
 		const StockDataTable& mounthnumber,
+		const StockDataTable& shnumber,
 		CStateInter& daystate,
 		CStateInter& weekstate,
 		CStateInter& monthstate,
 		string Stockcode);
+	bool StatisticeASIData(
+		const StockDataTable& daynumber,
+		CStateInter& daystate,
+		const string& Stockcode);
 	//
 	bool Inter(const StockDataTable& daynumber,
 		const StockDataTable& weeknumber,
@@ -39,9 +44,6 @@ public:
 		CStateInter& weekstate,
 		CStateInter& monthstate);
 	//
-	bool GroupFreqStatistice(
-		const StockDataTable& daynumber,
-		CStateInter& stateinter);
 	//
 	bool MACD_EDA_Statistice(
 		const StockDataTable& allnumber,
@@ -75,10 +77,15 @@ public:
 		unsigned int interval);
 	//unsigned int GetIndexFromTimeList(vector<string> _vTimeDay, string time1);
 	//
+	bool SaveMeanVarList_CS(
+		const string& Stockcoed,
+		const MeanVar& _lastMeanVar,
+		const MeanVar& _allDataMeanVar);
 	map<string, StockDataType> filterDataVarList;
 	map<string, StockDataType> filterDataMeanList;
 	map<string, StockDataType> allDataVarList;
 	map<string, StockDataType> allDataMeanList;
+	FreqListType _FreqList;
 private:
 	string _LastError;
 	const unsigned int moveVarDaySize;
@@ -97,6 +104,27 @@ void CStatisticeInter::GroupStatistice(
 	}
 }
 
+class CRealTimeAna
+{
+public:
+	CRealTimeAna();
+	~CRealTimeAna();
 
+	bool AnalysisRealTimeData(const StockDataTable& number,string stockCode);
+private:
+
+};
+//
+static void CheckCurrentStockDataAndGetName(
+	const StockDataTable& AnaNumber,
+	const StockDataTable& mounthnumber,
+	const MeanVar& allDataMeanVar,
+	unsigned int Currentindex,
+	unsigned int monthIndex,
+	const string& StockCode);
+//
+bool GroupFreqStatistice(
+	const StockDataTable& daynumber,
+	CStateInter& stateinter);
 
 #endif

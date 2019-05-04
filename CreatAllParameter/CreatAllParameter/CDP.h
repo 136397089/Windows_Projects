@@ -11,11 +11,11 @@ struct CDP
 	StockDataType _NL_NormalLow;
 
 };
-class CCDP// :public CNumberManager
+class CCDPCal// :public CNumberManager
 {
 public:
-	CCDP();
-	~CCDP();
+	CCDPCal();
+	~CCDPCal();
 	//////////////////////////////////////////////////////////////////////////
 	//更新目录下所有CSV文件里的MACD值(数据按列排)
 	//strPath:目录路径

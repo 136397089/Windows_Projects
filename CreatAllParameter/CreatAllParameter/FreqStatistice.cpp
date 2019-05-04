@@ -2,9 +2,12 @@
 #include <math.h>
 #include "FreqStatistice.h"
 
-#define MINSTEPSIZE 0.0001
+#define MINSTEPSIZE 0.00001f
 CFreqStatistice::CFreqStatistice():
-_stepsize(0)
+_stepsize(0.05f),
+beginGroup(-220),
+endGroup(220)
+
 {
 }
 
@@ -15,19 +18,16 @@ CFreqStatistice::~CFreqStatistice()
 
 bool CFreqStatistice::Inition()
 {
-	_vfreqlist.clear();
 	return true;
 }
 
-bool CFreqStatistice::GetGroupFrqu(const VStockData& vdatalist, const float groupsize, changeRateStatis& vfreqlist)
+bool CFreqStatistice::GetGroupFrqu(const VStockData& vdatalist, FreqListType& vfreqlist)const
 {
 
-	if (groupsize <= 0 || groupsize > -MINSTEPSIZE && groupsize < MINSTEPSIZE)
+	if (_stepsize <= 0 || _stepsize > -MINSTEPSIZE && _stepsize < MINSTEPSIZE)
 		return false;
-	_vfreqlist.clear();
 	vfreqlist.clear();
 
-	_stepsize = groupsize;
 
 	for (unsigned int i = 0; i < vdatalist.size(); i++)
 	{
@@ -35,26 +35,29 @@ bool CFreqStatistice::GetGroupFrqu(const VStockData& vdatalist, const float grou
 		float downValus = GetTheGroupDownValue(vdatalist[i], _stepsize);
 		vfreqlist[downValus]++;
 	}
-	_vfreqlist = vfreqlist;
 	return true;
 }
 
 
 //计算对应值分组的下界，所有分组都以0为基准进行；
-float CFreqStatistice::GetTheGroupDownValue(const float value, const float stepsize)
+float CFreqStatistice::GetTheGroupDownValue(const float value, const float stepsize)const
 {
-	//限制stepsize的最小值
-	if (stepsize <= 0 || stepsize>-MINSTEPSIZE && stepsize < MINSTEPSIZE)
-		return 0.0f;
-	int groupindex = floor(value / stepsize);
-	if (value < 0)
-		groupindex--;
-
-	return (stepsize * groupindex);
+	return (stepsize * GetTheGroupIndex(value, stepsize));
 }
 
 
-int CFreqStatistice::GetFreqByValue(float _downValue, float _upValue)
+int CFreqStatistice::GetTheGroupIndex(const float value, const float stepsize) const
+{
+	//限制stepsize的最小值
+	if (stepsize <= 0 || stepsize > -MINSTEPSIZE && stepsize < MINSTEPSIZE)
+		return 0.0f;
+	int groupindex = floor(value / stepsize);
+// 	if (value < 0)
+// 		groupindex -=1;
+	return groupindex;
+}
+
+int CFreqStatistice::GetFreqByValue(float _downValue, float _upValue, FreqListType _vfreqlist) const
 {
 	float downKey = GetTheGroupDownValue(_downValue, _stepsize);
 	float upKey = GetTheGroupDownValue(_upValue, _stepsize);
@@ -64,6 +67,24 @@ int CFreqStatistice::GetFreqByValue(float _downValue, float _upValue)
 			freq += ite->second;
 
 	return freq;
+}
+
+bool CFreqStatistice::PushFreqData(float _dValue, FreqListType& vfreqlist)const
+{
+	if (_stepsize <= 0 || _stepsize > -MINSTEPSIZE && _stepsize < MINSTEPSIZE)
+		return false;
+	float downValus = GetTheGroupDownValue(_dValue, _stepsize);
+	vfreqlist[downValus]++;
+	return true;
+}
+
+void CFreqStatistice::SetEmptydate(FreqListType& vfreqlist) const
+{
+	for (int i = beginGroup; i <= endGroup;i++)
+	{
+		if (vfreqlist.count(i*_stepsize) == 0)
+			vfreqlist[i*_stepsize] = 0;
+	}
 }
 
 

@@ -14,11 +14,11 @@ struct ASI/*:public IndexBaseType*/
 // 		return *this;
 // 	}
 };
-class CAsi// :public CNumberManager
+class CAsiCal// :public CNumberManager
 {
 public:
-	CAsi();
-	~CAsi();
+	CAsiCal();
+	~CAsiCal();
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//

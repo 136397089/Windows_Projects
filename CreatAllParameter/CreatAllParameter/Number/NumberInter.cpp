@@ -48,7 +48,7 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 	StringList vSigLinedata;
 	for (StringList::iterator ite = lineString.begin(); ite != lineString.end(); ite++)
 	{
-		vSigLinedata = CutString(*ite, ",");
+		CutString(*ite, ",", vSigLinedata);
 		AllString.push_back(vSigLinedata);
 		vSigLinedata.clear();
 	}
@@ -59,6 +59,7 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 	{
 		cout << "Error:Can not do.";
 	}
+
 }
 
 
@@ -67,7 +68,9 @@ bool CNumberInterface::GetDataAndNumber(const string& filename, const string& Fi
 	//清除上次分析的文件所有指标数据
 	mDayValue.clear();
 	//从文件中读出需要的数据
+	LOG(ERROR) << "Read Data begin." ;
 	RaedDateFromFile(FilePath + "\\" + filename);
+	LOG(ERROR) << "Read Data finish.";
 	if (!mDayValue.ChackDataSize())
 	{
 		LOG(ERROR) << "NumberAll error: size of data read from file is not equal.";
@@ -77,19 +80,33 @@ bool CNumberInterface::GetDataAndNumber(const string& filename, const string& Fi
 		<< "************************************"
 		<< filename
 		<< "************************************" << endl;
+	if (filename.find(".") > 0 && filename.find(".") < 100)
+		mDayValue._strStockCode = filename.substr(0, filename.find("."));
 	mDayValue.SetDate();
 	ResizeData(BeginDate);
 	CNumbersCalculator numbercal;
 	CDataSizeSwich datasizetool;
-	numbercal.GetAllNumbers(mDayValue);
+	LOG(ERROR) << "mDayValue Data begin.";
+	numbercal.GetAllNumbers(mDayValue, "day");
+	LOG(ERROR) << "mDayValue Data finish.";
 
+	LOG(ERROR) << "mWeekValue Data begin.";
 	mWeekValue.clear();
+	mWeekValue._strStockCode = mDayValue._strStockCode;
+	LOG(ERROR) << "mWeekValue Data change begin.";
 	datasizetool.DayToWeek(mDayValue, mWeekValue);
-	numbercal.GetAllNumbers(mWeekValue);
+	LOG(ERROR) << "mWeekValue Data number begin.";
+	numbercal.GetAllNumbers(mWeekValue,"week");
+	LOG(ERROR) << "mWeekValue Data finish.";
 
+	LOG(ERROR) << "mMonthValue Data begin.";
 	mMonthValue.clear();
+	mMonthValue._strStockCode = mDayValue._strStockCode;
+	LOG(ERROR) << "mMonthValue Data change begin.";
 	datasizetool.DayToMonth(mDayValue, mMonthValue);
-	numbercal.GetAllNumbers(mMonthValue);
+	LOG(ERROR) << "mMonthValue Data number begin.";
+	numbercal.GetAllNumbers(mMonthValue, "month");
+	LOG(ERROR) << "mMonthValue Data finish.";
 
 	return true;
 }
@@ -156,17 +173,17 @@ void CNumberInterface::ProcessingTransverseData(const StringBlock& AllString)
 }
 
 
-const StockDataTable& CNumberInterface::GetDayValue()
+const StockDataTable& CNumberInterface::GetDayValue() const
 {
 	return mDayValue;
 }
 
-const StockDataTable& CNumberInterface::GetWeekValue()
+const StockDataTable& CNumberInterface::GetWeekValue() const
 {
 	return mWeekValue;
 }
 
-const StockDataTable& CNumberInterface::GetMonthValue()
+const StockDataTable& CNumberInterface::GetMonthValue() const
 {
 	return mMonthValue;
 }

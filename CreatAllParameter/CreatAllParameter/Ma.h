@@ -11,11 +11,11 @@ struct MA
 	StockDataType Ma4;
 };
 
-class CMa
+class CMaCal
 {
 public:
-	CMa(int M1, int M2, int M3, int M4);
-	~CMa();
+	CMaCal(int M1, int M2, int M3, int M4);
+	~CMaCal();
 	bool GetNextMa(const DatePriceData& OneDayData, MA& mFrontKDJ);
 
 	bool Inition();
@@ -23,7 +23,7 @@ private:
 	list<StockDataType> closedatas;
 	int M1_Par, M2_Par, M3_Par, M4_Par;
 	int day;
-	CMa();
+	CMaCal();
 
 };
 

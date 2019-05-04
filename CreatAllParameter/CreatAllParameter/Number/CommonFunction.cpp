@@ -8,25 +8,22 @@
 using namespace std;
 
 //ÇÐ¸î×Ö·û´®
-vector<string> CutString(string inputstring,string CutIndex)
+void CutString(const string& inputstring, string CutIndex, vector<string>& ResultStringList)
 {
-	vector<string> vTempString;
-	string strLeft,strRight;
-	strRight = inputstring;
 
-	int index = strRight.find(CutIndex);
-	while(index >= 0)
+	int frontIndex = inputstring.find(CutIndex);
+	int laterIndex = 0;
+	while(frontIndex >= 0)
 	{
-		//strLeft = strRight.substr(0,strRight.find(CutIndex));
-		vTempString.push_back(strRight.substr(0, strRight.find(CutIndex)));
-		strRight = strRight.substr(strRight.find(CutIndex) + 1);
-		index = strRight.find(CutIndex);
+		ResultStringList.push_back(inputstring.substr(laterIndex, frontIndex - laterIndex));
+		laterIndex = frontIndex + 1;
+		frontIndex = inputstring.find(CutIndex, laterIndex);
 	}
-	if (strRight.size()>=1 && strRight != CutIndex)
+	if (laterIndex < inputstring.size()-1)
 	{
-		vTempString.push_back(strRight);
+		ResultStringList.push_back(inputstring.substr(laterIndex, inputstring.size() - laterIndex));
 	}
-	return vTempString;
+	return ;
 }
 
 

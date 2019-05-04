@@ -37,7 +37,7 @@ bool CDataSizeSwich::DayToWeek(const StockDataTable& allstockdata, StockDataTabl
 	for (unsigned int i = 1; i < allstockdata._vTimeDay.size(); i++)
 	{
 		FrontDate.SetDay(allstockdata._vTimeDay[i]);
-		if (FrontDate.GetFrontWeekDay(5,1)!= BackDate.GetFrontWeekDay(5,1))//如果不相等表示不是同一个星期
+		if (FrontDate.GetFrontWeekDay(5,1) != BackDate.GetFrontWeekDay(5,1))//如果不相等表示不是同一个星期
 		{
 			returnstockdata._vTimeDay.push_back((BackDate+7).GetFrontWeekDay(5, 1).GetDay());
 			returnstockdata._vOpen.push_back(WeekOpen);
@@ -87,6 +87,7 @@ bool CDataSizeSwich::DayToMonth(const StockDataTable& allstockdata, StockDataTab
 	CDate FrontDate, BackDate,Tempdate;
 	FrontDate.SetDay(allstockdata._vTimeDay[0]);
 	BackDate.SetDay(allstockdata._vTimeDay[0]);
+	Tempdate.SetDay(allstockdata._vTimeDay[0]);
 
 	StockDataType MonthOpen = allstockdata._vOpen[0];
 	StockDataType MonthClose = allstockdata._vClose[0];

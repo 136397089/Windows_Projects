@@ -19,11 +19,11 @@ struct TRIX /*: public IndexBaseType*/
 // 		return *this;
 // 	}
 };
-class CTRIX// :public CNumberManager
+class CTRIXCal// :public CNumberManager
 {
 public:
-	CTRIX();
-	~CTRIX();
+	CTRIXCal();
+	~CTRIXCal();
 	void GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix);
 private:
 	float GetEMA(const list<StockDataType>& dataList);

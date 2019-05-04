@@ -39,11 +39,11 @@ public:
 	bool GetDataAndNumber(const string& filename ,const string& FilePath);
 
 	//
-	const StockDataTable& GetDayValue();
+	const StockDataTable& GetDayValue() const;
 	//
-	const StockDataTable& GetWeekValue();
+	const StockDataTable& GetWeekValue() const;
 	//
-	const StockDataTable& GetMonthValue();
+	const StockDataTable& GetMonthValue() const;
 private:
 	//////////////////////////////////////////////////////////////////////////
 	//从文件中读出所有的数据

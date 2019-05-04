@@ -47,16 +47,14 @@ bool CStockAccount::Trading(const TransactionData& mbusiness)
 	//买入股票错误,资金不足
 	if (mbusiness._Price * mbusiness._Volume > _CurrentAvailableCapital && mbusiness._Volume > 0.0)
 	{
-		LOG(ERROR) << "Stock Account error:Lack of Available Capital.";
-		LOG(INFO) << "Stock Account error:Lack of Available Capital.";
+		//LOG(ERROR) << "Stock Account error:Lack of Available Capital.";
 		_LastError = "Lack of Available Capital.";
 		return false;
 	}
 	//卖出股票错误,股票不足
 	if (_StockQuantityOwned + mbusiness._Volume < 0 && mbusiness._Volume < 0.0)
 	{
-		LOG(ERROR) << "Stock Account error:Lack of Operable Stock.";
-		LOG(INFO) << "Stock Account error:Lack of Operable Stock.";
+		//LOG(ERROR) << "Stock Account error:Lack of Operable Stock.";
 		_LastError = "Lack of Operable Stock.";
 		return false;
 	}
@@ -78,7 +76,7 @@ bool CStockAccount::Trading(const TransactionData& mbusiness)
 		_AllBusiness.push_back(mbusiness);
 		return true;
 	}
-	LOG(ERROR) << "Stock Account error:Business do not finish.";//没有检查到出错的情况下，交易没有完成
+	//LOG(ERROR) << "Stock Account error:Business do not finish.";//没有检查到出错的情况下，交易没有完成
 	return false;
 }
 
@@ -252,7 +250,6 @@ bool CStockAccount::BuyStock(const TransactionData& mbusiness)
 	if (mbusiness._Price * mbusiness._Volume > _CurrentAvailableCapital)//资金不够买入这么多的股票
 	{
 		LOG(ERROR) << "Stock Account error:Lack of Available Capital.";
-		LOG(INFO) << "Stock Account error:Lack of Available Capital.";
 		_LastError = "Lack of Available Capital.";
 		return false;
 	}

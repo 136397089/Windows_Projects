@@ -14,12 +14,12 @@ CLog::CLog()
 	try{
 		if (1 == OpenNumber)
 		{
-			CreateDirectory("D:\\StockFile\\Log", NULL);
+			CreateDirectory("D:\\StockFile\\Log\\", NULL);
 			google::InitGoogleLogging("CreatAllParameter.exe");
-			google::SetLogDestination(google::GLOG_INFO, "D:\\StockFile\\Log\\stockLog");
-			google::SetLogDestination(google::GLOG_WARNING, "D:\\StockFile\\Log\\WarningLog");
-			google::SetLogDestination(google::GLOG_ERROR, "D:\\StockFile\\ErrorLog");
-			google::SetLogDestination(google::GLOG_FATAL, "D:\\StockFile\\FatalLog");
+			google::SetLogDestination(google::GLOG_INFO, "D:\\StockFile\\Log\\stockLog\\");
+			google::SetLogDestination(google::GLOG_WARNING, "D:\\StockFile\\Log\\WarningLog\\");
+			google::SetLogDestination(google::GLOG_ERROR, "D:\\StockFile\\Log\\ErrorLog\\");
+			google::SetLogDestination(google::GLOG_FATAL, "D:\\StockFile\\Log\\FatalLog\\");
 		}
 	}
 	catch (exception)

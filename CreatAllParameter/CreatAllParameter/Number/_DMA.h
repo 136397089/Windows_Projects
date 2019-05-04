@@ -21,11 +21,11 @@ struct DMA_DATA/*:public IndexBaseType*/
 // 		return *this;
 // 	}
 };
-class CDMA// : public CNumberManager
+class CDMACal// : public CNumberManager
 {
 public:
-	CDMA();
-	~CDMA();
+	CDMACal();
+	~CDMACal();
 	//////////////////////////////////////////////////////////////////////////
 	//更新目录下所有CSV文件里的DMA值(数据按列排)
 	//strPath:目录路径

@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <string>
+#include "DateTool.h"
 #include "D:\MySql\mysql-5.7.25-winx64\include\mysql.h"
 
 using namespace std;
@@ -30,7 +31,8 @@ enum DataType
 	_eMEDIUMBLOB,
 	_eMEDIUMTEXT,
 	_eLONGBLOB,
-	_eLONGTEXT
+	_eLONGTEXT,
+	_eUNDEFTYPE
 };
 enum DataAttribute
 {
@@ -44,44 +46,170 @@ enum DataAttribute
 	_eNULL = 1 << 6,
 };
 
-struct TableData
+struct Column
 {
 	string Dataname;
 	DataType datatype;
 	int datasize;//如果是字符串，通过datasize指定数据的长度
 	DataAttribute attribute;
+	string remarkData;//用于记录
+	Column() :
+		attribute(_eEMPTY), 
+		Dataname(""), 
+		datatype(_eINT), 
+		datasize(0), 
+		remarkData(""){}
+	void InitionData(
+		const string& _Dataname,
+		const DataType& _datatype,
+		const int& _datasize, 
+		const DataAttribute& _attribute,
+		const string& _remarkData);
+};
+enum WhereType
+{
+	_eLess,
+	_eBigger,
+	_eIs,
+	_eNot,
+	_eLessOrEqual,
+	_eBiggerOrEqual,
+	_eLike
+};
+enum RelationalType
+{
+	_eAnd,
+	_eOr,
+	_eWhereEmpty
+};
+struct WhereCommand
+{
+	string dataName;
+	WhereType commandType;
+	RelationalType relation;
+	string data;
+	template<class T>
+	WhereCommand IniCommand(const string& _strName, WhereType _tyCommand, const T& _tdata, RelationalType _relation);
+	string GetCommand(RelationalType relation) const;
+	WhereCommand();
+	~WhereCommand();
 };
 class MySQLInterFace
 {
 public:
 	MySQLInterFace();
 	~MySQLInterFace();
-
+	//
 	bool Inition();
 	//创建一个数据库
-	bool CreatDataBases(string _Databases);
+	bool CreatDataBases(const string& _Databases);
 	//删除一个数据库
-	bool DeleteDataBases(string _Databases);
+	bool DeleteDataBases(const string& _Databases);
 	//获得所有数据库名称
 	bool GetDatabasesList(vector<string>& _Databases);
 	//进入数据库
-	bool UseDatabases(string _Databases);
+	bool UseDatabases(const string& _Databases);
 	//创建一个表
-	bool CreatTable(string _TableName,const vector<TableData>& dataTypeList);
+	bool CreatTable(const string& _TableName,const vector<Column>& columnTypeList);
 	//删除一个表
-	bool DeleteTable(string _TableName);
+	bool DeleteTable(const string& _TableName);
 	//删除表里面的数据
-	bool DeleteTableData(string _TableName);
+	bool DeleteTableData(const string& _TableName);
 	//获得所有表名称
 	bool GetTableList(vector<string>& _Tables);
+	//检查表是否存在
+	bool CheckTableExists(string _TableName);
+	//获得表的表头
+	bool GetTableColumns(const string& _TableName, vector<Column>& columnTypeList);
+	//检查表头是否都存在
+	bool CheckTableColumnsExists(const string& _TableName, const vector<Column>& _columnsName);
+	//将表头增加到对应的表当中
+	bool AddColumnToTable(const string& _TableName,const vector<Column>& _columnsName);
 	//
+	bool DeleteColumn(const string& _TableName, const string& columnName);
+	//保存数据到数据库
+	bool InsertData(string _TableName,const vector<Column>& columnTypeList,const vector<string>& dataList);
+	//更新表数据
+	bool UpDateData(
+		string _TableName,
+		const vector<Column>& columnTypeList,
+		const vector<string>& dataList,
+		const vector<WhereCommand>& commandList
+/*		const string& whereLimit*/);
+	//从表中读取数据
+	bool SearchDataFromTable(
+		const string _TableName,
+		const vector<Column>& columnTypeList,
+		vector<vector<string>>& _returndatas);
+	//从表中读取数据
+	bool SearchDataFromTable(
+		const string _TableName,
+		const vector<Column>& columnTypeList,
+		const vector<WhereCommand>& whereList,
+		vector<vector<string>>& _returndatas);
+	//检查是否有存在对应的数据
+	bool CheckDataExists(const string _TableName, const vector<WhereCommand>& whereList);
 
+	//保存数据到数据库之前调用，将特定类型的数据转为字符串
+	string DataConversion(const Column& columnName, const string& _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const int _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const unsigned int _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const long _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const short _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const CDate& _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const float _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const double _data, vector<string>& vdataList) const;
 
-	string GetDateType(DataType datatype);
-	string GetDateAttribute(DataAttribute Attribute);
-	MYSQL mydata;
-
+	//
+	bool RunCommand(const string& command);
+	//
+	bool GetTableResult(vector<vector<string>>& _Tables);
+	//
+private:
+	bool GetListResult(vector<string>& _ListData);
+// 	bool StringToCloumn(const vector<string>& _Tables, Column& column);
+	//将DataType类型的数据类型转为字符串形式
+	string DateTypeToString(const Column& column);
+	//将查询到的字符串形式的数据类型转为DataType
+	DataType StringToDateType(const string& column);
+	//将数据属性转为命令字符串
+	string DateAttributeToString(DataAttribute Attribute);
+	//获得数据长度的字符串
+	string GetDateSize(const Column& column);
+	//
+	int StringToDateSize(const string& datasize);
+	//将字符串转为数据类型
+	Column ExplaincolumnType(const vector<string>& columnstringList);
+	//
+	bool AddOneColumns(const string& _TableName, const Column& _columnsName);
 	string _lastError;
+	MYSQL sqlDataBase;
+	MYSQL* dataSql;
+
+	inline bool CheckTableColMap(const string& table, const string& column)
+	{	return indexmap._TableColMap[table + "_" + column] == 1; }
+	inline void MySQLInterFace::SetTableColMap(const string& table, const string& column)
+	{		indexmap._TableColMap[table + "_" + column] = 1;	}
+	inline void MySQLInterFace::DeleteTableColMap(const string& table, const string& column)
+	{		indexmap._TableColMap[table + "_" + column] = 0;	}
+	inline bool MySQLInterFace::CheckTableMap(const string& table)
+	{		return indexmap._TableMap[table] == 1;	}
+	inline void MySQLInterFace::SetTableMap(const string& table)
+	{		indexmap._TableMap[table] = 1;	}
+	inline void MySQLInterFace::DeleteTableMap(const string& table)
+	{		indexmap._TableMap[table] = 0;	}
+	struct IndexMaps
+	{
+		friend bool MySQLInterFace::CheckTableColMap(const string& table, const string& column);
+		friend void MySQLInterFace::SetTableColMap(const string& table, const string& column);
+		friend void MySQLInterFace::DeleteTableColMap(const string& table, const string& column);
+		friend bool MySQLInterFace::CheckTableMap(const string& table);
+		friend void MySQLInterFace::SetTableMap(const string& table);
+		friend void MySQLInterFace::DeleteTableMap(const string& table);
+	private:
+		map<string, int> _TableMap;//用于记录之前已经查到的表，减少发送指令的次数
+		map<string, int> _TableColMap;//用于记录之前已经查到的表头，减少发送指令的次数
+	} indexmap;
 };
 #define SZCHARSIZE 100
 struct _tagMysqlInfo
@@ -94,4 +222,24 @@ struct _tagMysqlInfo
 	char unix_socket[SZCHARSIZE];    //如果unix_socket不是NULL，该字符串描述了应使用的套接字或命名管道。注意，“host”参数决定了连接的类型。
 	DWORD client_flag;    // client_flag的值通常为0
 };
+
+
+// struct LikeCommand
+// {
+// 
+// };
+
+template<class T>
+WhereCommand WhereCommand::IniCommand(const string& _strName, WhereType _tyCommand, const T& _tdata, RelationalType _relation)
+{
+	dataName = _strName;
+	commandType = _tyCommand;
+	relation = _relation;
+	ostringstream  oss;
+	oss << _tdata;
+	data = oss.str();
+	return *this;
+}
+
+
 
