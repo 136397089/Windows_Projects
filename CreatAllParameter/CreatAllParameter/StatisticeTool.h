@@ -41,11 +41,13 @@ struct DayPrice
 	StockDataType _highData;
 	StockDataType _lowData;
 	StockDataType _openData;
+	CDate _date;
 
 	StockDataType _frontclose;
 	StockDataType _fronthigh;
 	StockDataType _frontlow;
 	StockDataType _frontopen;
+	CDate _frontdate;
 };
 
 class CStatisticeTool

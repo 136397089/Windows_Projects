@@ -24,7 +24,24 @@ typedef map<IndexType, const StateTable*> IndexStateConstPointer;
 #define KDJ_INDEX2 3.0f
 #define KDJ_INDEX3 3.0f
 
-
+class SinDayData: public SinDayPriceData
+{
+public:
+	StockDataType changepercent;//涨跌幅
+	StockDataType turnoverratio;//换手率
+	StockDataType per; //市盈率
+	StockDataType pb;//市净率
+	StockDataType mktcap;//总市值
+	StockDataType nmc;//流通市值
+// 	StockDataType _Open;
+// 	StockDataType _Close;
+// 	StockDataType _High;
+// 	StockDataType _Low;
+// 	StockDataType _Volume;
+	SinDayData()
+		:changepercent(0), turnoverratio(0), per(0), pb(0), mktcap(0), nmc(0)
+		/*,_Open(0), _Close(0), _High(0), _Low(0), _Volume(0)*/{}
+};
 
 
 class StateRecords;
@@ -34,9 +51,9 @@ public:
 	CNumberInterface();
 	~CNumberInterface();
 	//////////////////////////////////////////////////////////////////////////
-	//分析目标文件中的数据
+	//从文件中读数据，并计算指标
 	//////////////////////////////////////////////////////////////////////////
-	bool GetDataAndNumber(const string& filename ,const string& FilePath);
+	bool GetDataAndNumbers(const string& filename ,const string& FilePath);
 
 	//
 	const StockDataTable& GetDayValue() const;
@@ -44,6 +61,8 @@ public:
 	const StockDataTable& GetWeekValue() const;
 	//
 	const StockDataTable& GetMonthValue() const;
+	//从文件夹中读出当日的数据
+	bool GetTodayData(const string& fileFullPath, map<string, SinDayData>& TodayData);
 private:
 	//////////////////////////////////////////////////////////////////////////
 	//从文件中读出所有的数据
@@ -54,20 +73,12 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	void ProcessingTransverseData(const StringBlock& AllString);
 	//////////////////////////////////////////////////////////////////////////
-	//将计算完的数据保存到文件当中
-	//////////////////////////////////////////////////////////////////////////
-	bool SaveDataToFile(const string& strFilePath);
-	//////////////////////////////////////////////////////////////////////////
-	//
-	//////////////////////////////////////////////////////////////////////////
-	void CheckAndPrintKDJMin(const string& filename);
-	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
 	bool ResizeData(CDate beginData);
 	bool _IsInSale;
 	int index;
-	CLog resultFile;
+	//CLog resultFile;
 	double startTime;
 	StockDataTable mDayValue;
 	StockDataTable mWeekValue;

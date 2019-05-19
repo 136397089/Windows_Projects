@@ -148,21 +148,16 @@ class CNumberBase;
 //
 //
 //////////////////////////////////////////////////////////////////////////
-struct DatePriceData
+struct SinDayPriceData
 {
 public:
-	int DateIndex;
-	DatePriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f),DateIndex(0){}
+	SinDayPriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f){}
 	CDate mDate;
 	StockDataType _Open;
 	StockDataType _Close;
 	StockDataType _High;
 	StockDataType _Low;
 	StockDataType _Volume;
-	StockDataType _Ma5;
-	StockDataType _Ma10;
-	StockDataType _Ma20;
-	StockDataType operator [] (string index);
 };
 struct IndexBaseType
 {
@@ -230,7 +225,7 @@ public:
 	//vMACDValue:要加入的列数据
 	//tittle:列名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileColumn(string FilePath, VStockData vMACDValue, string tittle);
+	void AddColumnToCsvFile(string FilePath, VStockData vMACDValue, string tittle);
 	//////////////////////////////////////////////////////////////////////////
 	//读CSV文件中对应行的数据
 	//filepath:文件路径
@@ -241,42 +236,42 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//调用ReSavefileRanks之前运行
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanksBegin(string FilePath);
+	void AddRanksToCsvFileBegin(string FilePath);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
 	//
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, const  VStockData& vNewValue, string tittle);
+	void AddRanksToCsvFile(string FilePath, const  VStockData& vNewValue, string tittle);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
 	//
 	//tittle:行名
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle);
+	void AddRanksToCsvFile(string FilePath, const vector<string>& vNewValue, string tittle);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, const  map<string, StockDataType>& vNewValue);
+	void AddRanksToCsvFile(string FilePath, const  map<string, StockDataType>& vNewValue);
 	//////////////////////////////////////////////////////////////////////////
 	//增加对应的行保存到CSV文件中
 	//FilePath：文件路径
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanks(string FilePath, const  FreqListType& vNewValue);
+	void AddRanksToCsvFile(string FilePath, const  FreqListType& vNewValue);
 	//////////////////////////////////////////////////////////////////////////
 	//调用ReSavefileRanks之后运行
 	//////////////////////////////////////////////////////////////////////////
-	void ReSavefileRanksEnd(string FilePath);
+	void AddRanksToCsvFileEnd(string FilePath);
 
 
 	//////////////////////////////////////////////////////////////////////////
 	//按行读文件中的数据并返回
 	//
 	//////////////////////////////////////////////////////////////////////////
-	StringList ReadDataFromCSVFileRanks(const string& fullFilePath);
+	bool ReadDataFromCSVFileRanks(const string& fullFilePath, StringList& strAllData) const;
 	//////////////////////////////////////////////////////////////////////////
 	//从CSV文件读取数据,并切割成二维数组形式
 	//////////////////////////////////////////////////////////////////////////
@@ -315,5 +310,176 @@ public:
 };
 
 
+////////////////////////////////////////////////////////////////////////////
+//以下是定义指标数据类型
+//
+//////////////////////////////////////////////////////////////////////////
+
+struct Macd
+{
+public:
+	Macd() :m12(0), m26(0), dif(0), dea(0), bar(0){}
+	StockDataType m12;
+	StockDataType m26;
+	StockDataType dif;
+	StockDataType dea;
+	StockDataType bar;
+};
+
+struct KDJ
+{
+public:
+	KDJ() :K_OF_KDJ(0), D_OF_KDJ(0), J_OF_KDJ(0){}
+	StockDataType K_OF_KDJ;
+	StockDataType D_OF_KDJ;
+	StockDataType J_OF_KDJ;
+};
+
+struct DayHLCOV
+{
+	DayHLCOV(){};
+	DayHLCOV(
+		StockDataType _hlcopen,
+		StockDataType _hlchigh,
+		StockDataType  _hlclow,
+		StockDataType _hlcclose,
+		StockDataType  _hlcvol)
+		:_HLCOpen(_hlcopen),
+		_HLCHigh(_hlchigh),
+		_HLCLow(_hlclow),
+		_HLCClose(_hlcclose),
+		_HLCVol(_hlcvol){}
+	StockDataType _HLCOpen;
+	StockDataType _HLCHigh;
+	StockDataType _HLCLow;
+	StockDataType _HLCClose;
+	StockDataType _HLCVol;
+};
+
+struct ARBRCRVRPSY
+{
+	StockDataType AR;
+	StockDataType BR;
+	StockDataType VR;
+	StockDataType CR;
+	StockDataType CRMa1;
+	StockDataType CRMa2;
+	StockDataType CRMa3;
+	StockDataType CRMa4;
+	StockDataType PSY;
+};
+
+struct DMA_DATA
+{
+	DMA_DATA() :_DDD(0), _AMA(0){}
+	StockDataType _AMA;
+	StockDataType _DDD;
+};
+
+struct ASI
+{
+	ASI() :_asi(0), _asit(0){}
+	StockDataType _asi;//
+	StockDataType _asit;//均值
+};
+
+struct CDP
+{
+	StockDataType _CDP;
+	StockDataType _AH_High;
+	StockDataType _NH_NormalHigh;
+	StockDataType _AL_Low;
+	StockDataType _NL_NormalLow;
+
+};
+
+struct  Dmi
+{
+	StockDataType _PDI;
+	StockDataType _NDI;
+	StockDataType _ADX;
+	StockDataType _ADXR;
+	Dmi()
+	{
+		_PDI = 0.0f;
+		_NDI = 0.0f;
+		_ADX = 0.0f;
+		_ADXR = 0.0f;
+	}
+};
+struct DMTR
+{
+	StockDataType PDM;
+	StockDataType NDM;
+	StockDataType TR;
+	StockDataType ADX;
+	DMTR()
+	{
+		PDM = 0.0f;
+		NDM = 0.0f;
+		TR = 0.0f;
+		ADX = 0.0f;
+	}
+};
+
+struct EMV
+{
+	StockDataType emv;
+	StockDataType emvma;
+	StockDataType TemporaryVariable;
+	StockDataType highToLowMa;
+	EMV() :emv(0), emvma(0), TemporaryVariable(1), highToLowMa(1){}
+};
+
+struct MA
+{
+	MA() :Ma1(0), Ma2(0), Ma3(0), Ma4(0) {}
+	StockDataType Ma1;
+	StockDataType Ma2;
+	StockDataType Ma3;
+	StockDataType Ma4;
+};
+struct TRIX 
+{
+	TRIX() :_TRIX(0), _TRMA(0), _AX(0), _BX(0), _TR(0){}
+	StockDataType _TRIX;
+	StockDataType _TRMA;
+	StockDataType _AX;
+	StockDataType _BX;
+	StockDataType _TR;
+
+};
+
+struct MACDCombin
+{
+	Macd TodayMacd;
+	Macd YesterdayMacd;
+	Macd BefoYesMacd;
+	Macd CurrentMacd;
+
+	CDate Today;
+	CDate Yesterday;
+	CDate BefoYes;
+	CDate CurrentDate;
+};
+
+struct KDJCombin
+{
+	KDJ		TodayKDJ;
+	KDJ		YesterdayKDJ;
+	KDJ		BefYesKDJ;
+	KDJ		CurrentKDJ;
+
+	CDate	Today;
+	CDate	Yesterday;
+	CDate	BefYes;
+	CDate	CurrentDate;
+};
+
+struct realTimeDataToAna
+{
+	KDJCombin CloselyKDJs;
+	MACDCombin CloselyMACDs;
+};
 
 #endif

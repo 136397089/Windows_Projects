@@ -1,6 +1,8 @@
 #pragma once
 #ifndef _LOG_H
 #define _LOG_H
+#include <map>
+#include <vector>
 #include <string>
 #include <fstream>
 #include <crtdefs.h >
@@ -12,17 +14,25 @@ class CLog
 {
 public:
 	CLog();
+	CLog(string filename);
 	~CLog();
-// 	void SetStartTime();
-// 	void OutIndexTime(const char* inf);
-// 	void Inition();
-	fstream& get();
 private:
-// 	Clog& operator <<(const int& infor);
-// 	Clog& operator <<(const string& infor);
-// 	Clog& operator <<(const float& infor);
-// 	Clog& operator <<(const double& infor);
-// 	Clog& operator <<(const basic_ostream<_Elem, _Traits>& ends);
+	string logfilename;
+	string logfilePath;
+	template<class T>
+	bool SaveCsvFile(const vector<T>& dataTosave);
+// 	bool SaveCSVFile(map<string, map<string, float>> dataToSave);
+// 	bool SaveCSVFile(map<string, map<string, int>> dataToSave);
+// 	bool SaveCSVFile(map<string, map<string, string>> dataToSave);
+// 	bool SaveCSVFile(map<string, map<string, float>> dataToSave);
 };
+
+template<class T>
+bool CLog::SaveCsvFile(const vector<T>& dataTosave)
+{
+	fstream LogFile;
+	LogFile.open(logfilePath + logfilename, fstream::out);
+	return true;
+}
 
 #endif

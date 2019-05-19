@@ -20,10 +20,10 @@ CMaCal::~CMaCal()
 {
 }
 
-bool CMaCal::GetNextMa(const DatePriceData& OneDayData, MA& mFrontMa)
+bool CMaCal::GetNextMa(const SinDayPriceData& OneDayData, MA& mFrontMa)
 {
 	MA TempMa = mFrontMa;
-	closedatas.push_back(OneDayData._Close);
+	closedatas.push_back((OneDayData._Close + OneDayData._High + OneDayData._Low) / 3);
 	if (  closedatas.size() > M1_Par 
 		&&closedatas.size() > M2_Par
 		&&closedatas.size() > M3_Par

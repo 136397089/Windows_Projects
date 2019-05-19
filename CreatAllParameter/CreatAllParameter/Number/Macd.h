@@ -16,25 +16,6 @@ class CMacdCal;
 //
 //
 //////////////////////////////////////////////////////////////////////////
-struct Macd/*:public IndexBaseType*/
-{
-public:
-	Macd() :m12(0), m26(0), diff(0), dea(0), bar(0){}
-	StockDataType m12;
-	StockDataType m26;
-	StockDataType diff;
-	StockDataType dea;
-	StockDataType bar;
-// 		Macd& operator = (const Macd& rhs){
-// 		_Index1 = rhs._Index1;
-// 		_Index2 = rhs._Index2;
-// 		_Index3 = rhs._Index3;
-// 		_Index4 = rhs._Index4;
-// 		_Index5 = rhs._Index5;
-// 		return *this;
-// 	}
-};
-
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -44,7 +25,7 @@ public:
 class CMacdCal// : public CNumberManager
 {
 public:
-	CMacdCal(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m);
+	CMacdCal(StockDataType shortsmoothness = 12, StockDataType longsmoothness = 26, StockDataType m = 9);
 	~CMacdCal(void);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -52,7 +33,7 @@ public:
 	//closeData:收盘价
 	//mMacd:前日的MACD
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextMacd(const DatePriceData& OneDayData, Macd& mMacd);
+	bool GetNextMacd(const SinDayPriceData& OneDayData, Macd& mMacd);
 private:
 	const StockDataType shortSmoothness;
 	const StockDataType longSmoothness;

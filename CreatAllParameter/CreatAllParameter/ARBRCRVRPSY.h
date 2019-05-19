@@ -3,25 +3,14 @@
 #include <list>
 #include "Number/NumberBase.h"
 
-struct ARBRCRVRPSY
-{
-	StockDataType AR;
-	StockDataType BR;
-	StockDataType VR;
-	StockDataType CR;
-	StockDataType CRMa1;
-	StockDataType CRMa2;
-	StockDataType CRMa3;
-	StockDataType CRMa4;
-	StockDataType PSY;
-};
+
 
 class CArBrCrVrPsy
 {
 public:
 	CArBrCrVrPsy();
 	~CArBrCrVrPsy();
-	bool GetNextArBrVrPsy(const DatePriceData& OneDayData, ARBRCRVRPSY& mLastData);
+	bool GetNextArBrVrPsy(const SinDayPriceData& OneDayData, ARBRCRVRPSY& mLastData);
 
 	StockDataType GetAR();
 	StockDataType GetBR();
@@ -30,7 +19,7 @@ public:
 	StockDataType GetVR();
 	StockDataType GetPSY();
 
-	list<DatePriceData> TemporaryStorageData;
+	list<SinDayPriceData> TemporaryStorageData;
 	unsigned int VRParameter;
 	unsigned int ARBRParameter;
 	unsigned int CRParameter;

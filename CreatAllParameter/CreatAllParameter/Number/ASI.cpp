@@ -16,7 +16,7 @@ CAsiCal::~CAsiCal()
 }
 
 
-bool CAsiCal::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
+bool CAsiCal::GetNextASI(const SinDayPriceData& TodayData, ASI& mFrontASI)
 {
 	ASI tempasi = mFrontASI;
 	float A = abs(TodayData._High - _YesterdayData._Close);
@@ -35,7 +35,7 @@ bool CAsiCal::GetNextASI(const DatePriceData& TodayData, ASI& mFrontASI)
 	float E = (TodayData._Close - _YesterdayData._Close);
 	float F = (TodayData._Close - TodayData._Open);
 	float G = (_YesterdayData._Close - _YesterdayData._Open);
-	float X = E + F / 2 + G;
+	float X = E + F / 2 + G;//从概念上来看－－指近两日的真实涨幅加权求和
 	float K = max(A, B);
 	float SI = 16 * X * K / R;
 

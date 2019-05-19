@@ -30,7 +30,7 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& stockdatas,const string& 
 	//结果输出
 	SigDayTechIndex currentIndex;
 	//一天的价格
-	DatePriceData thisDayPrice;
+	SinDayPriceData thisDayPrice;
 	//要遍历的所有数据
 	vector<string>::const_iterator dayIte = stockdatas._vTimeDay.begin();
 	VStockData::const_iterator closeite = stockdatas._vClose.begin();
@@ -83,9 +83,12 @@ bool CNumbersCalculator::GetAllNumbers(StockDataTable& stockdatas,const string& 
 		//1.4保存计算完的各类指标数据到对应的Vector当中
 		PushBackIndex(currentIndex, stockdatas);
 	}
-	sqlTool.SaveMACDCacheData();
- 	sqlTool.SaveKDJCacheData();
-	sqlTool.SaveDayCacheData();
+	if (dataType == "day")
+	{
+		sqlTool.SaveMACDCacheData();
+		sqlTool.SaveKDJCacheData();
+		sqlTool.SaveDayCacheData();
+	}
 	stockdatas.SetDate();
 	return true;
 }
@@ -97,7 +100,7 @@ void CNumbersCalculator::PushBackIndex(const SigDayTechIndex& AllIndex, StockDat
 	datas._vMACDValue.push_back(AllIndex._MacdData.bar);
 	datas._vMACDMa12.push_back(AllIndex._MacdData.m12);
 	datas._vMACDMa26.push_back(AllIndex._MacdData.m26);
-	datas._vDiff.push_back(AllIndex._MacdData.diff);
+	datas._vDiff.push_back(AllIndex._MacdData.dif);
 	datas._vDEA.push_back(AllIndex._MacdData.dea);
 	//DMA
 	datas._vDMAValue.push_back(AllIndex._DMAData._DDD);

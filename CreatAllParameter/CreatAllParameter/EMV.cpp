@@ -17,7 +17,7 @@ CEMVCal::~CEMVCal()
 {
 }
 
-bool CEMVCal::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
+bool CEMVCal::GetNextEmv(const SinDayPriceData& TodayDayData, EMV& _data)
 {
 	if (RecordData.size() == 0)
 	{
@@ -25,7 +25,7 @@ bool CEMVCal::GetNextEmv(const DatePriceData& TodayDayData, EMV& _data)
 		EMVList.push_front(_data);
 		return true;
 	}
-	DatePriceData refData = *RecordData.begin();
+	SinDayPriceData refData = *RecordData.begin();
 	frontVolSum = frontVolSum + TodayDayData._Volume;
 	frontHighToHLMaSum = frontHighToHLMaSum + TodayDayData._High - TodayDayData._Low;
 	if (RecordData.size() == EMVPara)

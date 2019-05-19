@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef MYSQLINTERFACE_H
+#define MYSQLINTERFACE_H
+
 #include <vector>
 #include <string>
 #include "DateTool.h"
@@ -149,7 +153,10 @@ public:
 		vector<vector<string>>& _returndatas);
 	//检查是否有存在对应的数据
 	bool CheckDataExists(const string _TableName, const vector<WhereCommand>& whereList);
-
+	//
+	bool SetColumnUnique(const string& _TableName, const string& _ColumnName);
+	//
+	bool SetColumnCombinUnique(const string& _TableName, const vector<string>& _ColumnName);
 	//保存数据到数据库之前调用，将特定类型的数据转为字符串
 	string DataConversion(const Column& columnName, const string& _data, vector<string>& vdataList) const;
 	string DataConversion(const Column& columnName, const int _data, vector<string>& vdataList) const;
@@ -186,27 +193,15 @@ private:
 	MYSQL sqlDataBase;
 	MYSQL* dataSql;
 
-	inline bool CheckTableColMap(const string& table, const string& column)
-	{	return indexmap._TableColMap[table + "_" + column] == 1; }
-	inline void MySQLInterFace::SetTableColMap(const string& table, const string& column)
-	{		indexmap._TableColMap[table + "_" + column] = 1;	}
-	inline void MySQLInterFace::DeleteTableColMap(const string& table, const string& column)
-	{		indexmap._TableColMap[table + "_" + column] = 0;	}
-	inline bool MySQLInterFace::CheckTableMap(const string& table)
-	{		return indexmap._TableMap[table] == 1;	}
-	inline void MySQLInterFace::SetTableMap(const string& table)
-	{		indexmap._TableMap[table] = 1;	}
-	inline void MySQLInterFace::DeleteTableMap(const string& table)
-	{		indexmap._TableMap[table] = 0;	}
+	bool CheckTableColMap(const string& table, const string& column);
+	void SetTableColMap(const string& table, const string& column);
+	void DeleteTableColMap(const string& table, const string& column);
+	bool CheckTableMap(const string& table);
+	void SetTableMap(const string& table);
+	void DeleteTableMap(const string& table);
+
 	struct IndexMaps
 	{
-		friend bool MySQLInterFace::CheckTableColMap(const string& table, const string& column);
-		friend void MySQLInterFace::SetTableColMap(const string& table, const string& column);
-		friend void MySQLInterFace::DeleteTableColMap(const string& table, const string& column);
-		friend bool MySQLInterFace::CheckTableMap(const string& table);
-		friend void MySQLInterFace::SetTableMap(const string& table);
-		friend void MySQLInterFace::DeleteTableMap(const string& table);
-	private:
 		map<string, int> _TableMap;//用于记录之前已经查到的表，减少发送指令的次数
 		map<string, int> _TableColMap;//用于记录之前已经查到的表头，减少发送指令的次数
 	} indexmap;
@@ -243,3 +238,6 @@ WhereCommand WhereCommand::IniCommand(const string& _strName, WhereType _tyComma
 
 
 
+
+
+#endif

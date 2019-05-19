@@ -1,4 +1,8 @@
 #pragma once
+
+#ifndef NUMBERTOSQL_H
+#define NUMBERTOSQL_H
+
 #include <string>
 #include "DateTool.h"
 #include "Number/NumberBase.h"
@@ -11,31 +15,13 @@
 
 using namespace std;
 
-
-struct DayHLCOV
-{
-	DayHLCOV(
-		StockDataType _hlcopen,
-		StockDataType _hlchigh,
-		StockDataType  _hlclow,
-		StockDataType _hlcclose,
-		StockDataType  _hlcvol)
-		:_HLCOpen(_hlcopen),
-		_HLCHigh(_hlchigh),
-		_HLCLow(_hlclow),
-		_HLCClose(_hlcclose),
-		_HLCVol(_hlcvol){}
-	StockDataType _HLCOpen;
-	StockDataType _HLCHigh;
-	StockDataType _HLCLow;
-	StockDataType _HLCClose;
-	StockDataType _HLCVol;
-};
 class CNumbersToSql
 {
 public:
 	CNumbersToSql();
 	~CNumbersToSql();
+	//初始化，清空缓存数据
+	bool IniMysqlTool();
 	//保存单个数据到数据库－MACD
 	bool SaveSingleData(
 		const string& stockcode,
@@ -49,8 +35,6 @@ public:
 		const CDate& date,
 		const KDJ& dataToSave,
 		const CKDJCal& calData);
-	//初始化，清空缓存数据
-	bool IniMysqlTool();
 	//将缓存数据保存到数据库
 	void InsertData(
 		const string& stockcode,
@@ -69,15 +53,39 @@ public:
 		const string& typeofdata,
 		const CDate& date,
 		const DayHLCOV& _daydata);
+	bool InsertData(
+		const string& stockcode,
+		const vector<unsigned int>& TypeAndFreqData,
+		const vector<float>& meanVarData,
+		int beginIndex,
+		int endIndex);
 
 	//将缓存的数据保存到数据库
 	bool SaveMACDCacheData();
 	bool SaveKDJCacheData();
 	bool SaveDayCacheData();
+	bool SaveFreqCacheData();
 
-	bool RecoveryData(const CDate& _date, Macd& _macd);
-	bool RecoveryData(const CDate& _date, KDJ& _kdj,CKDJCal& calData);
+	bool RecoveryMACDData(
+		const string& stockCode,
+		const string& typeofdata,
+		MACDCombin& ReturnMacd
+		);
+	bool RecoveryKDJData(
+		const string& stockCode,
+		const string& typeofdata,
+		KDJCombin& KDJReturn);
+	bool RecoveryPriceData(
+		const string& stockCode,
+		const string& typeofdata,
+		vector<SinDayPriceData>& FrontPrice);
+	bool GetMacd(
+		const string& stockCode,
+		const string& typeofdata,
+		MACDCombin& _macd);
+	int CheckStockFundCount(const string& stockcode);
 
+	float ReadPEFromSQL(const string& stockcode);
 private:
 	//获得MACD的表头
 	void GetMacdColumnsType(vector<Column>& vdataType);
@@ -85,6 +93,8 @@ private:
 	void GetDayColumnsType(vector<Column>& vdataType);
 	//获得KDJ的表头
 	void GetKDJColumnsType(vector<Column>& vdataType);
+	//获得KDJ的表头
+	void SetFreqGroupingColumnsType(int beginGroupIndex, int endGroupIndex);
 	//将KDJ的数据转换为字符串，用于生成保存指令
 	bool KDJDataConversion(
 		const vector<Column>& saveDataType,
@@ -92,11 +102,22 @@ private:
 		const CKDJCal& calData,
 		vector<string>& vdataList);
 	//
-	bool GetMACDValueString(string& valueString);
+	bool GetMACDValueString(string& valueString,unsigned int beginInedx);
 	//
-	bool GetDayValueString(string& valueString);
+	bool GetDayValueString(string& valueString, unsigned int beginInedx);
+	//
+	bool GetKDJValueString(string& valueString, unsigned int beginInedx);
+	//
+	bool GetFreqValueString(string& valueString, unsigned int beginInedx);
+	//
+	unsigned int GetBeginIndexToSave(vector<CDate>& _vDate,const string& tebleName);
+	//
+	bool GetDuplicataUpdateValue(vector<Column>& vdataType, unsigned int beginIndex, string& result);
+	//
+	bool StringChangelateToMACD(const vector<string>& macdstrData, CDate& _date, Macd& MacdData);
+	//
+	bool StringChangelateToKDJ(const vector<string>& kdjstrData, CDate& _date, KDJ& KDJData);
 
-	bool GetKDJValueString(string& valueString);
 	vector<Macd> _vMacdDataToSave;
 	vector<CDate> _vMacdDate;
 	string _MacdTablename;
@@ -105,11 +126,19 @@ private:
 	vector<CDate> _vKDJDate;
 	string _KDJTablename;
 
-	vector<CDate> _Dates;
-	vector<DayHLCOV> _vHLCToSave;
+	vector<CDate> _DayDataDates;
+	vector<DayHLCOV> _vDayDataToSave;
 	string _dataTebleName;
 
+	vector<string> _vFreqDataToSave;
+	string _freqTebleName;
+	int _beginIndex;
+	int _endindex;
+
 	MySQLInterFace *psqlTool;
-	HANDLE _MYSQLMutex;
 };
 
+
+
+
+#endif

@@ -10,6 +10,8 @@
 #include "CcdpStatistics.h"
 #include "StockAccountNum.h"
 #include "FreqStatistice.h"
+#include "NumbersToSql.h"
+#include "Group.h"
 
 CRITICAL_SECTION filterDataMeancs;
 
@@ -48,179 +50,9 @@ bool CStatisticeInter::Inter(
 
 	CcdpStatistics CDPStaTool;
 	CDPStaTool.CountCDPData(weekdata);
-	simulation(daydata,weekdata);
 
-	MACD_EDA_Statistice(daydata, daystate.allIndexStates[_eMACD_BAR]);
 	//GroupFreqStatistice(allnumber, stateinter);
 	return true;
-}
-
-
-
-
-bool CStatisticeInter::MACD_EDA_Statistice(const StockDataTable& allnumber, const StateTable& _State)
-{
-	const StatePointsList& StaticList = _State._staticstate;
-	//输入检查
-	if (StaticList.size() < DATAMINSIZE)
-	{
-		_LastError = "StaticList  size error. In MACD_EDA_Statistice.";
-		return false;
-	}
-
-	CFreqStatistice freqStatTool;
-	CStatisticeTool statictool;
-	FreqListType vfreqlist;
-
-	StockDataTable newdata;
-	VStockData PriceChangeResult;
-
-	unsigned int backIndex = 0;
-	unsigned int frontIndex = 0;
-	StaticResults changerate;
-	vector<StaticResults> Upresults;
-	vector<StaticResults> Downresults;
-	vector<StaticResults> Allresules;
-	for (unsigned int i = 0; i < StaticList.size(); i++)
-	{
-		backIndex = frontIndex;
-		frontIndex = StaticList[i]._TimeIndex;
-
-		if (frontIndex <= backIndex)
-			continue;
-		newdata = allnumber.NewDataByIndex(frontIndex, frontIndex + 30);
-		//统计区间上涨和下跌的次数比例
-		freqStatTool.Inition();
-		freqStatTool.GetGroupFrqu(newdata._vPriChaRate, vfreqlist);
-		float rise = freqStatTool.GetFreqByValue(0.00001f, 1.0f, vfreqlist);
-		float fall = freqStatTool.GetFreqByValue(-1.0f, -0.00001f, vfreqlist);
-		changerate.RiseDayRate = rise / (float)newdata._vPriChaRate.size();
-		changerate.FallDayRate = fall / (float)newdata._vPriChaRate.size();
-		changerate.BeginDate.SetDay(newdata._vTimeDay[0]);
-		changerate._IndexType = StaticList[i]._IndexType;
-		//
-		statictool.GetEveryDayChangeRate(newdata._vClose, PriceChangeResult);
-		statictool.GetMaxChangeRates(PriceChangeResult, changerate);
-		
-		if (changerate._IndexType == _eStaticPositiveUpClose)
-		{
-			Upresults.push_back(changerate);
-			Allresules.push_back(changerate);
-		}
-		else
-		{
-			Downresults.push_back(changerate);
-			Allresules.push_back(changerate);
-		}
-	}
-	Save_MACD_EDA_StatisticeResultTofile(Allresules);
-	return true;
-}
-
-
-bool CStatisticeInter::Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result)
-{
-	fstream outfile("D:\\StockFile\\Log\\StatisticeResult.csv", ios::out);
-	outfile
-		<< "date" << ","
-		<< "RiseRate" << ","
-		<< "FallRate" << ","
-		<< "RiseRate1" << ","
-		<< "RiseRate2" << ","
-		<< "RiseRate3" << ","
-		<< "FallRate1" << ","
-		<< "FallRate2" << ","
-		<< "FallRate3" << ","
-		<< "IndexType"
-		<< endl;
-	for (vector<StaticResults>::iterator ite = result.begin(); ite != result.end(); ite++)
-	{
-		outfile
-		<< ite->BeginDate.GetDay()<<","
-		<< ite->RiseDayRate << ","
-		<< ite->FallDayRate << ","
-		<< ite->RiseRate1 << ","
-		<< ite->RiseRate2 << ","
-		<< ite->RiseRate3 << ","
-		<< ite->FallRate1 << ","
-		<< ite->FallRate2 << ","
-		<< ite->FallRate3 << ","
-		<< ite->_IndexType << ",";
-		outfile << endl;
-	}
-
-	outfile.close();
-	return true;
-}
-
-//根据模拟CDP的高低点来买卖股票
-void CStatisticeInter::simulation(const StockDataTable& daynumber, const StockDataTable& weeknumber)
-{
-	const VStockData &dayclose = daynumber._vClose;
-	const VStockData &daylow = daynumber._vLow;
-	const VStockData &dayhigh = daynumber._vHigh;
-	const vector<string> &day = daynumber._vTimeDay;
-
-	const VStockData &weekNL = weeknumber._vNL_NormalLow;
-	const VStockData &weekKDJ_J = weeknumber._vJ;
-// 	const VStockData &daylow = daynumber._vLow;
-// 	const VStockData &dayhigh = daynumber._vHigh;
-	CStockAccount account("000001",1000000);
-
-	float StopLossLine1 = 0.95f;
-	float StopLossLine2 = 0.90f;
-	float StopLossLine3 = 0.98f;
-
-	//CDFT DFTTool;
-	//DFTDataList result = DFTTool.DFT(daynumber._vPSY);
-	for (unsigned int i = DATAMINSIZE; i < day.size(); i++)
-	{
-		unsigned int iLastWeek = weeknumber.GetLastTimeIndexByDate(daynumber._vDate[i]);
-		if (iLastWeek == 0)
-			continue;
-		if (daylow[i] < weekNL[iLastWeek] &&
-			account.GetStockQuantityOwned() <= 0.01 &&
-			daynumber._vPSY[i]   < 30)
-		{
-			account.AllIn(weekNL[iLastWeek], day[i]);
-			continue;
-		}
-		if (dayhigh[i] / account.GetLastBuyPrice() >= 1.05f &&
-			account.GetStockQuantityOwned() >= 1.0f)
-		{
-			account.SellOutAll(account.GetLastBuyPrice()*1.05f, day[i]);
-			LOG(INFO) << day[i] << " Profit :" << account.GetCurrentAssets(0.0f)
-				<< " Buy: " << account.GetLastBuyPrice() << "--"
-				<< "Sell: " << account.GetLastSellPrice() << endl;
-			continue;
-		}
-		if (dayhigh[i] >= weeknumber._vNH_NormalHigh[iLastWeek]&&
-			account.GetStockQuantityOwned() >= 1.0f)
-		{
-			account.SellOutAll(weeknumber._vNH_NormalHigh[iLastWeek], day[i]);
-			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
-				<< " Buy: " << account.GetLastBuyPrice() << "--"
-				<< "Sell: " << account.GetLastSellPrice() << endl;
-		}
-		if (daylow[i] / account.GetLastBuyPrice() <= StopLossLine1 &&
-			account.GetStockQuantityOwned() >= 1.0f
-			&& daynumber._vAsit[i] - daynumber._vAsit[i - 1] < 0)
-		{
-			account.SellOutAll(account.GetLastBuyPrice() * StopLossLine1, day[i]);
-			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
-				<< " Buy: " << account.GetLastBuyPrice() << "--"
-				<< "Sell: " << account.GetLastSellPrice() << endl;
-		}
-		if (daylow[i] / account.GetLastBuyPrice() <= StopLossLine2 &&
-			account.GetStockQuantityOwned() >= 1.0f)
-		{
-			account.SellOutAll(account.GetLastBuyPrice() * StopLossLine2, day[i]);
-			LOG(INFO) << day[i] << " Loss :" << account.GetCurrentAssets(0.0f)
-				<<" Buy: "<< account.GetLastBuyPrice() << "--"
-				<<"Sell: "<< account.GetLastSellPrice()<< endl;
-		}
-	}
-	return;
 }
 
 StockDataType CStatisticeInter::Autocorrelation(const VStockData& _inputdata, unsigned int interval)
@@ -295,120 +127,6 @@ void CStatisticeInter::MALineStatistice(
 }
 
 
-bool CStatisticeInter::StatisticeHistoryData(
-	const StockDataTable& daynumber,
-	const StockDataTable& weeknumber,
-	const StockDataTable& mounthnumber,
-	const StockDataTable& shnumber,
-	CStateInter& daystate,
-	CStateInter& weekstate,
-	CStateInter& monthstate,
-	string Stockcode)
-{
-	EnterCriticalSection(&filterDataMeancs);
-	if (!weeknumber.ChackDataSize()
-		/*|| !weeknumber.ChackDataSize()*/
-		/*|| !mounthnumber.ChackDataSize()*/)
-	{
-		LeaveCriticalSection(&filterDataMeancs);
-		return false;
-	}
-	CFreqStatistice freqTool;
-	_FreqList.clear();
-
-	const StockDataTable& AnaNumber = daynumber;
-	MeanVarPoint _tempMeanVarData;//用于暂存移动方差和移动均值
-	CMeanVariance moveMeanVarTool;//用于全部计算方差和均值的工具
-	MeanVar _localFilterMeanVar;//moveMeanVarTool迭代总移动方差和均值的返回变量
-	MeanVar _allDataMeanVar;//moveMeanVarTool迭代总移动方差和均值的返回变量
-	MeanVar _moveMeanVar;//moveMeanVarTool迭代计算移动方差和均值的返回变量
-	daystate.moveMeanList.clear();//
-	DayPrice oneDayPrice;//用于暂存日价格数据
-	list <DayPrice> movePriceList;//平移方差计算时保存之前价格的价格
-	_tempMeanVarData._TimeIndex = 0;
-	_tempMeanVarData._Date = AnaNumber._vDate[0];
-	daystate.moveMeanList.push_back(_tempMeanVarData);
-	CStockAccount account("000001",100000000);
-	StatePoint tempStatePoint;
-	StateTable& states = daystate.allIndexStates[_eASI_I];
-
-	//遍历所有的数据，计算方差和均值
-	for (unsigned int indexCurrent = 6; indexCurrent < AnaNumber._vTimeDay.size(); indexCurrent++)
-	{
-		oneDayPrice._openData = AnaNumber._vOpen[indexCurrent];
-		oneDayPrice._closeData = AnaNumber._vClose[indexCurrent];
-		oneDayPrice._highData = AnaNumber._vHigh[indexCurrent];
-		oneDayPrice._lowData = AnaNumber._vLow[indexCurrent];
-		oneDayPrice._frontopen = AnaNumber._vOpen[indexCurrent - 1];
-		oneDayPrice._frontclose = AnaNumber._vClose[indexCurrent - 1];
-		oneDayPrice._fronthigh = AnaNumber._vHigh[indexCurrent - 1];
-		oneDayPrice._frontlow = AnaNumber._vLow[indexCurrent - 1];
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _allDataMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _allDataMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _allDataMeanVar);
-		unsigned int monthIndex = mounthnumber.GetLastTimeIndexByDate(AnaNumber._vDate[indexCurrent]);
-		unsigned int shIndex = shnumber.GetLastTimeIndexByDate(AnaNumber._vDate[indexCurrent]);
-		tempStatePoint = states.CloselyLocalPoint(indexCurrent-2);
-		if (tempStatePoint._IndexType == _eLocalLow)
-			tempStatePoint = states.CloselyLocalPoint(tempStatePoint._TimeIndex - 1);
-		CheckCurrentStockDataAndGetName(
-			AnaNumber,mounthnumber,_allDataMeanVar,
-			indexCurrent,monthIndex,Stockcode);
-		if (monthIndex == 0 || shIndex == 0)
-			continue;
-		if ( false
-			|| (!(AnaNumber._vK[indexCurrent - 1] - AnaNumber._vK[indexCurrent - 2] > 0.00))
-			|| (!(AnaNumber._vDiff[indexCurrent - 1] - AnaNumber._vDiff[indexCurrent - 2] > 0))
-			|| (!(2 * AnaNumber._vDiff[indexCurrent - 2] - AnaNumber._vDiff[indexCurrent - 1] - AnaNumber._vDiff[indexCurrent - 3] < 0))
-			|| (!(2 * AnaNumber._vK[indexCurrent - 2] - AnaNumber._vK[indexCurrent - 1] - AnaNumber._vK[indexCurrent - 3] < 0.00))
-			|| (!(mounthnumber._vDiff[monthIndex] - mounthnumber._vDiff[monthIndex - 1] > 0))
-			|| (!(_allDataMeanVar.mean > 0.00))
-			|| (!(daynumber._vAsi_i[indexCurrent-1] > tempStatePoint._Value))
-			|| (!(tempStatePoint._IndexType == _eLocalHigh))
-// 			|| (!(AnaNumber._vK[indexCurrent - 1] < 50))
-// 			|| (!(shnumber._vK[shIndex] - shnumber._vK[shIndex - 1] > 0.0f))
-// 			|| (!(shnumber._vDiff[shIndex] - shnumber._vDiff[shIndex - 1] > 0.0f))
-//  			|| (!(2 * shnumber._vDiff[shIndex - 1] - shnumber._vDiff[shIndex] - shnumber._vDiff[shIndex - 2] < 0.0f))
-// 			|| ((2 * shnumber._vK[shIndex - 1] - shnumber._vK[shIndex] - shnumber._vK[shIndex - 2] < 0.0f))
-				)
-		{
-			//account.SellOutAll((oneDayPrice._highData + oneDayPrice._lowData + oneDayPrice._closeData) / 3, "1991-1-1");
-			continue;
-		}
-		//account.AllIn((oneDayPrice._highData + oneDayPrice._lowData + oneDayPrice._closeData) / 3, "1991-1-1");
-		//迭代计算全部数据的方差和均值
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _localFilterMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _localFilterMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _localFilterMeanVar);
-		freqTool.PushFreqData(GetReturnRate_H(oneDayPrice), _FreqList);
-		freqTool.PushFreqData(GetReturnRate_C(oneDayPrice), _FreqList);
-		freqTool.PushFreqData(GetReturnRate_L(oneDayPrice), _FreqList);
-		//计算移动方差和均值
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_H(oneDayPrice), _moveMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_C(oneDayPrice), _moveMeanVar);
-		moveMeanVarTool.GetNextMeanVar(GetReturnRate_L(oneDayPrice), _moveMeanVar);
-		movePriceList.push_back(oneDayPrice);
-		if (indexCurrent >= moveVarDaySize)
-		{
-		//计算移动方差和均值，去除最开始的数据
-			oneDayPrice = movePriceList.front();
-			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_H(oneDayPrice), _moveMeanVar);
-			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_C(oneDayPrice), _moveMeanVar);
-			moveMeanVarTool.GetMeanVarRemoveData(GetReturnRate_L(oneDayPrice), _moveMeanVar);
-			movePriceList.pop_front();
-		}
-		//将移动方差和均值保存到moveMeanVarList当中
-		_tempMeanVarData._TimeIndex = indexCurrent;
-		_tempMeanVarData._Date = AnaNumber._vDate[indexCurrent];
-		_tempMeanVarData._Mean = _moveMeanVar.mean;
-		_tempMeanVarData._Var = _moveMeanVar.var;
-		_tempMeanVarData._MeanToVarRatio = _moveMeanVar.mean / _moveMeanVar.var;
-		daystate.moveMeanList.push_back(_tempMeanVarData);
-	}
-	SaveMeanVarList_CS(Stockcode, _localFilterMeanVar, _allDataMeanVar);
-	LeaveCriticalSection(&filterDataMeancs);
-	return true;
-}
 
 
 bool CStatisticeInter::StatisticeASIData(
@@ -426,15 +144,8 @@ bool CStatisticeInter::StatisticeASIData(
 	unsigned _Passtimeinedx = 0;
 	for (unsigned int index = 20; index < daynumber._vTimeDay.size(); index++)
 	{
-		oneDayPrice._openData = AnaNumber._vOpen[index];
-		oneDayPrice._closeData = AnaNumber._vClose[index];
-		oneDayPrice._highData = AnaNumber._vHigh[index];
-		oneDayPrice._lowData = AnaNumber._vLow[index];
-		oneDayPrice._frontopen = AnaNumber._vOpen[index - 1];
-		oneDayPrice._frontclose = AnaNumber._vClose[index - 1];
-		oneDayPrice._fronthigh = AnaNumber._vHigh[index - 1];
-		oneDayPrice._frontlow = AnaNumber._vLow[index - 1];
-		tempPoint = states.CloselyLocalPoint(index-2);
+		GetOneDayPrice(oneDayPrice, index, AnaNumber);
+		tempPoint = states.CloselyLocalPoint(index - 2);
 		if (tempPoint._IndexType == _eLocalLow)
 			tempPoint = states.CloselyLocalPoint(tempPoint._TimeIndex - 1);
 		if (   !(daynumber._vAsi_i[index-1] > tempPoint._Value)
@@ -471,6 +182,155 @@ bool CStatisticeInter::SaveMeanVarList_CS(
 	return true;
 }
 
+bool CStatisticeInter::GroupDabug(
+	const StockDataTable& daynumber,
+	const StockDataTable& weeknumber,
+	const StockDataTable& mounthnumber,
+	const StockDataTable shnumber,
+	CStateInter& daystate,
+	CStateInter& weekstate,
+	CStateInter& monthstate)
+{
+	//EnterCriticalSection(&filterDataMeancs);
+	const StockDataTable& AnaNumber = daynumber;
+
+	if (!AnaNumber.ChackDataSize())
+	{
+		//LeaveCriticalSection(&filterDataMeancs);
+		return false;
+	}
+	DayPrice oneDayPrice;//用于暂存日价格数据
+	CHistoryGroup GroupTool;
+	NumberEvent tempNumberEvent;
+	vector<NumberEvent> _numberdata;
+	map<Group, MeanVar> meanVarMiddle;
+	unsigned int shIndex = 0;
+	unsigned int mInx = 0;
+	for (unsigned int index = 80; index < AnaNumber._vTimeDay.size(); index++)
+	{
+		GetOneDayPrice(oneDayPrice, index, AnaNumber);
+		if (oneDayPrice._closeData / oneDayPrice._frontclose >= 1.098
+			|| oneDayPrice._closeData / oneDayPrice._frontclose <= 0.902)
+			continue;//排除当天涨停和跌停的情况
+		mInx = mounthnumber.GetLastTimeIndexByDate(AnaNumber._vDate[index]);
+		_numberdata.clear();
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDayDIFF, AnaNumber._vDiff[index - 1]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayDIFF, AnaNumber._vDiff[index - 1] - AnaNumber._vDiff[index - 2]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayDIFF, AnaNumber._vCR[index - 1] + AnaNumber._vDiff[index - 3] - 2 * AnaNumber._vDiff[index - 2]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayKDJ_K, AnaNumber._vK[index - 1] - AnaNumber._vK[index - 2]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayKDJ_K, AnaNumber._vK[index - 1] + AnaNumber._vK[index - 3] - 2 * AnaNumber._vK[index - 2]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDayCR, AnaNumber._vCR[index - 1] - 80));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayVR, AnaNumber._vVR[index - 1] - AnaNumber._vVR[index - 2]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisMonthKDJ_KJ, (mounthnumber._vJ[mInx - 1] - mounthnumber._vK[mInx - 1]) + 10));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayCRMA, AnaNumber._vCRMA1[index - 1] - AnaNumber._vCRMA1[index - 2]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayMA1, AnaNumber._vMa1[index - 1] - AnaNumber._vMa2[index - 2]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayMA2, AnaNumber._vMa2[index - 1] - AnaNumber._vMa3[index - 2]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayMA3, AnaNumber._vMa3[index - 1] - AnaNumber._vMa4[index - 2]));
+
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisMonthDIFF, mounthnumber._vDiff[MonthIndex]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeMonthDIFF, mounthnumber._vDiff[mInx] - mounthnumber._vDiff[mInx - 1]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeMonthDIFF, mounthnumber._vDiff[MonthIndex] + mounthnumber._vDiff[MonthIndex - 2] - 2 * mounthnumber._vDiff[MonthIndex - 1]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeMonthKDJ_K, mounthnumber._vK[mInx] - mounthnumber._vK[mInx - 1]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeMonthKDJ_K, mounthnumber._vK[MonthIndex] + mounthnumber._vK[MonthIndex - 2] - 2 * mounthnumber._vK[MonthIndex - 1]));
+
+		shIndex = shnumber.GetLastTimeIndexByDate(AnaNumber._vTimeDay[index]);
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDayDIFF, shnumber._vDiff[shIndex]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDeDayDIFF, shnumber._vDiff[shIndex] - shnumber._vDiff[shIndex - 1]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDeDeDayDIFF, shnumber._vDiff[shIndex] + shnumber._vDiff[shIndex - 2] - 2 * shnumber._vDiff[shIndex - 1]));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDeDayKDJ_K, shnumber._vK[shIndex] - shnumber._vK[shIndex - 1]));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDeDeDayKDJ_K, shnumber._vK[shIndex] + shnumber._vK[shIndex - 2] - 2 * shnumber._vK[shIndex - 1] + 5));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisShDeDayCR, shnumber._vCR[shIndex] - shnumber._vCR[shIndex - 1] - 20));
+		if (index > 0 && index <= (AnaNumber._vTimeDay.size() / 2)){
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_C(oneDayPrice), _eGroup1);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_H(oneDayPrice), _eGroup1);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_L(oneDayPrice), _eGroup1);
+		}
+		if (index > (AnaNumber._vTimeDay.size() / 4) && index <= (AnaNumber._vTimeDay.size() / 2))	{
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_C(oneDayPrice), _eGroup2);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_H(oneDayPrice), _eGroup2);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_L(oneDayPrice), _eGroup2);
+		}
+		if (index > (AnaNumber._vTimeDay.size() / 2) && index <= (AnaNumber._vTimeDay.size() * 3/4))	{
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_C(oneDayPrice), _eGroup3);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_H(oneDayPrice), _eGroup3);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_L(oneDayPrice), _eGroup3);
+		}
+		if (index > (AnaNumber._vTimeDay.size() * 3 / 4))	{
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_C(oneDayPrice), _eGroup4);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_H(oneDayPrice), _eGroup4);
+			GroupTool.RecordDataFreq(_numberdata, GetReturnRate_L(oneDayPrice), _eGroup4);
+		}
+		GroupTool.RecordDay(_numberdata, oneDayPrice._frontdate);
+
+	}
+	vector<unsigned int> FreqAndCountData;
+	Group keyGroup;
+	for (unsigned int i = 0; i < GroupTool.vkeyGroupType.size();i++)
+	{
+		keyGroup = GroupTool.vkeyGroupType[i];
+		keyGroup.changeRateType = _eGroup1;
+		SaveOneGroupFreqData(AnaNumber._strStockCode, keyGroup, GroupTool);
+		keyGroup.changeRateType = _eGroup2;
+		SaveOneGroupFreqData(AnaNumber._strStockCode, keyGroup, GroupTool);
+		keyGroup.changeRateType = _eGroup3;
+		SaveOneGroupFreqData(AnaNumber._strStockCode, keyGroup, GroupTool);
+		keyGroup.changeRateType = _eGroup4;
+		SaveOneGroupFreqData(AnaNumber._strStockCode, keyGroup, GroupTool);
+		keyGroup.changeRateType = _eMixed;
+		SaveOneGroupFreqData(AnaNumber._strStockCode, keyGroup, GroupTool);
+	}
+	
+	return true;
+}
+
+bool CStatisticeInter::SaveOneGroupFreqData(const string& stockCoed,Group _GroupType, CHistoryGroup& GroupTool)
+{
+	vector<unsigned int> FreqAndCountData;
+	MeanVar groupMeanVar;
+	GroupTool.GetNumberFreqData(_GroupType, FreqAndCountData);//获得统计的频次数据
+	GroupTool.GetGroupMeanVar(_GroupType, groupMeanVar);//获得统计的均值和方差
+	vector<float> meanVarData;
+	FreqAndCountData.push_back(groupMeanVar.n);
+	meanVarData.push_back(groupMeanVar.mean);
+	meanVarData.push_back(groupMeanVar.var);
+	EnterCriticalSection(&filterDataMeancs);
+	CNumbersToSql SQlTool;
+	SQlTool.IniMysqlTool();
+	SQlTool.InsertData(stockCoed, FreqAndCountData, meanVarData, GroupTool.FreqTool.beginGroup, GroupTool.FreqTool.endGroup);
+	SQlTool.SaveFreqCacheData();
+	LeaveCriticalSection(&filterDataMeancs);
+	return true;
+}
+
+void CStatisticeInter::GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, const StockDataTable& AnaNumber) const 
+{
+	oneDayPrice._openData = AnaNumber._vOpen[index];
+	oneDayPrice._closeData = AnaNumber._vClose[index];
+	oneDayPrice._highData = AnaNumber._vHigh[index];
+	oneDayPrice._lowData = AnaNumber._vLow[index];
+	oneDayPrice._date.SetDay(AnaNumber._vTimeDay[index]);
+
+	oneDayPrice._frontopen = AnaNumber._vOpen[index - 1];
+	oneDayPrice._frontclose = AnaNumber._vClose[index - 1];
+	oneDayPrice._fronthigh = AnaNumber._vHigh[index - 1];
+	oneDayPrice._frontlow = AnaNumber._vLow[index - 1];
+	oneDayPrice._frontdate = AnaNumber._vDate[index - 1];
+}
+
+bool CStatisticeInter::GetMeanFromSQL(string columns, unsigned int Numtype)
+{
+	MySQLInterFace SQLTool;
+	SQLTool.Inition();
+
+	string sqlIns = "show tables;";
+	vector<string> tables;
+	SQLTool.GetTableList(tables);
+
+
+
+	return true;
+}
+
 
 
 void CheckCurrentStockDataAndGetName(
@@ -484,17 +344,17 @@ void CheckCurrentStockDataAndGetName(
 	if (monthIndex != 0 && Currentindex >= AnaNumber._vTimeDay.size() - 1)
 	{
 		if ((AnaNumber._vDiff[Currentindex] - AnaNumber._vDiff[Currentindex - 1] < 0.00f))
-			LOG(INFO) << StockCode << " Day diff failure to meet conditions.";
+			LOG(WARNING) << StockCode << " Day diff failure to meet conditions.";
 		else if ((2 * AnaNumber._vDiff[Currentindex - 1] - AnaNumber._vDiff[Currentindex] - AnaNumber._vDiff[Currentindex - 2] > 0))
-			LOG(INFO) << StockCode << " Day diff failure to meet conditions.";
+			LOG(WARNING) << StockCode << " Day diff failure to meet conditions.";
 		else if ((AnaNumber._vK[Currentindex] - AnaNumber._vK[Currentindex - 1] < 0.00))
-			LOG(INFO) << StockCode << " KDJ_K failure to meet conditions.";
+			LOG(WARNING) << StockCode << " KDJ_K failure to meet conditions.";
 		else if ((2 * AnaNumber._vK[Currentindex - 1] - AnaNumber._vK[Currentindex] - AnaNumber._vK[Currentindex - 2] > 0.00f))
-			LOG(INFO) << StockCode << " KDJ_K failure to meet conditions.";
+			LOG(WARNING) << StockCode << " KDJ_K failure to meet conditions.";
 		else if ((mounthnumber._vDiff[monthIndex] - mounthnumber._vDiff[monthIndex - 1] < 0))
-			LOG(INFO) << StockCode << " Month diff failure to meet conditions.";
+			LOG(WARNING) << StockCode << " Month diff failure to meet conditions.";
 		else if ((allDataMeanVar.mean < 0.00f))
-			LOG(INFO) << StockCode << " Day mean failure to meet conditions.";
+			LOG(WARNING) << StockCode << " Day mean failure to meet conditions.";
 		else
 		{
 			LOG(INFO) << " Get stock name:    " << StockCode;
@@ -516,47 +376,122 @@ CRealTimeAna::~CRealTimeAna()
 }
 
 
-bool CRealTimeAna::AnalysisRealTimeData(const StockDataTable& number, string stockCode)
-{
-	unsigned lastIndex = number._vTimeDay.size() - 1;
-	if (lastIndex < 10)
-		return false;
-	if (number._vK[lastIndex] > number._vK[lastIndex - 1]
-		&& number._vK[lastIndex] + number._vK[lastIndex - 2] > 2 * number._vK[lastIndex-1]
-		&& number._vJ[lastIndex - 1] < number._vK[lastIndex - 1]
-		&& number._vJ[lastIndex] > number._vK[lastIndex]
-		)
-	{
-		LOG(INFO) << "Realtime code KDJ up close:     " << stockCode;
-	}
-	if (number._vK[lastIndex] > number._vK[lastIndex - 1]
-		&& 2 * number._vK[lastIndex - 1] - number._vK[lastIndex] - number._vK[lastIndex - 2] < 0
-		&& number._vDiff[lastIndex] > number._vDiff[lastIndex - 1]
-		&& 2 * number._vDiff[lastIndex - 1] - number._vDiff[lastIndex] - number._vDiff[lastIndex - 2] < 0
-		)
-	{
-		LOG(INFO) << "Get Realtime stock code:     " << stockCode;
-	}
 
+bool CRealTimeAna::AnalysisRealTimeData(map<string, MACDCombin>& macdData, map<string, KDJCombin>& KDJData)
+{
+	if (macdData.size() != KDJData.size())
+	{
+		return false;
+	}
+	vector<NumberEvent> _numberdata;
+	NumberEvent tempNumberEvent;
+	realTimeDataToAna RealTimeData;
+	CurrentGroupingTool.Inition();
+	YesterdayGroupingTool.Inition();
+	for (map<string, MACDCombin>::const_iterator ite = macdData.begin(); ite != macdData.end(); ite++)
+	{
+		RealTimeData.CloselyMACDs = ite->second;
+		RealTimeData.CloselyKDJs = KDJData[ite->first];
+		_numberdata.clear();
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayDIFF, RealTimeData.CloselyMACDs.CurrentMacd.dif - RealTimeData.CloselyMACDs.TodayMacd.dif));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayDIFF, RealTimeData.CloselyMACDs.CurrentMacd.dif + RealTimeData.CloselyMACDs.YesterdayMacd.dif - 2 * RealTimeData.CloselyMACDs.TodayMacd.dif));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayKDJ_K, RealTimeData.CloselyKDJs.CurrentKDJ.K_OF_KDJ - RealTimeData.CloselyKDJs.TodayKDJ.K_OF_KDJ));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayKDJ_K, RealTimeData.CloselyKDJs.CurrentKDJ.K_OF_KDJ + RealTimeData.CloselyKDJs.YesterdayKDJ.K_OF_KDJ - 2 * RealTimeData.CloselyKDJs.TodayKDJ.K_OF_KDJ));
+
+		CurrentGroupingTool.GroupingNumbers(ite->first, _numberdata, _eMixed);
+
+		_numberdata.clear();
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayDIFF, RealTimeData.CloselyMACDs.TodayMacd.dif - RealTimeData.CloselyMACDs.YesterdayMacd.dif));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayDIFF, RealTimeData.CloselyMACDs.TodayMacd.dif + RealTimeData.CloselyMACDs.BefoYesMacd.dif - 2 * RealTimeData.CloselyMACDs.YesterdayMacd.dif));
+		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDayKDJ_K, RealTimeData.CloselyKDJs.TodayKDJ.K_OF_KDJ - RealTimeData.CloselyKDJs.YesterdayKDJ.K_OF_KDJ));
+// 		_numberdata.push_back(tempNumberEvent.IniData(_eBasisDeDeDayKDJ_K, RealTimeData.CloselyKDJs.TodayKDJ.K_OF_KDJ + RealTimeData.CloselyKDJs.BefYesKDJ.K_OF_KDJ - 2 * RealTimeData.CloselyKDJs.YesterdayKDJ.K_OF_KDJ));
+		YesterdayGroupingTool.GroupingNumbers(ite->first, _numberdata, _eMixed);
+	}
+	ShowCurrentCode();
+	ShowYesterdayCode();
 	return true;
 }
-//
-bool GroupFreqStatistice(const StockDataTable& stockdata, CStateInter& stateinter)
+
+void CRealTimeAna::Inition()
 {
-	CFreqStatistice tempStat;
-	FreqListType vfreqlist;
-	StatePointsList& thePoints = stateinter.allIndexStates[_eMACD_DEA]._trendstate;
-	for (unsigned int i = 0; i < thePoints.size(); i++)
+	CurrentGroupingTool.Inition();
+}
+
+void CRealTimeAna::ShowCurrentCode()
+{
+	vector<string> returnCode;
+	CurrentGroupingTool.GetGroup(
+		(BasisType)(_eBasisDeDayDIFF/* | _eBasisDeDeDayDIFF*/ | _eBasisDeDayKDJ_K /*| _eBasisDeDeDayKDJ_K*/),
+		(PosNegType)(_eBasisDeDayDIFF_P /*| _eBasisDeDeDayDIFF_P*/ | _eBasisDeDayKDJ_K_P /*| _eBasisDeDeDayKDJ_K_P*/),
+		returnCode);
+	CNumbersToSql SQLTool;
+	SQLTool.IniMysqlTool();
+	int countFromFund = 0;
+	int index = 0;
+	float pe = 0;
+	int TableCout = 8;
+
+	cout << endl<<"*******Current data********"<<endl;
+	for (unsigned int i = 0; i < returnCode.size(); i++)
 	{
-		unsigned int timeindex = thePoints[i]._TimeIndex;
-		if (thePoints[i]._IndexType == _eTrendBottomRise&&
-			stockdata._vDEA[timeindex] > 0)
+		countFromFund = SQLTool.CheckStockFundCount(returnCode[i]);
+		pe = SQLTool.ReadPEFromSQL(returnCode[i]);
+		if (countFromFund > 2 && pe < 25 && pe > 2)
 		{
-			unsigned int beginindex = thePoints[i]._TimeIndex;
-			StockDataTable tempdata = stockdata.NewDataByIndex(beginindex, beginindex + 30);
-			tempStat.Inition();
-			tempStat.GetGroupFrqu(tempdata._vPriChaRate, vfreqlist);
+			if (0 == index)
+				cout << setw(TableCout) << "code"
+				<< setw(TableCout) << "count"
+				<< setw(TableCout) << "PE"
+				<< setw(TableCout) << "code"
+				<< setw(TableCout) << "count"
+				<< setw(TableCout) << "PE";
+			if (index % 2 == 0)
+				cout << endl;
+			index++;
+			cout << setw(TableCout) << returnCode[i]
+				<< setw(TableCout) << countFromFund
+				<< setw(TableCout) << pe;
 		}
 	}
-	return true;
 }
+
+void CRealTimeAna::ShowYesterdayCode()
+{
+	vector<string> returnCode;
+	YesterdayGroupingTool.GetGroup(
+		(BasisType)(_eBasisDeDayDIFF /*| _eBasisDeDeDayDIFF*/ | _eBasisDeDayKDJ_K /*| _eBasisDeDeDayKDJ_K*/),
+		(PosNegType)(_eBasisDeDayDIFF_P /*| _eBasisDeDeDayDIFF_P*/ | _eBasisDeDayKDJ_K_P /*| _eBasisDeDeDayKDJ_K_P*/),
+		returnCode);
+	CNumbersToSql SQLTool;
+	SQLTool.IniMysqlTool();
+	int countFromFund = 0;
+	int index = 0;
+	float pe = 0;
+	int TableCout = 8;
+	cout << endl << "*******Yesterday data********" << endl;
+	for (unsigned int i = 0; i < returnCode.size(); i++)
+	{
+		countFromFund = SQLTool.CheckStockFundCount(returnCode[i]);
+		pe = SQLTool.ReadPEFromSQL(returnCode[i]);
+		if (countFromFund > 2 && pe < 25 && pe > 2)
+		{
+			if (0 == index)
+				cout << setw(TableCout) << "code"
+				<< setw(TableCout) << "count"
+				<< setw(TableCout) << "PE"
+				<< setw(TableCout) << "code"
+				<< setw(TableCout) << "count"
+				<< setw(TableCout) << "PE";
+			if (index % 2 == 0)
+				cout << endl;
+			index++;
+			cout << setw(TableCout) << returnCode[i]
+				<< setw(TableCout) << countFromFund
+				<< setw(TableCout) << pe;
+		}
+	}
+}
+
+
+
+//

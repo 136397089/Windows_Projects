@@ -1,34 +1,7 @@
 #pragma once
 #include "Number\NumberBase.h"
 
-struct  Dmi
-{
-	StockDataType _PDI;
-	StockDataType _NDI;
-	StockDataType _ADX;
-	StockDataType _ADXR;
-	Dmi()
-	{
-		_PDI = 0.0f;
-		_NDI = 0.0f;
-		_ADX = 0.0f;
-		_ADXR = 0.0f;
-	}
-};
-struct DMTR
-{
-	StockDataType PDM;
-	StockDataType NDM;
-	StockDataType TR;
-	StockDataType ADX;
-	DMTR()
-	{
-		PDM = 0.0f;
-		NDM = 0.0f;
-		TR = 0.0f;
-		ADX = 0.0f;
-	}
-};
+
 class CDMI// :public CNumberManager
 {
 public:
@@ -54,11 +27,11 @@ public:
 	//closeData:收盘价
 	//mMacd:前日的MACD
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextDMI(const DatePriceData& OneDayData, Dmi& mDmi);
+	bool GetNextDMI(const SinDayPriceData& OneDayData, Dmi& mDmi);
 
 	bool Inition();
 private:
-	DatePriceData _FrontPriceData;
+	SinDayPriceData _FrontPriceData;
 	//list<DMTR> _vFrontDMTRList;
 	Dmi _FrontDMI;
 	DMTR _FrontAvgDMTR;

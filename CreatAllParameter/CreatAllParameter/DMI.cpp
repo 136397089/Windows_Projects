@@ -30,7 +30,7 @@ CDMI::~CDMI()
 // 
 // }
 
-bool CDMI::GetNextDMI(const DatePriceData& TodayDayData, Dmi& mDmi)
+bool CDMI::GetNextDMI(const SinDayPriceData& TodayDayData, Dmi& mDmi)
 {
 	mDmi._PDI = 0;
 	mDmi._NDI = 0;

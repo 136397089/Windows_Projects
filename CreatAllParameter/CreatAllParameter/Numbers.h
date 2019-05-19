@@ -24,7 +24,7 @@ public:
 	
 private:
 	void PushBackIndex(const SigDayTechIndex& AllIndex, StockDataTable& datas);
-	//AllStockData mDayValue;
+
 
 };
 

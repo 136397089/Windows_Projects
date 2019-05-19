@@ -28,7 +28,7 @@ CArBrCrVrPsy::~CArBrCrVrPsy()
 {
 }
 
-bool CArBrCrVrPsy::GetNextArBrVrPsy(const DatePriceData& OneDayData, ARBRCRVRPSY& mLastData)
+bool CArBrCrVrPsy::GetNextArBrVrPsy(const SinDayPriceData& OneDayData, ARBRCRVRPSY& mLastData)
 {
 	TemporaryStorageData.push_front(OneDayData);
 	if (TemporaryStorageData.size() > VRParameter &&
@@ -88,7 +88,7 @@ StockDataType CArBrCrVrPsy::GetAR()
 	StockDataType sum_high_open = 0;
 	StockDataType sum_open_low = 0;
 	unsigned int j = 1;
-	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator currentIte = TemporaryStorageData.begin();
 	while (currentIte != TemporaryStorageData.end())
 	{
 		sum_high_open = sum_high_open + (currentIte->_High - currentIte->_Open);
@@ -119,8 +119,8 @@ StockDataType CArBrCrVrPsy::GetBR()
 	StockDataType sum_pcolse_low = 0;
 
 	unsigned int j = 1;
-	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<DatePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator currentIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
 	lastTimeIte++;
 	while (lastTimeIte != TemporaryStorageData.end())
 	{
@@ -153,8 +153,8 @@ StockDataType CArBrCrVrPsy::GetVR()
 	StockDataType BVS = 0;
 	StockDataType CVS = 0;
 	unsigned int j = 1;
-	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<DatePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator currentIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
 	lastTimeIte++;
 	while (lastTimeIte != TemporaryStorageData.end())
 	{
@@ -189,8 +189,8 @@ StockDataType CArBrCrVrPsy::GetPSY()
 
 	float PSY = 0;
 	unsigned int j = 1;
-	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<DatePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator currentIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
 	lastTimeIte++;
 	while (lastTimeIte != TemporaryStorageData.end())
 	{
@@ -223,8 +223,8 @@ StockDataType CArBrCrVrPsy::GetCR()
 	StockDataType P2 = 0;
 
 	unsigned int j = 1;
-	list<DatePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<DatePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator currentIte = TemporaryStorageData.begin();
+	list<SinDayPriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
 	lastTimeIte++;
 	while (lastTimeIte != TemporaryStorageData.end())
 	{

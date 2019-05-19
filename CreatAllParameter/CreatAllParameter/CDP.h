@@ -2,15 +2,6 @@
 #include "Number\NumberBase.h"
 
 
-struct CDP
-{
-	StockDataType _CDP;
-	StockDataType _AH_High;
-	StockDataType _NH_NormalHigh;
-	StockDataType _AL_Low;
-	StockDataType _NL_NormalLow;
-
-};
 class CCDPCal// :public CNumberManager
 {
 public:
@@ -36,7 +27,7 @@ public:
 	//closeData:收盘价
 	//mMacd:前日的MACD
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextCDP(const DatePriceData& OneDayData, CDP& mCdp);
+	bool GetNextCDP(const SinDayPriceData& OneDayData, CDP& mCdp);
 
 };
 

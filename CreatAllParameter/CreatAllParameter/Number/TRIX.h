@@ -1,30 +1,13 @@
 #pragma once
 #include <list>
 #include "NumberBase.h"
-struct TRIX /*: public IndexBaseType*/
-{
-	TRIX() :_TRIX(0), _TRMA(0),_AX(0), _BX(0), _TR(0){}
-	StockDataType _TRIX;
-	StockDataType _TRMA;
-	StockDataType _AX;
-	StockDataType _BX;
-	StockDataType _TR;
 
-// 	TRIX& operator = (const TRIX& rhs){
-// 		_Index1 = rhs._Index1;
-// 		_Index2 = rhs._Index2;
-// 		_Index3 = rhs._Index3;
-// 		_Index4 = rhs._Index4;
-// 		_Index5 = rhs._Index5;
-// 		return *this;
-// 	}
-};
 class CTRIXCal// :public CNumberManager
 {
 public:
 	CTRIXCal();
 	~CTRIXCal();
-	void GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix);
+	void GetNextTRIX(const SinDayPriceData& OneDayData, TRIX& mTrix);
 private:
 	float GetEMA(const list<StockDataType>& dataList);
 	float _ParameterN;

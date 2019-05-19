@@ -235,11 +235,12 @@
     <ClInclude Include="CcdpStatistics.h" />
     <ClInclude Include="DFT.h" />
     <ClInclude Include="EMV.h" />
+    <ClInclude Include="FinaceData.h" />
+    <ClInclude Include="Group.h" />
     <ClInclude Include="MeanVariance.h" />
     <ClInclude Include="Morphological.h" />
     <ClInclude Include="MySQLInterFace.h" />
     <ClInclude Include="NumbersToSql.h" />
-    <ClInclude Include="SearchStock.h" />
     <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
     <ClInclude Include="BullMarkBearMark.h" />
@@ -291,11 +292,12 @@
     <ClCompile Include="CcdpStatistics.cpp" />
     <ClCompile Include="DFT.cpp" />
     <ClCompile Include="EMV.cpp" />
+    <ClCompile Include="FinaceData.cpp" />
+    <ClCompile Include="Group.cpp" />
     <ClCompile Include="MeanVariance.cpp" />
     <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="MySQLInterFace.cpp" />
     <ClCompile Include="NumbersToSql.cpp" />
-    <ClCompile Include="SearchStock.cpp" />
     <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
     <ClCompile Include="BullMarkBearMark.cpp" />

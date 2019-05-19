@@ -1,0 +1,18 @@
+﻿生成启动时间为 2019/5/16 17:47:12。
+     1>项目“D:\MyProjects\win_project\CodeChangelate\CodeChangelate\CodeChangelate.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\CL.exe /c /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D _WINDOWS /D NDEBUG /D _UNICODE /D UNICODE /D _AFXDLL /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\CodeChangelate.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt CodeChangelateDlg.cpp
+         CodeChangelateDlg.cpp
+       Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\CodeChangelate\Release\CodeChangelate.exe" /INCREMENTAL:NO /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"D:\Program Files\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"D:\MyProjects\win_project\CodeChangelate\Release\CodeChangelate.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\CodeChangelate\Release\CodeChangelate.lib" /MACHINE:X86 /SAFESEH Release\CodeChangelate.res
+         Release\CodeChangelate.obj
+         Release\CodeChangelateDlg.obj
+         Release\stdafx.obj
+         正在生成代码
+         已完成代码的生成
+         CodeChangelate.vcxproj -> D:\MyProjects\win_project\CodeChangelate\Release\CodeChangelate.exe
+     1>已完成生成项目“D:\MyProjects\win_project\CodeChangelate\CodeChangelate\CodeChangelate.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:02.91

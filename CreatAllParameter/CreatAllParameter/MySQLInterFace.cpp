@@ -638,7 +638,7 @@ bool MySQLInterFace::UpDateData(
 	const vector<Column>& columnTypeList,
 	const vector<string>& dataList,
 	const vector<WhereCommand>& commandList
-/*	const string& whereLimit*/)
+	)
 {
 	if (dataList.size() == 0 || columnTypeList.size() != dataList.size())
 	{
@@ -669,24 +669,31 @@ bool MySQLInterFace::UpDateData(
 
 bool MySQLInterFace::CheckTableExists(string _TableName)
 {
-	transform(_TableName.begin(), _TableName.end(), _TableName.begin(), ::tolower);
-	vector<string> _Tables;
-	GetTableList(_Tables);
-	string tempTableName;
 	if (CheckTableMap(_TableName))
 	{
+		LOG(INFO) << "Find table:"<<_TableName;
 		return true;
 	}
-	for (unsigned int i = 0; i < _Tables.size();i++)
+	transform(_TableName.begin(), _TableName.end(), _TableName.begin(), ::tolower);
+	string sqlIns = "show tables like '" + _TableName + "';";
+	if (!RunCommand(sqlIns))
 	{
-		tempTableName = _Tables[i];
-		transform(tempTableName.begin(), tempTableName.end(), tempTableName.begin(), ::tolower);
-		if (_Tables[i] == _TableName)
-		{
-			SetTableMap(_TableName);
-			return true;
-		}
+		LOG(ERROR) << "error:CheckTableExists Run command error.";
+		return false;
 	}
+	vector<vector<string>> resultTable;
+	if (!GetTableResult(resultTable))
+	{
+		LOG(ERROR) << "error:CheckTableExists get result error.";
+		return false;
+	}
+	if (resultTable.size() > 1)
+	{
+		LOG(INFO) << "Find table " << _TableName<<" by SQL commond.";
+		SetTableMap(_TableName);
+		return true;
+	}
+
 	return false;
 }
 
@@ -786,7 +793,11 @@ bool MySQLInterFace::RunCommand(const string& command)
 // 		Inition();
 	returnCode= mysql_query(&sqlDataBase, command.c_str());
 	if (returnCode != 0)
+	{
+		LOG(ERROR) <<"Run Commend Error: "<< command << endl;
 		return false;
+	}
+	LOG(INFO) << "Run Commend Success: " << command << endl;
 	return true;
 }
 
@@ -851,6 +862,71 @@ bool MySQLInterFace::GetTableResult(vector<vector<string>>& _Tables)
 	}
 	mysql_free_result(result);//ÊÍ·Å½á¹û
 	return true;
+}
+
+bool MySQLInterFace::SetColumnUnique(const string& _TableName, const string& _ColumnName)
+{
+	string sqlInstru = "";
+	sqlInstru = "Alter table "
+		+ _TableName
+		+ " add unique ("
+		+ _ColumnName + ");";
+	if (!RunCommand(sqlInstru))
+	{
+		LOG(ERROR) << "Error: " << sqlInstru;
+		_lastError = "Set ColumnUnique failed.";
+		return false;
+	}
+	return true;
+}
+
+bool MySQLInterFace::SetColumnCombinUnique(const string& _TableName, const vector<string>& _ColumnName)
+{
+	if (_ColumnName.size() == 0)
+	{
+		LOG(ERROR) << "Function SetColumnCombinUnique:_Columns size error.";
+		return false;
+	}
+	string sqlInstru = "";
+	sqlInstru = "Alter table " + _TableName + " add unique index(" + _ColumnName[0];
+	for (unsigned int i = 1; i < _ColumnName.size();i++)
+	{
+		sqlInstru += "," + _ColumnName[i];
+	}
+	sqlInstru = sqlInstru + ");";
+	if (!RunCommand(sqlInstru))
+	{
+		LOG(ERROR) << "Error: " << sqlInstru;
+		_lastError = "Set Column CombinUnique failed.";
+		return false;
+	}
+
+	return true;
+}
+
+bool MySQLInterFace::CheckTableColMap(const string& table, const string& column)
+{
+	return indexmap._TableColMap[table + "_" + column] == 1;
+}
+void MySQLInterFace::SetTableColMap(const string& table, const string& column)
+{
+	indexmap._TableColMap[table + "_" + column] = 1;
+}
+void MySQLInterFace::DeleteTableColMap(const string& table, const string& column)
+{
+	indexmap._TableColMap[table + "_" + column] = 0;
+}
+bool MySQLInterFace::CheckTableMap(const string& table)
+{
+	return indexmap._TableMap[table] == 1;
+}
+void MySQLInterFace::SetTableMap(const string& table)
+{
+	indexmap._TableMap[table] = 1;
+}
+void MySQLInterFace::DeleteTableMap(const string& table)
+{
+	indexmap._TableMap[table] = 0;
 }
 
 WhereCommand::WhereCommand()

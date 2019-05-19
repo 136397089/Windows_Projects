@@ -26,7 +26,7 @@ CCDPCal::~CCDPCal()
 // 
 // }
 
-bool CCDPCal::GetNextCDP(const DatePriceData& TodayDayData, CDP& mCdp)
+bool CCDPCal::GetNextCDP(const SinDayPriceData& TodayDayData, CDP& mCdp)
 {
 	mCdp._CDP = (TodayDayData._High + TodayDayData._Low + 2 * TodayDayData._Close) / 4;
 	mCdp._AH_High = mCdp._CDP + (TodayDayData._High - TodayDayData._Low);

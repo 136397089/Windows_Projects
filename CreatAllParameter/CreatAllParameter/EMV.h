@@ -2,14 +2,6 @@
 #include <list>
 #include "Number/NumberBase.h"
 
-struct EMV
-{
-	StockDataType emv;
-	StockDataType emvma;
-	StockDataType TemporaryVariable;
-	StockDataType highToLowMa;
-	EMV():emv(0),emvma(0),TemporaryVariable(1),highToLowMa(1){}
-};
 
 class CEMVCal
 {
@@ -17,7 +9,7 @@ public:
 	CEMVCal();
 	~CEMVCal();
 	void Inition();
-	bool GetNextEmv(const DatePriceData& OneDayData,EMV& _data);
+	bool GetNextEmv(const SinDayPriceData& OneDayData,EMV& _data);
 	unsigned int EMVPara;
 	unsigned int MaPara;
 
@@ -26,6 +18,6 @@ public:
 	StockDataType frontHighDivideLowSum;
 	StockDataType frontVolSum;
 	list<EMV> EMVList;
-	list<DatePriceData> RecordData;
+	list<SinDayPriceData> RecordData;
 };
 

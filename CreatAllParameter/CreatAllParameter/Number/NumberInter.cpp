@@ -26,15 +26,11 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 {
 	bool IsLongitudinal  = false;//标志数据是否横向排列
 	CNumberBase mCSVFileTool;
+	//清除上次读入的所有指标数据
+	mDayValue.clear();
 
-	mDayValue._vClose.clear();
-	mDayValue._vHigh.clear();
-	mDayValue._vLow.clear();
-	mDayValue._vOpen.clear();
-	mDayValue._vTimeDay.clear();
-	mDayValue._vVolume.clear();
-
-	StringList lineString = mCSVFileTool.ReadDataFromCSVFileRanks(strFilePath);
+	StringList lineString;
+	mCSVFileTool.ReadDataFromCSVFileRanks(strFilePath, lineString);
 	StringBlock AllString;
 	if (lineString.size() < 3)
 	{
@@ -63,10 +59,8 @@ void CNumberInterface::RaedDateFromFile(const string& strFilePath)
 }
 
 
-bool CNumberInterface::GetDataAndNumber(const string& filename, const string& FilePath)
+bool CNumberInterface::GetDataAndNumbers(const string& filename, const string& FilePath)
 {
-	//清除上次分析的文件所有指标数据
-	mDayValue.clear();
 	//从文件中读出需要的数据
 	LOG(ERROR) << "Read Data begin." ;
 	RaedDateFromFile(FilePath + "\\" + filename);
@@ -86,44 +80,29 @@ bool CNumberInterface::GetDataAndNumber(const string& filename, const string& Fi
 	ResizeData(BeginDate);
 	CNumbersCalculator numbercal;
 	CDataSizeSwich datasizetool;
-	LOG(ERROR) << "mDayValue Data begin.";
+	LOG(INFO) << "mDayValue Data begin.";
 	numbercal.GetAllNumbers(mDayValue, "day");
-	LOG(ERROR) << "mDayValue Data finish.";
+	LOG(INFO) << "mDayValue Data finish.";
 
-	LOG(ERROR) << "mWeekValue Data begin.";
+	LOG(INFO) << "mWeekValue Data begin.";
 	mWeekValue.clear();
 	mWeekValue._strStockCode = mDayValue._strStockCode;
-	LOG(ERROR) << "mWeekValue Data change begin.";
+	LOG(INFO) << "mWeekValue Data change begin.";
 	datasizetool.DayToWeek(mDayValue, mWeekValue);
-	LOG(ERROR) << "mWeekValue Data number begin.";
+	LOG(INFO) << "mWeekValue Data number begin.";
 	numbercal.GetAllNumbers(mWeekValue,"week");
-	LOG(ERROR) << "mWeekValue Data finish.";
+	LOG(INFO) << "mWeekValue Data finish.";
 
-	LOG(ERROR) << "mMonthValue Data begin.";
+	LOG(INFO) << "mMonthValue Data begin.";
 	mMonthValue.clear();
 	mMonthValue._strStockCode = mDayValue._strStockCode;
-	LOG(ERROR) << "mMonthValue Data change begin.";
+	LOG(INFO) << "mMonthValue Data change begin.";
 	datasizetool.DayToMonth(mDayValue, mMonthValue);
-	LOG(ERROR) << "mMonthValue Data number begin.";
+	LOG(INFO) << "mMonthValue Data number begin.";
 	numbercal.GetAllNumbers(mMonthValue, "month");
-	LOG(ERROR) << "mMonthValue Data finish.";
+	LOG(INFO) << "mMonthValue Data finish.";
 
 	return true;
-}
-
-
-
-
-void CNumberInterface::CheckAndPrintKDJMin(const string& filename)
-{
-	VStockData::reverse_iterator iteKDJ1 = mDayValue._vJ.rbegin();
-	VStockData::reverse_iterator iteKDJ2 = iteKDJ1 + 1;
-	VStockData::reverse_iterator iteMACD1 = mDayValue._vMACDValue.rbegin();
-	VStockData::reverse_iterator iteMACD2 = iteMACD1 + 1;
-	VStockData::reverse_iterator iteASI1 = mDayValue._vAsi_i.rbegin();
-	VStockData::reverse_iterator iteASI2 = iteASI1 + 1;
-	if (*iteKDJ1 <= 0 && *iteKDJ2 <= 0)
-		resultFile.get() << filename << "  KDJMin" << endl;
 }
 
 
@@ -201,6 +180,48 @@ bool CNumberInterface::ResizeData(CDate beginData)
 			break;
 	}
 	mDayValue = mDayValue.NewDataByIndex(i, mDayValue._vDate.size());
+	return true;
+}
+
+bool CNumberInterface::GetTodayData(const string& fileFullPath, map<string, SinDayData>& TodayData)
+{
+	TodayData.clear();
+	CNumberBase mCSVFileTool;
+	StringList linestring;
+	mCSVFileTool.ReadDataFromCSVFileRanks(fileFullPath, linestring);
+	if (linestring.size() <= 1)
+	{
+		LOG(ERROR) << "Today's data is empty.";
+		return false;
+	}
+	StringList vSigColumns;
+	CutString(linestring[0], ",", vSigColumns);
+	if (vSigColumns.size() != 15)
+	{
+		LOG(ERROR) << "Columns size error.";
+		return false;
+	}
+	StringList vSigLinedata;
+	string stockCode = "";
+	SinDayData tempDayData;
+	for (unsigned int index = 1; index < linestring.size();index++)
+	{
+		vSigLinedata.clear();
+		CutString(linestring[index], ",", vSigLinedata);
+		stockCode = vSigLinedata[0];
+		tempDayData.changepercent = (StockDataType)atof(vSigLinedata[2].c_str());
+		tempDayData._Close = (StockDataType)atof(vSigLinedata[3].c_str());
+		tempDayData._Open = (StockDataType)atof(vSigLinedata[4].c_str());
+		tempDayData._High = (StockDataType)atof(vSigLinedata[5].c_str());
+		tempDayData._Low = (StockDataType)atof(vSigLinedata[6].c_str());
+		tempDayData._Volume = (StockDataType)atof(vSigLinedata[8].c_str());
+		tempDayData.turnoverratio = (StockDataType)atof(vSigLinedata[9].c_str());
+		tempDayData.per = (StockDataType)atof(vSigLinedata[11].c_str());
+		tempDayData.pb = (StockDataType)atof(vSigLinedata[12].c_str());
+		tempDayData.mktcap = (StockDataType)atof(vSigLinedata[13].c_str());
+		tempDayData.nmc = (StockDataType)atof(vSigLinedata[14].c_str());
+		TodayData[stockCode] = tempDayData;
+	}
 	return true;
 }
 

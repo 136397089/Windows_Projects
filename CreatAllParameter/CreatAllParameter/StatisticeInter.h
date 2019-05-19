@@ -7,13 +7,11 @@
 #include "StateInter.h"
 #include "StatisticeTool.h"
 #include "MeanVariance.h"
+#include "Group.h"
 
 //上证指数：日线MACD参数为36 78，diff上到0轴以上是上涨概率加大
 
 #define DATAMINSIZE 10
-
-
-
 
 class CStatisticeInter
 {
@@ -23,15 +21,6 @@ public:
 	//
 	bool Inition();
 	//
-	bool StatisticeHistoryData(
-		const StockDataTable& daynumber,
-		const StockDataTable& weeknumber,
-		const StockDataTable& mounthnumber,
-		const StockDataTable& shnumber,
-		CStateInter& daystate,
-		CStateInter& weekstate,
-		CStateInter& monthstate,
-		string Stockcode);
 	bool StatisticeASIData(
 		const StockDataTable& daynumber,
 		CStateInter& daystate,
@@ -44,21 +33,7 @@ public:
 		CStateInter& weekstate,
 		CStateInter& monthstate);
 	//
-	//
-	bool MACD_EDA_Statistice(
-		const StockDataTable& allnumber,
-		const StateTable& StateList);
-	//
-	bool Save_MACD_EDA_StatisticeResultTofile(vector<StaticResults>& result);
-	//
-	bool Ma5_Ma30_Statistice(
-		const StockDataTable& allnumber,
-		const StatePointsList& StateList);
 	//////////////////////////////////////////////////////////////////////////
-	//根据模拟CDP的高低点来买卖股票
-	void simulation(
-		const StockDataTable& daynumber,
-		const StockDataTable& weeknumber);
 	//对均线_madata1在均线_madata2之上和之下的时长进行统计
 	void MALineStatistice(
 		const VStockData& _inputdata1,
@@ -86,7 +61,19 @@ public:
 	map<string, StockDataType> allDataVarList;
 	map<string, StockDataType> allDataMeanList;
 	FreqListType _FreqList;
+	bool GroupDabug(
+		const StockDataTable& daynumber,
+		const StockDataTable& weeknumber,
+		const StockDataTable& mounthnumber,
+		const StockDataTable shnumber,
+		CStateInter& daystate,
+		CStateInter& weekstate,
+		CStateInter& monthstate);
+	bool SaveOneGroupFreqData(const string& stockCoed,Group _GroupType, CHistoryGroup& GroupTool);
+
+	bool GetMeanFromSQL(string columns,unsigned int Numtype);
 private:
+	void GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, const StockDataTable& daynumber) const ;
 	string _LastError;
 	const unsigned int moveVarDaySize;
 };
@@ -110,8 +97,15 @@ public:
 	CRealTimeAna();
 	~CRealTimeAna();
 
-	bool AnalysisRealTimeData(const StockDataTable& number,string stockCode);
+	bool AnalysisRealTimeData(map<string, MACDCombin>& macdData, map<string, KDJCombin>& KDJData);
+
+	void Inition();
+
+	void  ShowCurrentCode();
+	void  ShowYesterdayCode();
 private:
+	COnedayGrouping CurrentGroupingTool;
+	COnedayGrouping YesterdayGroupingTool;
 
 };
 //
@@ -123,8 +117,8 @@ static void CheckCurrentStockDataAndGetName(
 	unsigned int monthIndex,
 	const string& StockCode);
 //
-bool GroupFreqStatistice(
-	const StockDataTable& daynumber,
-	CStateInter& stateinter);
+// bool GroupFreqStatistice(
+// 	const StockDataTable& daynumber,
+// 	CStateInter& stateinter);
 
 #endif

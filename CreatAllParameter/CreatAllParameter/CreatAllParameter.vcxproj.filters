@@ -198,9 +198,6 @@
     <ClInclude Include="StateMachineInter.h">
       <Filter>StateMachine</Filter>
     </ClInclude>
-    <ClInclude Include="SearchStock.h">
-      <Filter>Statistics</Filter>
-    </ClInclude>
     <ClInclude Include="MySQLInterFace.h">
       <Filter>Mysql</Filter>
     </ClInclude>
@@ -212,6 +209,12 @@
     </ClInclude>
     <ClInclude Include="NumbersToSql.h">
       <Filter>Mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="Group.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="FinaceData.h">
+      <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -350,9 +353,6 @@
     <ClCompile Include="StateMachineInter.cpp">
       <Filter>StateMachine</Filter>
     </ClCompile>
-    <ClCompile Include="SearchStock.cpp">
-      <Filter>Statistics</Filter>
-    </ClCompile>
     <ClCompile Include="MySQLInterFace.cpp">
       <Filter>Mysql</Filter>
     </ClCompile>
@@ -364,6 +364,12 @@
     </ClCompile>
     <ClCompile Include="NumbersToSql.cpp">
       <Filter>Mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="Group.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="FinaceData.cpp">
+      <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

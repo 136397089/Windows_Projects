@@ -134,12 +134,12 @@ bool CStockAccount::ChangeStockPosition(const float& currentPrice, const string&
 	float localTagePosition = tagePosition;
 	if (localTagePosition > 1.0)
 	{
-		LOG(INFO) << "Stock Account error:Tage position outoff limit,set it to 1.0f.";
+		LOG(ERROR) << "Stock Account error:Tage position outoff limit,set it to 1.0f.";
 		localTagePosition = 1.0f;
 	}
 	if (localTagePosition < 0.0f)
 	{
-		LOG(INFO) << "Stock Account error:Tage position outoff limit,set it to 0.0f.";
+		LOG(ERROR) << "Stock Account error:Tage position outoff limit,set it to 0.0f.";
 		localTagePosition = 0.0f;
 	}
 	//1.1判断价格是否有问题
@@ -152,7 +152,7 @@ bool CStockAccount::ChangeStockPosition(const float& currentPrice, const string&
 	//1.2如果仓位相差太小，则不进行操作
 	if (localTagePosition - GetPosition(currentPrice) <= 0.01 && localTagePosition - GetPosition(currentPrice) >= -0.01)
 	{
-		LOG(INFO) << "Stock Account Info: Position Change too small.";
+		LOG(WARNING) << "Stock Account Info: Position Change too small.";
 		return true;
 	}
 	float currentPosition = GetPosition(currentPrice);
@@ -223,7 +223,7 @@ void CStockAccount::PrintAllBusiness(const string& filePath)
 	{
 		if (_AllBusiness.size() == 0)
 		{
-			LOG(INFO) << "Stock Account info: Business size is zero.";
+			LOG(WARNING) << "Stock Account info: Business size is zero.";
 			return;
 		}
 		outfile << _OwnStockCode << endl;

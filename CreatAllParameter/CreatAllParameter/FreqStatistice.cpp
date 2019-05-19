@@ -7,7 +7,13 @@ CFreqStatistice::CFreqStatistice():
 _stepsize(0.05f),
 beginGroup(-220),
 endGroup(220)
+{
+}
 
+CFreqStatistice::CFreqStatistice(float step, int begin, int end):
+_stepsize(step),
+beginGroup(begin),
+endGroup(end)
 {
 }
 
@@ -52,8 +58,11 @@ int CFreqStatistice::GetTheGroupIndex(const float value, const float stepsize) c
 	if (stepsize <= 0 || stepsize > -MINSTEPSIZE && stepsize < MINSTEPSIZE)
 		return 0.0f;
 	int groupindex = floor(value / stepsize);
-// 	if (value < 0)
-// 		groupindex -=1;
+	if (groupindex < beginGroup)
+		return beginGroup;
+	if (groupindex > endGroup)
+		return endGroup;
+
 	return groupindex;
 }
 
@@ -69,11 +78,11 @@ int CFreqStatistice::GetFreqByValue(float _downValue, float _upValue, FreqListTy
 	return freq;
 }
 
-bool CFreqStatistice::PushFreqData(float _dValue, FreqListType& vfreqlist)const
+bool CFreqStatistice::StaticFreqData(float _value, FreqListType& vfreqlist)const
 {
 	if (_stepsize <= 0 || _stepsize > -MINSTEPSIZE && _stepsize < MINSTEPSIZE)
 		return false;
-	float downValus = GetTheGroupDownValue(_dValue, _stepsize);
+	float downValus = GetTheGroupDownValue(_value, _stepsize);
 	vfreqlist[downValus]++;
 	return true;
 }

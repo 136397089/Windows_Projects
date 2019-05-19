@@ -7,20 +7,8 @@
 
 
 
-struct DMA_DATA/*:public IndexBaseType*/
-{
-	DMA_DATA() :_DDD(0), _AMA(0){}
-	StockDataType _AMA;
-	StockDataType _DDD;
-// 	DMA_DATA& operator = (const DMA_DATA& rhs){
-// 		_Index1 = rhs._Index1;
-// 		_Index2 = rhs._Index2;
-// 		_Index3 = rhs._Index3;
-// 		_Index4 = rhs._Index4;
-// 		_Index5 = rhs._Index5;
-// 		return *this;
-// 	}
-};
+
+
 class CDMACal// : public CNumberManager
 {
 public:
@@ -45,7 +33,7 @@ public:
 	//根据当天的数据获得当天的DMA值
 	//
 	//////////////////////////////////////////////////////////////////////////
-	void GetNextDMA(const DatePriceData& OneDayData, DMA_DATA& _Dma);
+	void GetNextDMA(const SinDayPriceData& OneDayData, DMA_DATA& _Dma);
 	void Inition();
 private:
 	list<StockDataType> closelyData50;

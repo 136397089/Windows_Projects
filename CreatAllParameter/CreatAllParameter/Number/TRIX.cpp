@@ -20,7 +20,7 @@ CTRIXCal::~CTRIXCal()
 {
 }
 
-void CTRIXCal::GetNextTRIX(const DatePriceData& OneDayData, TRIX& mTrix)
+void CTRIXCal::GetNextTRIX(const SinDayPriceData& OneDayData, TRIX& mTrix)
 {
 // 	_vTrix.push_back(mTrix);
 	TRIX FrontTrix;

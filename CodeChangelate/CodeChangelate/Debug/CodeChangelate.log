@@ -1,0 +1,15 @@
+﻿生成启动时间为 2019/5/15 9:37:57。
+     1>项目“D:\MyProjects\win_project\CodeChangelate\CodeChangelate\CodeChangelate.vcxproj”在节点 2 上(Build 个目标)。
+     1>ResourceCompile:
+         C:\Program Files (x86)\Windows Kits\8.1\bin\x86\rc.exe /D _DEBUG /D _UNICODE /D UNICODE /D _AFXDLL /l"0x0804" /IDebug\ /nologo /fo"Debug\CodeChangelate.res" CodeChangelate.rc 
+       Link:
+         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\CodeChangelate\Debug\CodeChangelate.exe" /INCREMENTAL /NOLOGO /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /manifestinput:"D:\Program Files\VC\Include\Manifest\dpiaware.manifest" /DEBUG /PDB:"D:\MyProjects\win_project\CodeChangelate\Debug\CodeChangelate.pdb" /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"wWinMainCRTStartup" /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\CodeChangelate\Debug\CodeChangelate.lib" /MACHINE:X86 Debug\CodeChangelate.res
+         Debug\CodeChangelate.obj
+         Debug\CodeChangelateDlg.obj
+         Debug\stdafx.obj
+         CodeChangelate.vcxproj -> D:\MyProjects\win_project\CodeChangelate\Debug\CodeChangelate.exe
+     1>已完成生成项目“D:\MyProjects\win_project\CodeChangelate\CodeChangelate\CodeChangelate.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:00.37

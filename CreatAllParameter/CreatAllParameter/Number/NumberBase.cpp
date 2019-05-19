@@ -81,7 +81,7 @@ VStockData CNumberBase::ReadColumnStringFormFile(string filepath, string strTitt
 //
 //有Bug，无调用，暂不修改
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileColumn(string FilePath, VStockData vNumValue, string tittle)
+void CNumberBase::AddColumnToCsvFile(string FilePath, VStockData vNumValue, string tittle)
 {
 	fstream outfile(FilePath.c_str(),ios::out|ios::in);
 	string ch;
@@ -209,7 +209,7 @@ VStockData CNumberBase::ReadRanksStringFormFile(string filepath, string strTittl
 //////////////////////////////////////////////////////////////////////////
 //调用ReSavefileRanks之前运行
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileRanksBegin(string FilePath)
+void CNumberBase::AddRanksToCsvFileBegin(string FilePath)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	fstream infile(FilePath.c_str(), ios::in);
@@ -227,7 +227,7 @@ void CNumberBase::ReSavefileRanksBegin(string FilePath)
 //////////////////////////////////////////////////////////////////////////
 //调用ReSavefileRanks之后运行
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileRanksEnd(string FilePath)
+void CNumberBase::AddRanksToCsvFileEnd(string FilePath)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	fstream outfile(FilePath.c_str(), ios::out | ios::app);
@@ -246,7 +246,7 @@ void CNumberBase::ReSavefileRanksEnd(string FilePath)
 //vNumValue:要加入的行数据
 //tittle:列名
 //////////////////////////////////////////////////////////////////////////
-void CNumberBase::ReSavefileRanks(string FilePath, const  VStockData& vNewValue, string tittle)
+void CNumberBase::AddRanksToCsvFile(string FilePath, const  VStockData& vNewValue, string tittle)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
@@ -263,7 +263,7 @@ void CNumberBase::ReSavefileRanks(string FilePath, const  VStockData& vNewValue,
 	newBuffer.push_back(oss.str());
 }
 
-void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewValue, string tittle)
+void CNumberBase::AddRanksToCsvFile(string FilePath, const vector<string>& vNewValue, string tittle)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	for (unsigned int lineNumber = 0; lineNumber < buffer.size(); lineNumber++)
@@ -280,7 +280,7 @@ void CNumberBase::ReSavefileRanks(string FilePath, const vector<string>& vNewVal
 	newBuffer.push_back(oss.str());
 }
 
-void CNumberBase::ReSavefileRanks(string FilePath, const map<string, StockDataType>& vNewValue)
+void CNumberBase::AddRanksToCsvFile(string FilePath, const map<string, StockDataType>& vNewValue)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	ostringstream  tittleoss;
@@ -294,7 +294,7 @@ void CNumberBase::ReSavefileRanks(string FilePath, const map<string, StockDataTy
 	newBuffer.push_back(dataoss.str());
 }
 
-void CNumberBase::ReSavefileRanks(string FilePath, const FreqListType& vNewValue)
+void CNumberBase::AddRanksToCsvFile(string FilePath, const FreqListType& vNewValue)
 {
 	CMutexLocker(_StockCSVFileMutex, INFINITE);
 	ostringstream  dataoss;
@@ -438,29 +438,16 @@ void CNumberBase::RunTread(string filePath)
 
 
 
-StringList CNumberBase::ReadDataFromCSVFileRanks(const string& fullFilePath)
+bool CNumberBase::ReadDataFromCSVFileRanks(const string& fullFilePath, StringList& strAllData) const
 {
 	string linestring;
-	StringList strAllData;
+// 	StringList strAllData;
 	strAllData.clear();
-// 	ifstream file;
-// 	file.open(fullFilePath.c_str());
-// 	if (!file)
-// 	{
-// 		cerr << "Error opening file.Make sure the file exists." << endl;
-// 		system("pause");
-// 		exit(-1);
-// 	}
-// 	//getline(file, linestring);//在文件中第一行是日期，可以不用查找
-// 	while (getline(file, linestring))//第二行开始才是数据
-// 	{
-// 		strAllData.push_back(linestring);
-// 	}
 	FILE *pfile;
 	fopen_s(&pfile, fullFilePath.c_str(), "r");
 	if (NULL == pfile){
 		LOG(ERROR) << "Open data file error.";
-		return strAllData;
+		return false;
 		exit(-1);
 	}
 	char v;
@@ -488,12 +475,16 @@ StringList CNumberBase::ReadDataFromCSVFileRanks(const string& fullFilePath)
 			fscanf_s(pfile, "%*c", buffer);
 	}
 	fclose(pfile);
-	return strAllData;
+	return true;
 }
 
 StringBlock CNumberBase::ReadDataFromCSVFileAndCutRanks(const string& fullFilePath, string strCutIndex )
 {
-	StringList vLineData = ReadDataFromCSVFileRanks(fullFilePath);
+	StringList vLineData;
+	if (!ReadDataFromCSVFileRanks(fullFilePath, vLineData))
+	{
+		LOG(ERROR) << "Error:Read Data From:" << fullFilePath;
+	}
 	StringBlock ReturnData;
 	if (vLineData.size() < 3)
 	{
