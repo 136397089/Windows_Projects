@@ -385,7 +385,7 @@ Column MySQLInterFace::ExplaincolumnType(const vector<string>& columnstringList)
 	return dataColumns;
 }
 //保存数据到数据库之前调用，将特定类型的数据转为字符串
-string MySQLInterFace::DataConversion(const Column& columnName, const string& _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const string& _data) const
 {
 	if (columnName.datatype == _eCHAR
 		|| columnName.datatype == _eVARCHAR
@@ -394,12 +394,11 @@ string MySQLInterFace::DataConversion(const Column& columnName, const string& _d
 		|| columnName.datatype == _eMEDIUMTEXT
 		)
 	{
-		vdataList.push_back(_data);
-		return _data;
+		return "'"+_data+"'";
 	}
 	return "";
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const int _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const int _data) const
 {
 	if (columnName.datatype == _eINT
 		|| columnName.datatype == _eTINYINT
@@ -408,12 +407,11 @@ string MySQLInterFace::DataConversion(const Column& columnName, const int _data,
 		){
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const unsigned int _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const unsigned int _data) const
 {
 	if (columnName.datatype == _eINT
 		|| columnName.datatype == _eTINYINT
@@ -422,55 +420,48 @@ string MySQLInterFace::DataConversion(const Column& columnName, const unsigned i
 		){
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const long _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const long _data) const
 {
 	if (columnName.datatype == _eBIGINT
 		){
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const short _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const short _data) const
 {
 	if (columnName.datatype == _eSMALLINT
 		|| columnName.datatype == _eTINYINT
 		){
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const CDate& _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const CDate& _data) const
 {
+	ostringstream  oss;
 	if (columnName.datatype == _eDATE)
 	{
-		ostringstream  oss;
 		oss << "'" <<_data._year << "-" << _data._month << "-" << _data._day<<"'";
 		string tempdate = oss.str();
-		vdataList.push_back(tempdate);
 		return oss.str();
 	}
 	if (columnName.datatype == _eTIME)
 	{
-		ostringstream  oss;
 		oss << "'" << _data._hour << ":" << _data._minute << ":" << _data._second << "'";
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	if (columnName.datatype == _eDATETIME || columnName.datatype == _eTIMESTAMP)
 	{
-		ostringstream  oss;
 		oss << "'" 
 			<< _data._year << "-"
 			<< _data._month << "-" << _data._day 
@@ -478,31 +469,27 @@ string MySQLInterFace::DataConversion(const Column& columnName, const CDate& _da
 			<< ":" << _data._minute 
 			<< ":" << _data._second
 			<< "'";
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	if (columnName.datatype == _eYEAR)
 	{
-		ostringstream  oss;
 		oss << "'" << _data._year << "'";
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const float _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const float _data) const
 {
 	if (columnName.datatype == _eFLOAT)
 	{
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
 }
-string MySQLInterFace::DataConversion(const Column& columnName, const double _data, vector<string>& vdataList) const
+string MySQLInterFace::DataConversion(const Column& columnName, const double _data) const
 {
 	if (columnName.datatype == _eDOUBLE
 		|| columnName.datatype == _eDECIMAL
@@ -510,7 +497,6 @@ string MySQLInterFace::DataConversion(const Column& columnName, const double _da
 	{
 		ostringstream  oss;
 		oss << _data;
-		vdataList.push_back(oss.str());
 		return oss.str();
 	}
 	return "";
@@ -549,7 +535,7 @@ bool MySQLInterFace::InsertData(
 	return true;
 }
 
-bool MySQLInterFace::SearchDataFromTable(
+bool MySQLInterFace::ReadDataFromTable(
 	const string _TableName,
 	const vector<Column>& columnTypeList,
 	vector<vector<string>>& _returnDatas)
@@ -576,7 +562,7 @@ bool MySQLInterFace::SearchDataFromTable(
 	GetTableResult(_returnDatas);
 	return true;
 }
-bool MySQLInterFace::SearchDataFromTable(
+bool MySQLInterFace::ReadDataFromTable(
 	const string _TableName,
 	const vector<Column>& columnTypeList,
 	const vector<WhereCommand>& whereList,
@@ -776,7 +762,7 @@ bool MySQLInterFace::CheckDataExists(const string _TableName, const vector<Where
 {
 	vector<Column> columnTypeList;
 	vector<vector<string>> _datas;
-	SearchDataFromTable(_TableName, columnTypeList, whereList, _datas);
+	ReadDataFromTable(_TableName, columnTypeList, whereList, _datas);
 	if (_datas.size() <= 1)
 	{
 		return false;
@@ -820,9 +806,9 @@ bool MySQLInterFace::GetListResult(vector<string>& _ListData)
 	mysql_free_result(result);//释放结果
 	return true;
 }
-bool MySQLInterFace::GetTableResult(vector<vector<string>>& _Tables)
+bool MySQLInterFace::GetTableResult(vector<vector<string>>& _Tabledatas)
 {
-	_Tables.clear();
+	_Tabledatas.clear();
 	MYSQL_RES *result = NULL;
 	result = mysql_store_result(&sqlDataBase);//获取结果
 	if (NULL == result)
@@ -841,7 +827,7 @@ bool MySQLInterFace::GetTableResult(vector<vector<string>>& _Tables)
 		fd = mysql_fetch_field(result);//获取列名
 		_oneListTable.push_back(fd->name);
 	}
-	_Tables.push_back(_oneListTable);
+	_Tabledatas.push_back(_oneListTable);
 	_oneListTable.clear();
 	//获得每一行数据
 	MYSQL_ROW row = mysql_fetch_row(result);//读取一行结果
@@ -857,19 +843,19 @@ bool MySQLInterFace::GetTableResult(vector<vector<string>>& _Tables)
 			}
 			_oneListTable.push_back(row[i]);
 		}
-		_Tables.push_back(_oneListTable);
+		_Tabledatas.push_back(_oneListTable);
 		row = mysql_fetch_row(result);
 	}
 	mysql_free_result(result);//释放结果
 	return true;
 }
 
-bool MySQLInterFace::SetColumnUnique(const string& _TableName, const string& _ColumnName)
+bool MySQLInterFace::SetColumnPrimaryKey(const string& _TableName, const string& _ColumnName)
 {
 	string sqlInstru = "";
 	sqlInstru = "Alter table "
 		+ _TableName
-		+ " add unique ("
+		+ " add PRIMARY KEY ("
 		+ _ColumnName + ");";
 	if (!RunCommand(sqlInstru))
 	{
@@ -927,6 +913,39 @@ void MySQLInterFace::SetTableMap(const string& table)
 void MySQLInterFace::DeleteTableMap(const string& table)
 {
 	indexmap._TableMap[table] = 0;
+}
+
+bool MySQLInterFace::SetColumnUnique(const string& _TableName, const string& _ColumnName)
+{
+	string sqlInstru = "";
+	sqlInstru = "Alter table "
+		+ _TableName
+		+ " add UNIQUE ("
+		+ _ColumnName + ");";
+	if (!RunCommand(sqlInstru))
+	{
+		LOG(ERROR) << "Error: " << sqlInstru;
+		_lastError = "Set ColumnUnique failed.";
+		return false;
+	}
+	return true;
+}
+
+bool MySQLInterFace::SetColumnIndex(const string& _TableName, const string& _ColumnName)
+{
+	string sqlInstru = "";
+	sqlInstru = "Alter table "
+		+ _TableName
+		+ " add INDEX ("
+		+ _ColumnName + ");";
+	if (!RunCommand(sqlInstru))
+	{
+		LOG(ERROR) << "Error: " << sqlInstru;
+		_lastError = "Set ColumnUnique failed.";
+		return false;
+	}
+	return true;
+
 }
 
 WhereCommand::WhereCommand()

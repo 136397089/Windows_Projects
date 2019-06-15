@@ -532,85 +532,68 @@ DWORD WINAPI ThreadToUpdatefile(PVOID pvParam)
 	macd._TreadNum--;
 	return 0;
 }
-map<IndexType, string> IndexName = {
+map<StockNumberType, string> IndexName = {
 	{_eFile_Close_INDEX , File_Close_INDEX },
  	{_eFile_Date_INDEX , File_Date_INDEX },
 	{_eFile_Open_INDEX , File_Open_INDEX },
 	{_eFile_High_INDEX , File_High_INDEX },
 	{_eFile_Low_INDEX , File_Low_INDEX },
 	{_eFile_Volume_INDEX ,File_Volume_INDEX },
-
-	{ _eMACD_MA12, MACD_MA12 },
-	{ _eMACD_MA26, MACD_MA26 },
-	{ _eMACD_DIFF, MACD_DIFF },
-	{_eMACD_DEA , MACD_DEA },
-	{_eMACD_BAR , MACD_BAR },
-	{_eKDJ_K , KDJ_K },
-	{_eKDJ_D , KDJ_D },
-	{_eKDJ_J , KDJ_J },
-	{_eDMA_D , DMA_D },
-	{_eDMA_A , DMA_A },
-	{_eTRIX_TRIX , TRIX_TRIX },
-	{_eTRIX_MA , TRIX_MA },
-	{ _eTRIX_VTR, TRIX_VTR },
-	{ _eTRIX_VTB, TRIX_VTB },
-	{ _eTRIX_VTA, TRIX_VTA },
-	{_eMA_MA5 , MA_MA5 },
-	{ _eMA_MA10, MA_MA10 },
-	{ _eMA_MA20, MA_MA20 },
-	{ _eMA_MA40, MA_MA40 },
-	{ _ePRICECHANGE, PRICECHANGE },
-	{ _eVOLHANGE, VOLHANGE },
-	{ _eASI_I, ASI_I },
-	{ _eASI_T, ASI_T },
-	{ _eCDP_CDP, CDP_CDP },
-	{ _eCDP_AH, CDP_AH },
-	{ _eCDP_NH, CDP_NH },
-	{ _eCDP_NL, CDP_NL },
-	{ _eCDP_AL, CDP_AL },
-	{ _eAR, ABVP_AR },
-	{ _eBR, ABVP_BR },
-	{ _eCR, ABVP_CR },
-	{ _eCRMA1, ABVP_CRMA1 },
-	{ _eCRMA2, ABVP_CRMA2 },
-	{ _eCRMA3, ABVP_CRMA3 },
-	{ _eCRMA4, ABVP_CRMA4 },
-	{ _eVR, ABVP_VR },
-	{ _ePSY, ABVP_PSY },
-	{ _eEMV, EMV_EMV },
-	{ _eEMVMA, EMV_EMVMA }
+	{ _eMACD_MA12, "MACD_Ma12" },{ _eMACD_MA26, "MACD_Ma26" },{ _eMACD_DIFF, "MACD_Diff" },{_eMACD_DEA , "MACD_DEA" },{_eMACD_BAR , "MACD_BAR" },
+	{_eKDJ_K , "KDJ_K" },{_eKDJ_D , "KDJ_D" },{_eKDJ_J , "KDJ_J" },
+	{_eDMA_D , "DMA_D" },{_eDMA_A , "DMA_D" },
+	{_eTRIX_TRIX , "TRIX_TRIX" },{_eTRIX_MA , "TRIX_MA" },{ _eTRIX_VTR, "TRIX_VTR" },{ _eTRIX_VTB, "TRIX_VTB" },{ _eTRIX_VTA, "TRIX_VTA" },
+	{_eMA_MA1 , "MA_MA5" },{ _eMA_MA2, "MA_MA10" },{ _eMA_MA3, "MA_MA20" },{ _eMA_MA4, "MA_MA40" },
+	{ _eMA_UPRATE, "MA_UPRATE" },{ _ePRICECHANGE, "PRICECHANGE" },{ _eVOLHANGE, "VOLHANGE" },
+	{ _eASI_I, "ASI_I" },{ _eASI_T, "ASI_T" },
+	{ _eCDP_CDP, "CDP_CDP" },{ _eCDP_AH, "CDP_AH" },{ _eCDP_NH, "CDP_NH" },{ _eCDP_NL, "CDP_NL" },{ _eCDP_AL, "CDP_AL" },
+	{ _eAR, "ABVP_AR" }, { _eBR, "ABVP_BR" }, { _eCR, "ABVP_CR" }, { _ePSY, "ABVP_PSY" },
+	{ _eCRMA1, "ABVP_CRMA1" },{ _eCRMA2, "ABVP_CRMA2" },{ _eCRMA3, "ABVP_CRMA3" },{ _eCRMA4, "ABVP_CRMA4" },{ _eVR, "ABVP_VR" },
+	{ _eEMV, "EMV_EMV" },{ _eEMVMA, "EMV_EMVMA" },
+	{ _eBOOLUp, "BOOLUp" },{ _eBOOLMid, "BOOLMid" },{ _eBOOLDown, "BOOLDown" },{ _eBOOLSTD, "BOOLSTD" },
+	{ _eDMI_DIP, "DMI_DIP" }, { _eDMI_DIN, "DMI_DIN" }, { _eDMI_ADX, "DMI_ADX" }, { _eDMI_ADXR, "DMI_ADXR" },
+	{ _eRSI1, "RSI1" },{ _eRSI2, "RSI2" },{ _eRSI3, "RSI3" }
 };
-std::string GetIndexNameByIndexType(IndexType _indextype)
+
+
+std::string GetNumberNameByIndexType(StockNumberType _indextype)
 {
 	return IndexName[_indextype];
+}
+
+map<StockNumberType, string> GetAllNumberype()
+{
+	return IndexName;
 }
 
 
 
 
+void SinCyclePriceData::Inition()
+{
+	mDate.SetDay("1991-1-1");
+	_Open = 0.0f;
+	_Close = 0.0f;
+	_High = 0.0f;
+	_Low = 0.0f;
+	_Volume = 0.0f;
+}
 
+void SinCyclePriceData::Inition(StockDataType _dOpen, StockDataType _dClose, StockDataType _dHigh, StockDataType _dLow, StockDataType _dVol, string _strdate)
+{
+	mDate.SetDay(_strdate);
+	_Open = _dOpen;
+	_Close = _dClose;
+	_High = _dHigh;
+	_Low = _dLow;
+	_Volume = _dVol;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+bool SinCyclePriceData::operator==(const SinCyclePriceData& d) const
+{
+	return (_Open == d._Open
+		&& _Close == d._Close
+		&& _High == d._High
+		&& _Low == d._Low
+		&& _Volume == d._Volume);
+}

@@ -9,15 +9,22 @@ public:
 	CEMVCal();
 	~CEMVCal();
 	void Inition();
-	bool GetNextEmv(const SinDayPriceData& OneDayData,EMV& _data);
+	bool GetNextEmv(const SinCyclePriceData& OneDayData,EMV& _data);
+	inline StockDataType GetMaHighToLow(StockDataType HighToLow);
+	inline StockDataType GetMaTempToHL(StockDataType HighToLow);
+	inline StockDataType GetEMVMA(StockDataType _emv);
 	unsigned int EMVPara;
 	unsigned int MaPara;
 
-	StockDataType frontHighToHLMaSum;
-	StockDataType frontEMVSum;
-	StockDataType frontHighDivideLowSum;
-	StockDataType frontVolSum;
-	list<EMV> EMVList;
-	list<SinDayPriceData> RecordData;
+	StockDataType VolSum;
+	StockDataType HighToLowSum;
+	StockDataType EMVResourceSum;
+	StockDataType EMVSum;
+	StockDataType RefHigh;
+	StockDataType RefLow;
+	list<StockDataType> HistoryVol;
+	list<StockDataType> HistoryHighToLow;
+	list<StockDataType> HistoryTEMPtoHL;
+	list<StockDataType> HistoryEMV;
 };
 

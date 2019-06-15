@@ -5,6 +5,17 @@
 
 void StockDataTable::clear()
 {
+	map<StockNumberType, string> indexs = GetAllNumberype();
+	VStockData emptyData;
+	for (map<StockNumberType, string>::iterator ite = indexs.begin(); ite != indexs.end(); ite++)
+	{
+		StockNumberType currentType = ite->first;
+		if (_vTableAllIndex.count(ite->first) == 0)
+			_vTableAllIndex[ite->first] = emptyData;
+		else
+			_vTableAllIndex[ite->first].clear();
+	}
+	_strStockCode = "";
 	//Price
 	_vOpen.clear();
 	_vClose.clear();
@@ -14,55 +25,67 @@ void StockDataTable::clear()
 	_vTimeDay.clear();
 	_vDate.clear();
 	//MA
-	_vMa1.clear();
-	_vMa2.clear();
-	_vMa3.clear();
-	_vMa4.clear();
+// 	_vMa1.clear();
+// 	_vMa2.clear();
+// 	_vMa3.clear();
+// 	_vMa4.clear();
 	//MACD
-	_vMACDValue.clear();
-	_vMACDMa12.clear();
-	_vMACDMa26.clear();
-	_vDiff.clear();
-	_vDEA.clear();
-	//DMA
-	_vDMAValue.clear();
-	_vAMAValue.clear();
-	//TRIX
-	_vTRIX.clear();
-	_vTRMA.clear();
-	_vtr.clear();
-	_vtb.clear();
-	_vta.clear();
-	//KDJ
-	_vK.clear();
-	_vD.clear();
-	_vJ.clear();
+// 	_vMACDValue.clear();
+// 	_vMACDMa12.clear();
+// 	_vMACDMa26.clear();
+// 	_vDiff.clear();
+// 	_vDEA.clear();
+// 	//DMA
+// 	_vDMAValue.clear();
+// 	_vAMAValue.clear();
+// 	//TRIX
+// 	_vTRIX.clear();
+// 	_vTRMA.clear();
+// 	_vtr.clear();
+// 	_vtb.clear();
+// 	_vta.clear();
+// 	//KDJ
+// 	_vK.clear();
+// 	_vD.clear();
+// 	_vJ.clear();
 	//
-	_vAsi_i.clear();
-	_vAsit.clear();
+// 	_vAsi_i.clear();
+// 	_vAsit.clear();
 	//
-	_vPriChaRate.clear();
-	_vVolChaRate.clear();
+// 	_vPriChaRate.clear();
+// 	_vVolChaRate.clear();
 	//CDP
-	_vCDP.clear();
-	_vAH_High.clear();
-	_vNH_NormalHigh.clear();
-	_vAL_Low.clear();
-	_vNL_NormalLow.clear();
+// 	_vCDP.clear();
+// 	_vAH_High.clear();
+// 	_vNH_NormalHigh.clear();
+// 	_vAL_Low.clear();
+// 	_vNL_NormalLow.clear();
 	//
-	_vAR.clear();
-	_vBR.clear();
-	_vCR.clear();
-	_vCRMA1.clear();
-	_vCRMA2.clear();
-	_vCRMA3.clear();
-	_vCRMA4.clear();
-	_vVR.clear();
-	_vPSY.clear();
+// 	_vAR.clear();
+// 	_vBR.clear();
+// 	_vCR.clear();
+// 	_vCRMA1.clear();
+// 	_vCRMA2.clear();
+// 	_vCRMA3.clear();
+// 	_vCRMA4.clear();
+// 	_vVR.clear();
+// 	_vPSY.clear();
 	//
-	_vEMV.clear();
-	_vEMVMA.clear();
-	_strStockCode = "";
+// 	_vEMV.clear();
+// 	_vEMVMA.clear();
+	//
+// 	_vBOOLMid.clear();
+// 	_vBOOLUp.clear();
+// 	_vBOOLDown.clear();
+	//
+// 	_vDIP.clear();
+// 	_vDIN.clear();
+// 	_vADX.clear();
+// 	_vADXR.clear();
+	//
+// 	_vRSI1.clear();
+// 	_vRSI2.clear();
+// 	_vRSI3.clear();
 }
 
 
@@ -111,64 +134,21 @@ bool StockDataTable::ChackDataSize() const
 
 
 //
-StockDataPointer StockDataTable::GetAllPointerToSave() const
+StockDataPointer const StockDataTable::GetAllPointerToSave()
 {
 	StockDataPointer indexPointerMap;
-	//pirce
+	//
 	indexPointerMap[_eFile_Close_INDEX] = &_vClose;
 	indexPointerMap[_eFile_Open_INDEX] = &_vOpen;
 	indexPointerMap[_eFile_High_INDEX] = &_vHigh;
 	indexPointerMap[_eFile_Low_INDEX] = &_vLow;
 	indexPointerMap[_eFile_Volume_INDEX] = &_vVolume;
-	//MA
-	indexPointerMap[_eMA_MA5] = &_vMa1;
-	indexPointerMap[_eMA_MA10] = &_vMa2;
-	indexPointerMap[_eMA_MA20] = &_vMa3;
-	indexPointerMap[_eMA_MA40] = &_vMa4;
-	//MACD
-	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
-// 	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
-// 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
-	indexPointerMap[_eMACD_DIFF] = &_vDiff;
-	indexPointerMap[_eMACD_DEA] = &_vDEA;
-	//KDJ
-	indexPointerMap[_eKDJ_K] = &_vK;
-	indexPointerMap[_eKDJ_D] = &_vD;
-	indexPointerMap[_eKDJ_J] = &_vJ;
-	//DMA
-	indexPointerMap[_eDMA_D] = &_vDMAValue;
-	indexPointerMap[_eDMA_A] = &_vAMAValue;
-	//TRIX
-	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
-	indexPointerMap[_eTRIX_MA] = &_vTRMA;
-// 	indexPointerMap[_eTRIX_VTR] = &_vtr;
-// 	indexPointerMap[_eTRIX_VTB] = &_vtb;
-// 	indexPointerMap[_eTRIX_VTA] = &_vta;
-	//change rate
-	indexPointerMap[_ePRICECHANGE] = &_vPriChaRate;
-	indexPointerMap[_eVOLHANGE] = &_vVolChaRate;
-	//ASI
-	indexPointerMap[_eASI_I] = &_vAsi_i;
-	indexPointerMap[_eASI_T] = &_vAsit;
-	//CDP
-	indexPointerMap[_eCDP_CDP] = &_vCDP;
-	indexPointerMap[_eCDP_AH] = &_vAH_High;
-	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
-	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
-	indexPointerMap[_eCDP_AL] = &_vAL_Low;
-	//AR_BR_VR_PSY
-	indexPointerMap[_eAR] = &_vAR;
-	indexPointerMap[_eBR] = &_vBR;
-	indexPointerMap[_eCR] = &_vCR;
-	indexPointerMap[_eCRMA1] = &_vCRMA1;
-	indexPointerMap[_eCRMA2] = &_vCRMA2;
-	indexPointerMap[_eCRMA3] = &_vCRMA3;
-	indexPointerMap[_eCRMA4] = &_vCRMA4;
-	indexPointerMap[_eVR] = &_vVR;
-	indexPointerMap[_ePSY] = &_vPSY;
-	//
-	indexPointerMap[_eEMV] = &_vEMV;
-	indexPointerMap[_eEMVMA] = &_vEMVMA;
+
+	map<StockNumberType, string> indexs = GetAllNumberype();
+	for (map<StockNumberType, string>::iterator ite = indexs.begin(); ite != indexs.end(); ite++)
+	{
+ 		indexPointerMap[ite->first] = &(_vTableAllIndex[ite->first]);
+	}
 
 	return indexPointerMap;
 }
@@ -177,51 +157,61 @@ StockDataPointer StockDataTable::GetNumberPointer() const
 {
 	StockDataPointer indexPointerMap;
 	//
-	indexPointerMap[_eMA_MA5] = &_vMa1;
-	indexPointerMap[_eMA_MA10] = &_vMa2;
-	indexPointerMap[_eMA_MA20] = &_vMa3;
-	indexPointerMap[_eMA_MA40] = &_vMa4;
+// 	indexPointerMap[_eMA_MA1] = &_vMa1;
+// 	indexPointerMap[_eMA_MA2] = &_vMa2;
+// 	indexPointerMap[_eMA_MA3] = &_vMa3;
+// 	indexPointerMap[_eMA_MA4] = &_vMa4;
 	//
-	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
+// 	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
 // 	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
 // 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
-	indexPointerMap[_eMACD_DIFF] = &_vDiff;
-	indexPointerMap[_eMACD_DEA] = &_vDEA;
+// 	indexPointerMap[_eMACD_DIFF] = &_vDiff;
+// 	indexPointerMap[_eMACD_DEA] = &_vDEA;
 	//
-	indexPointerMap[_eDMA_D] = &_vDMAValue;
-	indexPointerMap[_eDMA_A] = &_vAMAValue;
+// 	indexPointerMap[_eDMA_D] = &_vDMAValue;
+// 	indexPointerMap[_eDMA_A] = &_vAMAValue;
 	//
-	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
-	indexPointerMap[_eTRIX_MA] = &_vTRMA;
+// 	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
+// 	indexPointerMap[_eTRIX_MA] = &_vTRMA;
 // 	indexPointerMap[_eTRIX_VTR] = &_vtr;
 // 	indexPointerMap[_eTRIX_VTB] = &_vtb;
 // 	indexPointerMap[_eTRIX_VTA] = &_vta;
 	//
-	indexPointerMap[_eKDJ_K] = &_vK;
-	indexPointerMap[_eKDJ_D] = &_vD;
-	indexPointerMap[_eKDJ_J] = &_vJ;
+// 	indexPointerMap[_eKDJ_K] = &_vK;
+// 	indexPointerMap[_eKDJ_D] = &_vD;
+// 	indexPointerMap[_eKDJ_J] = &_vJ;
+// 	//
+// 	indexPointerMap[_eASI_I] = &_vAsi_i;
+// 	indexPointerMap[_eASI_T] = &_vAsit;
+// 	//
+// 	indexPointerMap[_eCDP_CDP] = &_vCDP;
+// 	indexPointerMap[_eCDP_AH] = &_vAH_High;
+// 	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
+// 	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
+// 	indexPointerMap[_eCDP_AL] = &_vAL_Low;
 	//
-	indexPointerMap[_eASI_I] = &_vAsi_i;
-	indexPointerMap[_eASI_T] = &_vAsit;
+// 	indexPointerMap[_eAR] = &_vAR;
+// 	indexPointerMap[_eBR] = &_vBR;
+// 	indexPointerMap[_eCR] = &_vCR;
+// 	indexPointerMap[_eCRMA1] = &_vCRMA1;
+// 	indexPointerMap[_eCRMA2] = &_vCRMA2;
+// 	indexPointerMap[_eCRMA3] = &_vCRMA3;
+// 	indexPointerMap[_eCRMA4] = &_vCRMA4;
+// 	indexPointerMap[_eVR] = &_vVR;
+// 	indexPointerMap[_ePSY] = &_vPSY;
+// 	//
+// 	indexPointerMap[_eEMV] = &_vEMV;
+// 	indexPointerMap[_eEMVMA] = &_vEMVMA;
+// 	//
+// 	indexPointerMap[_eBOOLMid] = &_vBOOLMid;
+// 	indexPointerMap[_eBOOLUp] = &_vBOOLUp;
+// 	indexPointerMap[_eBOOLDown] = &_vBOOLDown;
 	//
-	indexPointerMap[_eCDP_CDP] = &_vCDP;
-	indexPointerMap[_eCDP_AH] = &_vAH_High;
-	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
-	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
-	indexPointerMap[_eCDP_AL] = &_vAL_Low;
-	//
-	indexPointerMap[_eAR] = &_vAR;
-	indexPointerMap[_eBR] = &_vBR;
-	indexPointerMap[_eCR] = &_vCR;
-	indexPointerMap[_eCRMA1] = &_vCRMA1;
-	indexPointerMap[_eCRMA2] = &_vCRMA2;
-	indexPointerMap[_eCRMA3] = &_vCRMA3;
-	indexPointerMap[_eCRMA4] = &_vCRMA4;
-	indexPointerMap[_eVR] = &_vVR;
-	indexPointerMap[_ePSY] = &_vPSY;
-	//
-	indexPointerMap[_eEMV] = &_vEMV;
-	indexPointerMap[_eEMVMA] = &_vEMVMA;
+// 	indexPointerMap[_eDMI_DIP] = &_vDIP;
+// 	indexPointerMap[_eDMI_DIN] = &_vDIN;
+// 	indexPointerMap[_eDMI_ADX] = &_vADX;
+// 	indexPointerMap[_eDMI_ADXR] = &_vADXR;
+
 	return indexPointerMap;
 }
 

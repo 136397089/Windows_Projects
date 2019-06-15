@@ -10,7 +10,11 @@ class CArBrCrVrPsy
 public:
 	CArBrCrVrPsy();
 	~CArBrCrVrPsy();
-	bool GetNextArBrVrPsy(const SinDayPriceData& OneDayData, ARBRCRVRPSY& mLastData);
+	bool GetNextArBrVrPsy(const SinCyclePriceData& OneDayData, ARBRCRVRPSY& mLastData);
+
+
+	void Inition();
+
 
 	StockDataType GetAR();
 	StockDataType GetBR();
@@ -19,7 +23,7 @@ public:
 	StockDataType GetVR();
 	StockDataType GetPSY();
 
-	list<SinDayPriceData> TemporaryStorageData;
+	list<SinCyclePriceData> TemporaryStorageData;
 	unsigned int VRParameter;
 	unsigned int ARBRParameter;
 	unsigned int CRParameter;

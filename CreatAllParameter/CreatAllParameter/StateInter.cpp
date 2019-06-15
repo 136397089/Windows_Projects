@@ -12,7 +12,7 @@ CStateInter::~CStateInter()
 }
 
 //对所有指标状态进行分析
-void CStateInter::Inter(const StockDataTable& allnumber,const string filename)
+void CStateInter::Inter(StockDataTable& allnumber,const string filename)
 {
 	StockDataPointer pointers = allnumber.GetNumberPointer();
 	allIndexStates.clear();
@@ -34,7 +34,7 @@ void CStateInter::Inter(const StockDataTable& allnumber,const string filename)
 // 	allIndexStates[_eMACD_DEA] = GetOneNumberState(allnumber._vDiff, emptydate);
 // 	allIndexStates[_eMACD_BAR] = GetOneNumberState( allnumber._vMACDValue, emptydate);
 // 	allIndexStates[_eKDJ_J] = GetOneNumberState( allnumber._vJ, allnumber._vD);
-	allIndexStates[_eASI_I] = GetOneNumberState( allnumber._vAsi_i, emptydate);
+	allIndexStates[_eASI_I] = GetOneNumberState(allnumber._vTableAllIndex[_eASI_I], emptydate);
 // 	allIndexStates[_eMA_MA5] = GetOneNumberState(allnumber._vMa1, allnumber._vMa2);
 
 	return;

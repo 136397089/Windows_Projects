@@ -33,11 +33,16 @@ public:
 	//closeData:收盘价
 	//mMacd:前日的MACD
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextMacd(const SinDayPriceData& OneDayData, Macd& mMacd);
+	bool GetNextMacd(const SinCyclePriceData& OneDayData, Macd& mMacd);
+
+	bool CurrentDataToVecter(vector<StockDataType>& CurrentData,const Macd& mMacd);
+
+	bool RecoveryDataFromVecter(const vector<StockDataType>& CurrentData, Macd& mMacd);
+	void Inition();
 private:
-	const StockDataType shortSmoothness;
-	const StockDataType longSmoothness;
-	const StockDataType M;
+	StockDataType shortSmoothness;
+	StockDataType longSmoothness;
+	StockDataType M;
 };
 
 

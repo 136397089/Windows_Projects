@@ -9,11 +9,11 @@ public:
 	//
 	//
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextASI(const SinDayPriceData& OneDayData, ASI& mFrontMa);
+	bool GetNextASI(const SinCyclePriceData& OneDayData, ASI& mFrontMa);
 
 	bool Inition();
 private:
-	SinDayPriceData _YesterdayData;
+	SinCyclePriceData _YesterdayData;
 	list<StockDataType> _vSIList;
 	list<StockDataType> _vASIList;
 

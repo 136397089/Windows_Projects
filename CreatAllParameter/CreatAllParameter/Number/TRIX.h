@@ -7,7 +7,8 @@ class CTRIXCal// :public CNumberManager
 public:
 	CTRIXCal();
 	~CTRIXCal();
-	void GetNextTRIX(const SinDayPriceData& OneDayData, TRIX& mTrix);
+	void GetNextTRIX(const SinCyclePriceData& OneDayData, TRIX& mTrix);
+	void Inition();
 private:
 	float GetEMA(const list<StockDataType>& dataList);
 	float _ParameterN;

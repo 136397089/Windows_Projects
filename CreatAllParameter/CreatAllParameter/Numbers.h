@@ -14,17 +14,44 @@
 #include "PriChag.h"
 #include "ARBRCRVRPSY.h"
 #include "EMV.h"
-class CNumbersCalculator
+#include "Bool.h"
+#include "RSICal.h"
+#include "NumbersToSql.h"
+
+class CIndicatorsCalculator
 {
 public:
-	CNumbersCalculator();
-	~CNumbersCalculator();
+	CIndicatorsCalculator();
+	~CIndicatorsCalculator();
 	//
-	bool GetAllNumbers(StockDataTable& datas,const string& dataType);
-	
+	bool GetAllNumbers(StockDataTable& datas);
+	//
+	void Inition();
+	//
+	bool SaveTempIndicators(string& _stockName, BasisCycleType cycle, CDate _date);
+	//
+	bool GetTempIndicators(StockDataTable& mValue,const string& _stockName, BasisCycleType cycle, const CDate& _date);
+	//
 private:
 	void PushBackIndex(const SigDayTechIndex& AllIndex, StockDataTable& datas);
-
+	CChagRate hPriChaRate;
+	CChagRate hVolChaRate;
+	CMacdCal hMacd;
+	CDMACal hDMA;
+	CTRIXCal hTRIX;
+	CKDJCal hKDJ;
+	CAsiCal hAsi;
+	CCDPCal hCdp;
+	CDMI hDmi;
+	CMaCal hma;
+	CEMVCal hemv;
+	CBool hbool;
+	CRSICal hrsi;
+	CArBrCrVrPsy ArBrVrPsy;
+	CNumbersToSql SQLTool;
+	//½á¹ûÊä³ö
+	SigDayTechIndex currentIndicators;
+	string stockCode;
 
 };
 

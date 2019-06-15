@@ -15,29 +15,9 @@
 #include "Ma.h"
 #include "ARBRCRVRPSY.h"
 #include "EMV.h"
-//趋势判断过程中使用的指标个数
-#define MaxSizeOfIndex 7
-#define LowPriceIndex 0
-#define HighPriceIndex 1
-#define MACDIndex 2
-#define TRIXIndex 3
-#define ASIIndex 4
-#define DMAIndex 5
-#define KDJIndex 6
 
-//////////////////////////////////////////////////////////////////////////
-//特征点所描述的指标
-enum IndexGenre
-{
-	_eLowPrice = LowPriceIndex,
-	_eHighPrice = HighPriceIndex,
-	_eMACD = MACDIndex,
-	_eTRIX = TRIXIndex,
-	_eASI = ASIIndex,
-	_eDMA = DMAIndex,
-	_eKDJ = KDJIndex,
-	_eUnDefine
-};
+
+
 
 //所有的指标－－单日分析时的入参
 struct SigDayTechIndex
@@ -54,14 +34,10 @@ struct SigDayTechIndex
 	MA _Ma;
 	ARBRCRVRPSY _ArBrVrPsy;
 	EMV _Emv;
+	BOOLIndex _Bool;
+	RSI _rsi;
+	void Inition();
 };
-// class CStatisticsB
-// {
-// public:
-// 	CStatisticsB();
-// 	~CStatisticsB();
-// };
-
 
 
 //特征点类型

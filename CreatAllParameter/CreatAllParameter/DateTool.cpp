@@ -4,11 +4,14 @@
 using namespace std;
 
 CDate::CDate()
+	:_hour(0), _minute(0), _second(0),
+	_year(0), _month(0), _day(0)
 {
 
 }
 //构造函数
 CDate::CDate(int year, int month, int day)
+	:_hour(0),_minute(0),_second(0)
 {
 	_year = year;
 	_month = month;
@@ -26,6 +29,7 @@ CDate::~CDate()
 }
 //拷贝构造函数
 CDate::CDate(const CDate& d)//必须传引用，传值会引发无穷递归调用
+	:_hour(0), _minute(0), _second(0)
 {
 	_year = d._year;
 	_month = d._month;
@@ -68,7 +72,10 @@ bool CDate::operator ==(const CDate& d)const//判断两个日期相等
 {
 	return _year == d._year
 		&&_month == d._month
-		&&_day == d._day;
+		&&_day == d._day
+		&&_hour == d._hour
+		&&_minute == d._minute
+		&&_second == d._second;
 }
 bool CDate::operator !=(const CDate& d)const//判断两个日期不相等
 {
@@ -76,7 +83,13 @@ bool CDate::operator !=(const CDate& d)const//判断两个日期不相等
 }
 bool CDate::operator>(const CDate& d) const// > 
 {
-	if ((_year > d._year) || (_year == d._year&&_month > d._month) || (_year == d._year&&_month == d._month&&_day > d._day))
+	if (	(_year > d._year)
+		|| (_year == d._year && _month > d._month)
+		|| (_year == d._year && _month == d._month && _day > d._day)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour > d._hour)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour == d._hour && _minute > d._minute)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour == d._hour && _minute == d._minute && _second > d._second)
+		)
 	{
 		return true;
 	}
@@ -88,7 +101,13 @@ bool CDate::operator>=(const CDate& d)const// >=
 }
 bool CDate::operator<(const CDate& d) const// <
 {
-	if ((_year < d._year) || (_year == d._year&&_month < d._month) || (_year == d._year&&_month == d._month&&_day < d._day))
+	if ((_year < d._year)
+		|| (_year == d._year && _month < d._month)
+		|| (_year == d._year && _month == d._month && _day < d._day)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour < d._hour)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour == d._hour && _minute < d._minute)
+		|| (_year == d._year && _month == d._month && _day == d._day && _hour == d._hour && _minute == d._minute && _second < d._second)
+		)
 	{
 		return true;
 	}
@@ -292,14 +311,41 @@ std::string CDate::GetDay() const
 	stringstream ss;
 
 	ss << _year << "-" << setw(2) << setfill('0') << _month << "-" << setw(2) << setfill('0') << _day;
-
+	if (_hour != 0)
+		ss << "-" << setw(2) << setfill('0') << _hour << "-" << setw(2) << setfill('0') << _minute;
 	return ss.str();
+}
+
+std::string CDate::GetDateTime() const
+{
+	stringstream ss;
+
+	ss << _year 
+		<< "-" << setw(2) << setfill('0') << _month
+		<< "-" << setw(2) << setfill('0') << _day
+		<< " " << setw(2) << setfill('0') << _hour 
+		<< ":" << setw(2) << setfill('0') << _minute 
+		<< ":" << setw(2) << setfill('0') << _second;
+	return ss.str();
+
+}
+
+std::string CDate::GetTime() const
+{
+	stringstream ss;
+	ss  << setw(2) << setfill('0') << _hour
+		<< ":" << setw(2) << setfill('0') << _minute
+		<< ":" << setw(2) << setfill('0') << _second;
+	return ss.str();
+
 }
 
 std::string CDate::GetDay(const string& splitter) const
 {
 	stringstream ss;
 	ss << _year << splitter << setw(2) << setfill('0') << _month << splitter << setw(2) << setfill('0') << _day;
+	if (_hour != 0)
+		ss << "-" << setw(2) << setfill('0') << _hour << "-" << setw(2) << setfill('0') << _minute;
 	return ss.str();
 }
 
@@ -353,6 +399,11 @@ bool CDate::SetTime(const string& _time)
 		return false;
 	_strTime = _time;
 	return true;
+}
+
+bool CDate::IsOnTheSameDay(const CDate& d)
+{
+	return _year == d._year && _month == d._month && _day == d._day;
 }
 
 

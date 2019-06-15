@@ -141,12 +141,12 @@ public:
 		const vector<WhereCommand>& commandList
 /*		const string& whereLimit*/);
 	//从表中读取数据
-	bool SearchDataFromTable(
+	bool ReadDataFromTable(
 		const string _TableName,
 		const vector<Column>& columnTypeList,
 		vector<vector<string>>& _returndatas);
 	//从表中读取数据
-	bool SearchDataFromTable(
+	bool ReadDataFromTable(
 		const string _TableName,
 		const vector<Column>& columnTypeList,
 		const vector<WhereCommand>& whereList,
@@ -154,18 +154,22 @@ public:
 	//检查是否有存在对应的数据
 	bool CheckDataExists(const string _TableName, const vector<WhereCommand>& whereList);
 	//
+	bool SetColumnPrimaryKey(const string& _TableName, const string& _ColumnName);
+	//
 	bool SetColumnUnique(const string& _TableName, const string& _ColumnName);
+	//
+	bool SetColumnIndex(const string& _TableName, const string& _ColumnName);
 	//
 	bool SetColumnCombinUnique(const string& _TableName, const vector<string>& _ColumnName);
 	//保存数据到数据库之前调用，将特定类型的数据转为字符串
-	string DataConversion(const Column& columnName, const string& _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const int _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const unsigned int _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const long _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const short _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const CDate& _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const float _data, vector<string>& vdataList) const;
-	string DataConversion(const Column& columnName, const double _data, vector<string>& vdataList) const;
+	string DataConversion(const Column& columnName, const string& _data) const;
+	string DataConversion(const Column& columnName, const int _data) const;
+	string DataConversion(const Column& columnName, const unsigned int _data) const;
+	string DataConversion(const Column& columnName, const long _data) const;
+	string DataConversion(const Column& columnName, const short _data) const;
+	string DataConversion(const Column& columnName, const CDate& _data) const;
+	string DataConversion(const Column& columnName, const float _data) const;
+	string DataConversion(const Column& columnName, const double _data) const;
 
 	//
 	bool RunCommand(const string& command);

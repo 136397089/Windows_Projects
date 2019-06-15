@@ -20,7 +20,7 @@ CTRIXCal::~CTRIXCal()
 {
 }
 
-void CTRIXCal::GetNextTRIX(const SinDayPriceData& OneDayData, TRIX& mTrix)
+void CTRIXCal::GetNextTRIX(const SinCyclePriceData& OneDayData, TRIX& mTrix)
 {
 // 	_vTrix.push_back(mTrix);
 	TRIX FrontTrix;
@@ -65,4 +65,14 @@ void CTRIXCal::StaticSizePush(StockDataType mdata, float msize, list<StockDataTy
 	mList.push_back(mdata);
 	if (mList.size() > msize)
 		mList.pop_front();
+}
+
+void CTRIXCal::Inition()
+{
+	frontClose.clear();
+	frontTA.clear();
+	frontTB.clear();
+	frontTR.clear();
+	TrixData.clear();
+
 }

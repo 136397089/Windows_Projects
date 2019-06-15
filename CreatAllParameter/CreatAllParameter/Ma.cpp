@@ -20,7 +20,7 @@ CMaCal::~CMaCal()
 {
 }
 
-bool CMaCal::GetNextMa(const SinDayPriceData& OneDayData, MA& mFrontMa)
+bool CMaCal::GetNextMa(const SinCyclePriceData& OneDayData, MA& mFrontMa)
 {
 	MA TempMa = mFrontMa;
 	closedatas.push_back((OneDayData._Close + OneDayData._High + OneDayData._Low) / 3);
@@ -57,12 +57,21 @@ bool CMaCal::GetNextMa(const SinDayPriceData& OneDayData, MA& mFrontMa)
 	mFrontMa.Ma2 = accumulate(Ma2Begin, closedatas.end(), 0) / (StockDataType)M2_Par;
 	mFrontMa.Ma3 = accumulate(Ma3Begin, closedatas.end(), 0) / (StockDataType)M3_Par;
 	mFrontMa.Ma4 = accumulate(Ma4Begin, closedatas.end(), 0) / (StockDataType)M4_Par;
+	if (mFrontMa.Ma1 > mFrontMa.Ma4)
+		upCount++;
+	else
+		downCount++;
+
+	mFrontMa.upRate = upCount / (upCount + downCount);
 	return true;
 }
 
 bool CMaCal::Inition()
 {
 	day = 0;
+	upCount = 0;
+	downCount = 0;
+
 	closedatas.clear();
 	return true;
 }

@@ -14,10 +14,11 @@ int _tmain(int argc, _TCHAR* argv[])
 // 	tool.testFunstion();
 	CLog initionLog;
 	CMainLoop mainloop;
-// 	mainloop.AnaHistory("D:\\StockFile\\test");
-	mainloop.AnaHistory("D:\\StockFile\\StockData_D_Current");
+// 	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\test");
+ 	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\StockData_30_Current");
+// 	mainloop.CreateThreadToAnaHistory_Daily("D:\\StockFile\\StockData_D_Current");
 // 	mainloop.AnaCurrentRealTimeData("D:\\StockFile\\whole\\", "today.csv");
-//	mainloop.AnaCurrentRealTimeData("D:\\StockFile\\StockData_30");
+// 	mainloop.AnaCurrentRealTimeData("D:\\StockFile\\StockData_30");
 
 	return 0;
 }

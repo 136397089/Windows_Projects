@@ -162,24 +162,23 @@ enum BasisType
 	_eBasisDayDIFF = (1<<0),
 	_eBasisDeDayDIFF = (1 << 1),
 	_eBasisDayCR = (1 << 2),//
-// 	_eBasisDeDeDayDIFF = (1 << 2),//
-	_eBasisDayKDJ_K = (1 << 3),
+	_eBasisDayKDJ_D = (1 << 3),
 	_eBasisDeDayKDJ_K = (1 << 4),
-// 	_eBasisDeDeDayKDJ_K = (1 << 5),
+ 	_eBasisDeDayDEA = (1 << 5),
 
 	_eBasisShDayDIFF = (1 << 6),
 	_eBasisShDeDayDIFF = (1 << 7),
-// 	_eBasisShDeDeDayDIFF = (1 << 8),
+ 	_eBasisShDeDayDEA = (1 << 8),
 	_eBasisShDeDayKDJ_K = (1 << 9),
-// 	_eBasisShDeDeDayKDJ_K = (1 << 10),
+	_eBasisDeDayKDJ_D = (1 << 10),
 	_eBasisDayMean = (1 << 11),
 
 	_eBasisMonthDIFF = (1 << 12),
 	_eBasisDeMonthDIFF = (1 << 13),
-// 	_eBasisDeDeMonthDIFF = (1 << 14),
+	_eBasisShDeDayKDJ_D = (1 << 14),
 	_eBasisMonthKDJ_K = (1 << 15),
 	_eBasisDeMonthKDJ_K = (1 << 16),
-// 	_eBasisDeDeMonthKDJ_K = (1 << 17),
+	_eBasisDeMa = (1 << 17),
 
 	_eBasisDeDayCRMA = (1 << 18),
 	_eBasisShDeDayCRMA = (1 << 19),
@@ -190,10 +189,12 @@ enum BasisType
 	_eBasisDeDayMA4 = (1 << 23),
 
 	_eBasisDeDayCR = (1 << 24),
-	_eBasisShDeDayCR = (1 << 25),
-	_eBasisDayRate = (1 << 26),
+	_eBasisDayRSI1 = (1 << 25),
+	_eBasisDeDayRSI1 = (1 << 26),
 	_eBasisDeDayRate = (1 << 27),
-	_eBasisDeDayVR = (1 << 28)
+	_eBasisDayVR = (1 << 28),
+	_eBasisDeDayVR = (1 << 29)
+
 };
 
 
@@ -202,19 +203,37 @@ void CCodeChangelateDlg::OnBnClickedChangelate()
 {
 	map <BasisType, string> typemap =
 	{
-		{ _eDPUnknow, "DPUnknow" },  { _eBasisDayDIFF, "DayDIFF" },
-		{ _eBasisDeDayDIFF, "DeDayDIFF" },  { _eBasisDayCR, "DayCR" },
-		{ _eBasisDayKDJ_K, "DayKDJ_K" },  { _eBasisDeDayKDJ_K, "DeDayKDJ_K" },
-		/*{ _eBasisDeDeDayKDJ_K, "DeDeDayKDJ_K" },*/  { _eBasisShDayDIFF, "ShDayDIFF" },
-		{ _eBasisShDeDayDIFF, "ShDeDayDIFF" },  /*{ _eBasisShDeDeDayDIFF, "ShDeDeDayDIFF" },*/
-		{ _eBasisShDeDayKDJ_K, "ShDeDayKDJ_K" },  /*{ _eBasisShDeDeDayKDJ_K, "ShDeDeDayKDJ_K" },*/
-		{ _eBasisDayMean, "DayMean" },  { _eBasisMonthDIFF, "MonthDIFF" },
-		{ _eBasisDeMonthDIFF, "DeMonthDIFF" },  /*{ _eBasisDeDeMonthDIFF, "DeDeMonthDIFF" },*/
-		{ _eBasisMonthKDJ_K, "MonthKDJ_K" },  { _eBasisDeMonthKDJ_K, "DeMonthKDJ_K" },
-		/*{ _eBasisDeDeMonthKDJ_K, "DeDeMonthKDJ_K" },*/  { _eBasisDeDayCRMA, "DeDayCRMA" },
-		{ _eBasisShDeDayCRMA, "ShDeDayCRMA" },  { _eBasisDeDayMA1, "DeDayMA1" },
-		{ _eBasisDeDayMA2, "DeDayMA2" },  { _eBasisDeDayMA3, "DeDayMA3" },   { _eBasisDeDayMA4, "DeDayMA4" },
-		{ _eBasisDeDayCR, "DeDayCR" }, { _eBasisShDeDayCR ,"ShDeDayCR"}
+		{ _eDPUnknow, "DPUnknow" },
+		{ _eBasisDayDIFF, "DayDIFF" },
+		{ _eBasisDeDayDIFF, "DeDayDIFF" },
+		{ _eBasisDayCR, "DayCR" },
+		{ _eBasisDayKDJ_D, "DayKDJ_D" },
+		{ _eBasisDeDayKDJ_K, "DeDayKDJ_K" },
+		{ _eBasisDeDayDEA, "DeDayDEA" },
+		{ _eBasisShDayDIFF, "ShDayDIFF" },
+		{ _eBasisShDeDayDIFF, "ShDeDayDIFF" },
+		{ _eBasisShDeDayDEA, "ShDeDayDEA" },
+		{ _eBasisShDeDayKDJ_K, "ShDeDayKDJ_K" },
+		{ _eBasisDeDayKDJ_D, "DeDayKDJ_D"},
+		{ _eBasisDayMean, "DayMean" },
+		{ _eBasisMonthDIFF, "MonthDIFF" },
+		{ _eBasisDeMonthDIFF, "DeMonthDIFF" },
+		{ _eBasisShDeDayKDJ_D ,"ShDeDayKDJ_D"},
+		{ _eBasisMonthKDJ_K, "MonthKDJ_K" },
+		{ _eBasisDeMonthKDJ_K, "DeMonthKDJ_K" },
+		{ _eBasisDeMa, "DeMa" },
+		{ _eBasisDeDayCRMA, "DeDayCRMA" },
+		{ _eBasisShDeDayCRMA, "ShDeDayCRMA" },
+		{ _eBasisDeDayMA1, "DeDayMA1" },
+		{ _eBasisDeDayMA2, "DeDayMA2" },
+		{ _eBasisDeDayMA3, "DeDayMA3" },
+		{ _eBasisDeDayMA4, "DeDayMA4" },
+		{ _eBasisDeDayCR, "DeDayCR" },
+		{ _eBasisDayRSI1, "DayRSI1" },
+		{ _eBasisDeDayRSI1, "DeDayRSI1" },
+		{ _eBasisDeDayRate, "DeDayRate" },
+		{ _eBasisDayVR, "DayVR" },
+		{ _eBasisDeDayVR, "DeDayVR" }
 	};
 	CString winTest;
 	m_editInput.GetWindowTextW(winTest);

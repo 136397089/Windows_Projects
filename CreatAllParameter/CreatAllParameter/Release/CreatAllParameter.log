@@ -1,71 +1,9 @@
-﻿生成启动时间为 2019/5/18 19:00:02。
+﻿生成启动时间为 2019/6/15 10:18:32。
      1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
-     1>ClCompile:
-         D:\Program Files\VC\bin\CL.exe /c /I.\eigen3 /Zi /nologo /W3 /WX- /sdl /O2 /Oi /Oy- /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"Release\CreatAllParameter.pch" /Fo"Release\\" /Fd"Release\vc120.pdb" /Gd /TP /analyze- /errorReport:prompt Group.cpp
-         Group.cpp
-     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
-                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
-     1>Group.cpp(7): warning C4244: “参数”: 从“double”转换到“int”，可能丢失数据
-     1>Group.cpp(7): warning C4305: “参数”: 从“double”到“float”截断
-     1>Group.cpp(93): warning C4305: “参数”: 从“double”到“const float”截断
-     1>Group.cpp(145): warning C4305: “参数”: 从“double”到“const float”截断
-       Link:
-         D:\Program Files\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib python36.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.pdb" /SUBSYSTEM:CONSOLE /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.lib" /MACHINE:X86 /SAFESEH Release\ARBRCRVRPSY.obj
-         Release\CcdpStatistics.obj
-         Release\DFT.obj
-         Release\EMV.obj
-         Release\FinaceData.obj
-         Release\Group.obj
-         Release\MeanVariance.obj
-         Release\Morphological.obj
-         Release\MySQLInterFace.obj
-         Release\NumbersToSql.obj
-         Release\StateMachineInter.obj
-         Release\StockDataTable.obj
-         Release\BullMarkBearMark.obj
-         Release\CDP.obj
-         Release\CreatAllParameter.obj
-         Release\DataSizeSwich.obj
-         Release\DateTool.obj
-         Release\DMI.obj
-         Release\CLocalRecordTool.obj
-         Release\FreqStatistice.obj
-         Release\Locker.obj
-         Release\Log.obj
-         Release\Ma.obj
-         Release\MainLoop.obj
-         Release\Matrix.obj
-         Release\Numbers.obj
-         Release\ASI.obj
-         Release\CommonFunction.obj
-         Release\NumberInter.obj
-         Release\StateRecords.obj
-         Release\TRIX.obj
-         Release\_DMA.obj
-         Release\NumberBase.obj
-         Release\KDJ.obj
-         Release\Macd.obj
-         Release\PriChag.obj
-         Release\PythonInterface.obj
-         Release\StaticIntegral.obj
-         Release\StaticRecord.obj
-         Release\StatisticeTool.obj
-         Release\StatisticeInter.obj
-         Release\StateB.obj
-         Release\StateInter.obj
-         Release\stdafx.obj
-         Release\StockAccountNum.obj
-         Release\tinystr.obj
-         Release\tinyxml.obj
-         Release\tinyxmlerror.obj
-         Release\tinyxmlparser.obj
-         Release\TrandRecord.obj
-         Release\TrendAnal.obj
-         正在生成代码
-         已完成代码的生成
+     1>Link:
          CreatAllParameter.vcxproj -> D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\Release\CreatAllParameter.exe
      1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作。
 
 生成成功。
 
-已用时间 00:00:06.77
+已用时间 00:00:00.08

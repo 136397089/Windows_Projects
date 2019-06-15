@@ -20,7 +20,9 @@
 #define  MAX_FILE_LINE_READFROM_COLUMN 10000
 
 
-enum IndexType
+
+
+enum StockNumberType
 {
 	//定义列标签的名称
 	_eFile_Close_INDEX,
@@ -31,6 +33,12 @@ enum IndexType
 	_eFile_HighLow_INDEX,
 	_eFile_Volume_INDEX,
 	_Debug_Index,
+	//
+	_eMACD,
+	_eTRIX,
+	_eASI,
+	_eDMA,
+	_eKDJ,
 	//MACD
 	_eMACD_MA12,
 	_eMACD_MA26,
@@ -51,10 +59,11 @@ enum IndexType
 	_eTRIX_VTB,
 	_eTRIX_VTA,
 	//MA
-	_eMA_MA5,
-	_eMA_MA10,
-	_eMA_MA20,
-	_eMA_MA40,
+	_eMA_MA1,
+	_eMA_MA2,
+	_eMA_MA3,
+	_eMA_MA4,
+	_eMA_UPRATE,
 	//
 	_ePRICECHANGE,
 	_eVOLHANGE,
@@ -79,7 +88,21 @@ enum IndexType
 	_ePSY,
 	//
 	_eEMV,
-	_eEMVMA
+	_eEMVMA,
+	//
+	_eBOOLMid,
+	_eBOOLUp,
+	_eBOOLSTD,
+	_eBOOLDown,
+	//
+	_eDMI_DIP,
+	_eDMI_DIN,
+	_eDMI_ADX,
+	_eDMI_ADXR,
+	//
+	_eRSI1,
+	_eRSI2,
+	_eRSI3
 };
 //定义列标签的名称
 #define File_Close_INDEX "close"
@@ -89,56 +112,58 @@ enum IndexType
 #define File_Low_INDEX "low"
 #define File_Volume_INDEX "volume"
 //MACD
-#define MACD_MA12  "MACD_Ma12"
-#define MACD_MA26  "MACD_Ma26"
-#define MACD_DIFF "MACD_Diff"
-#define MACD_DEA "MACD_DEA"
-#define MACD_BAR "MACD_BAR"
-//KDJ
-#define KDJ_K "KDJ_K"
-#define KDJ_D "KDJ_D"
-#define KDJ_J "KDJ_J"
-//DMA
-#define  DMA_D "DMA_D"
-#define  DMA_A "DMA_A"
-//TRIX
-#define TRIX_TRIX "TRIX_IX"
-#define TRIX_MA "TRIX_MA"
-#define TRIX_VTR "TRIX_tr"
-#define TRIX_VTB "TRIX_tb"
-#define TRIX_VTA "TRIX_ta"
-//MA
-#define MA_MA5 "MA_M5"
-#define MA_MA10 "MA_M10"
-#define MA_MA20 "MA_M20"
-#define MA_MA40 "MA_M40"
-//ChangeRate
-#define PRICECHANGE "pChange"
-#define VOLHANGE "volChange"
-//ASI
-#define ASI_I "ASI_I"
-#define ASI_T "ASI_T"
-//CDP
-#define CDP_CDP "CDP_CDP"
-#define CDP_AH "CDP_AH"
-#define CDP_NH "CDP_NH"
-#define CDP_NL "CDP_NL"
-#define CDP_AL "CDP_AL"
-//AR_BR_VR_PSY
-#define ABVP_AR "ABVP_AR"
-#define ABVP_BR "ABVP_BR"
-#define ABVP_CR "ABVP_CR"
-#define ABVP_CRMA1 "ABVP_CRMA1"
-#define ABVP_CRMA2 "ABVP_CRMA2"
-#define ABVP_CRMA3 "ABVP_CRMA3"
-#define ABVP_CRMA4 "ABVP_CRMA4"
-#define ABVP_VR "ABVP_VR"
-#define ABVP_PSY "ABVP_PSY"
-#define EMV_EMV "EMV_EMV"
-#define EMV_EMVMA "EMV_EMVMA"
+// #define MACD_MA12  "MACD_Ma12"
+// #define MACD_MA26  "MACD_Ma26"
+// #define MACD_DIFF "MACD_Diff"
+// #define MACD_DEA "MACD_DEA"
+// #define MACD_BAR "MACD_BAR"
+// //KDJ
+// #define KDJ_K "KDJ_K"
+// #define KDJ_D "KDJ_D"
+// #define KDJ_J "KDJ_J"
+// //DMA
+// #define  DMA_D "DMA_D"
+// #define  DMA_A "DMA_A"
+// //TRIX
+// #define TRIX_TRIX "TRIX_IX"
+// #define TRIX_MA "TRIX_MA"
+// #define TRIX_VTR "TRIX_tr"
+// #define TRIX_VTB "TRIX_tb"
+// #define TRIX_VTA "TRIX_ta"
+// //MA
+// #define MA_MA5 "MA_M5"
+// #define MA_MA10 "MA_M10"
+// #define MA_MA20 "MA_M20"
+// #define MA_MA40 "MA_M40"
+// #define MA_UPRATE "MA_UPRATE"
+// //ChangeRate
+// #define PRICECHANGE "pChange"
+// #define VOLHANGE "volChange"
+// //ASI
+// #define ASI_I "ASI_I"
+// #define ASI_T "ASI_T"
+// //CDP
+// #define CDP_CDP "CDP_CDP"
+// #define CDP_AH "CDP_AH"
+// #define CDP_NH "CDP_NH"
+// #define CDP_NL "CDP_NL"
+// #define CDP_AL "CDP_AL"
+// //AR_BR_VR_PSY
+// #define ABVP_AR "ABVP_AR"
+// #define ABVP_BR "ABVP_BR"
+// #define ABVP_CR "ABVP_CR"
+// #define ABVP_CRMA1 "ABVP_CRMA1"
+// #define ABVP_CRMA2 "ABVP_CRMA2"
+// #define ABVP_CRMA3 "ABVP_CRMA3"
+// #define ABVP_CRMA4 "ABVP_CRMA4"
+// #define ABVP_VR "ABVP_VR"
+// #define ABVP_PSY "ABVP_PSY"
+// #define EMV_EMV "EMV_EMV"
+// #define EMV_EMVMA "EMV_EMVMA"
 
-std::string GetIndexNameByIndexType(IndexType _indextype);
 
+std::string GetNumberNameByIndexType(StockNumberType _indextype);
+map<StockNumberType, string> GetAllNumberype();
 //线程函数
 DWORD WINAPI ThreadToUpdatefile(PVOID pvParam);
 
@@ -148,10 +173,13 @@ class CNumberBase;
 //
 //
 //////////////////////////////////////////////////////////////////////////
-struct SinDayPriceData
+struct SinCyclePriceData
 {
 public:
-	SinDayPriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f){}
+	SinCyclePriceData():_Open(0.0f),_Close(0.0f),_High(0.0f),_Low(0.0f),_Volume(0){}
+	void Inition();
+	void Inition(StockDataType _dOpen,StockDataType _dClose,StockDataType _dHigh,StockDataType _dLow,StockDataType _dVol,string _strdate);
+	bool operator ==(const SinCyclePriceData& d)const ;
 	CDate mDate;
 	StockDataType _Open;
 	StockDataType _Close;
@@ -358,6 +386,7 @@ struct DayHLCOV
 
 struct ARBRCRVRPSY
 {
+	ARBRCRVRPSY() :AR(0), BR(0), VR(0), CR(0), CRMa1(0), CRMa2(0), CRMa3(0), CRMa4(0), PSY(0){}
 	StockDataType AR;
 	StockDataType BR;
 	StockDataType VR;
@@ -385,6 +414,7 @@ struct ASI
 
 struct CDP
 {
+	CDP() :_CDP(0), _AH_High(0), _NH_NormalHigh(0), _AL_Low(0), _NL_NormalLow(0){}
 	StockDataType _CDP;
 	StockDataType _AH_High;
 	StockDataType _NH_NormalHigh;
@@ -395,31 +425,20 @@ struct CDP
 
 struct  Dmi
 {
-	StockDataType _PDI;
-	StockDataType _NDI;
+	StockDataType _DIP;
+	StockDataType _DIN;
 	StockDataType _ADX;
 	StockDataType _ADXR;
-	Dmi()
-	{
-		_PDI = 0.0f;
-		_NDI = 0.0f;
-		_ADX = 0.0f;
-		_ADXR = 0.0f;
-	}
+	Dmi() :_DIP(0), _DIN(0), _ADX(0), _ADXR(0){}
 };
 struct DMTR
 {
-	StockDataType PDM;
-	StockDataType NDM;
+	DMTR() :DMP(0), DMM(0), TR(0){}
+	StockDataType DMP;
+	StockDataType DMM;
 	StockDataType TR;
-	StockDataType ADX;
-	DMTR()
-	{
-		PDM = 0.0f;
-		NDM = 0.0f;
-		TR = 0.0f;
-		ADX = 0.0f;
-	}
+// 	StockDataType ADX;
+
 };
 
 struct EMV
@@ -438,6 +457,7 @@ struct MA
 	StockDataType Ma2;
 	StockDataType Ma3;
 	StockDataType Ma4;
+	StockDataType upRate;
 };
 struct TRIX 
 {
@@ -449,13 +469,27 @@ struct TRIX
 	StockDataType _TR;
 
 };
-
+struct BOOLIndex
+{
+	BOOLIndex() :MidPrice(0), Uper(0), Downer(0){}
+	StockDataType MidPrice;
+	StockDataType PriceSTD;
+	StockDataType Uper;
+	StockDataType Downer;
+};
+struct RSI
+{
+	RSI() :RSI1(0), RSI2(0), RSI3(0){}
+	StockDataType RSI1;
+	StockDataType RSI2;
+	StockDataType RSI3;
+};
 struct MACDCombin
 {
 	Macd TodayMacd;
 	Macd YesterdayMacd;
 	Macd BefoYesMacd;
-	Macd CurrentMacd;
+	Macd ForecastMacd;
 
 	CDate Today;
 	CDate Yesterday;
@@ -468,7 +502,7 @@ struct KDJCombin
 	KDJ		TodayKDJ;
 	KDJ		YesterdayKDJ;
 	KDJ		BefYesKDJ;
-	KDJ		CurrentKDJ;
+	KDJ		ForecastKDJ;
 
 	CDate	Today;
 	CDate	Yesterday;
@@ -476,10 +510,148 @@ struct KDJCombin
 	CDate	CurrentDate;
 };
 
+
+
+
 struct realTimeDataToAna
 {
 	KDJCombin CloselyKDJs;
 	MACDCombin CloselyMACDs;
 };
+
+
+
+struct DayPrice
+{
+	StockDataType _closeData;
+	StockDataType _highData;
+	StockDataType _lowData;
+	StockDataType _openData;
+	CDate _date;
+
+	StockDataType _frontClose;
+	StockDataType _frontHigh;
+	StockDataType _frontLow;
+	StockDataType _frontOpen;
+	CDate _frontdate;
+
+};
+
+
+
+
+enum BasisType
+{
+	_eDPUnknow = 0,
+
+	_eBasisDayDIFF = (1 << 0),
+	_eBasisDeDayDIFF = (1 << 1),
+	_eBasisDayCR = (1 << 2),//
+	_eBasisDayKDJ_D = (1 << 3),
+	_eBasisDeDayKDJ_K = (1 << 4),
+	_eBasisDeDayDEA = (1 << 5),
+
+	_eBasisShDayDIFF = (1 << 6),
+	_eBasisShDeDayDIFF = (1 << 7),
+	_eBasisShDeDayDEA = (1 << 8),
+	_eBasisShDeDayKDJ_K = (1 << 9),
+	_eBasisDeDayKDJ_D = (1 << 10),
+	_eBasisDayCTO = (1 << 11),
+
+	_eBasisDayKDJ_K = (1 << 12),
+	_eBasisShDeDayBAR = (1 << 13),
+	_eBasisShDeDayKDJ_D = (1 << 14),
+	_eBasisDeDayBar = (1 << 15),
+	_eBasisShDeKDJ_D = (1 << 16),
+	_eBasisDeMa = (1 << 17),
+
+	_eBasisDeDayCRMA = (1 << 18),
+	_eBasisDayEMV = (1 << 19),
+
+	_eBasisDeDEA = (1 << 20),
+	_eBasisDeMonthDEA = (1 << 21),
+	_eBasisDeMonthDIFF = (1 << 22),
+	_eBasisDeDayMA4 = (1 << 23),
+
+	_eBasisDeDayCR = (1 << 24),
+	_eBasisDayRSI1 = (1 << 25),
+	_eBasisDeDayRSI1 = (1 << 26),
+	_eBasisFroDayRSI1 = (1 << 27),
+	_eBasisDayVR = (1 << 28),
+	_eBasisDeDayVR = (1 << 29)
+
+};
+
+enum PosNegType
+{
+	_eNegative = 0,
+
+	_eBasisDayDIFF_P = (1 << 0),
+	_eBasisDeDayDIFF_P = (1 << 1),
+	_eBasisDayCR_P = (1 << 2),
+	// 	_eBasisDeDeDayDIFF_P = (1 << 2),//
+	_eBasisDayKDJ_D_P = (1 << 3),
+	_eBasisDeDayKDJ_K_P = (1 << 4),
+	_eBasisDeDayDEA_P = (1 << 5),
+
+	_eBasisShDayDIFF_P = (1 << 6),
+	_eBasisShDeDayDIFF_P = (1 << 7),
+	_eBasisShDeDayDEA_P = (1 << 8),
+	_eBasisShDeDayKDJ_K_P = (1 << 9),
+	_eBasisDeDayKDJ_D_P = (1 << 10),
+	_eBasisDayCTO_P = (1 << 11),
+
+	_eBasisDayKDJ_K_P = (1 << 12),
+	_eBasisShDeDayBAR_P = (1 << 13),
+	_eBasisShDeDayKDJ_D_P = (1 << 14),
+	_eBasisDeDayBar_P = (1 << 15),
+	_eBasisShDeKDJ_D_P = (1 << 16),
+	_eBasisupRate_P = (1 << 17),
+
+	_eBasisDeDayCRMA_P = (1 << 18),
+	_eBasisDayEMV_P = (1 << 19),
+
+	_eBasisDeDEA_P = (1 << 20),
+	_eBasisDeMonthDEA_P = (1 << 21),
+	_eBasisDeMonthDIFF_P = (1 << 22),
+	_eBasisDeDayMA4_P = (1 << 23),
+
+	_eBasisDeDayCR_P = (1 << 24),
+	_eBasisDayRSI1_P = (1 << 25),
+	_eBasisDeDayRSI1_P = (1 << 26),
+	_eBasisFroDayRSI1_P = (1 << 27),
+	_eBasisDeDayVR_P = (1 << 28)
+};
+
+enum pSpecGroupType
+{
+	_eCTUnknow = 0,
+	_eHighType = (1 << 0),
+	_eLowType = (1 << 1),
+	_eCloseType = (1 << 2),
+	_eOpenType = (1 << 3),
+	_eGroup1,
+	_eGroup2,
+	_eGroup3,
+	_eGroup4,
+	_eMixed = 0xeFFFFFFF
+};
+
+enum BasisCycleType
+{
+	eMinute5 = 1,
+	eMinute15 = 2,
+	eMinute30 = 3,
+	eMinute60 = 4,
+	eMinute120 = 5,
+	eDay = 6,
+	eWeek = 7,
+	eMonth = 8,
+	eSH = 1 << 8,
+	eSZ = 2 << 8,
+	eCY = 3 << 8,
+	eResource
+};
+
 
 #endif

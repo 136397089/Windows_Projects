@@ -8,13 +8,13 @@
 #include "../log.h"
 #include "../StockDataTable.h"
 #include "StateRecords.h"
+#include "../NumbersToSql.h"
 
 
 
-
-typedef map<IndexType, StateTable> IndexStateMap;
-typedef map<IndexType, StateTable*> IndexStatePointer;
-typedef map<IndexType, const StateTable*> IndexStateConstPointer;
+typedef map<StockNumberType, StateTable> IndexStateMap;
+typedef map<StockNumberType, StateTable*> IndexStatePointer;
+typedef map<StockNumberType, const StateTable*> IndexStateConstPointer;
 
 
 //定义参数
@@ -24,7 +24,7 @@ typedef map<IndexType, const StateTable*> IndexStateConstPointer;
 #define KDJ_INDEX2 3.0f
 #define KDJ_INDEX3 3.0f
 
-class SinDayData: public SinDayPriceData
+class SinDayData: public SinCyclePriceData
 {
 public:
 	StockDataType changepercent;//涨跌幅
@@ -45,44 +45,69 @@ public:
 
 
 class StateRecords;
-class CNumberInterface //:protected CNumberManager
+class CIndicatorsInterface //:protected CNumberManager
 {
 public:
-	CNumberInterface();
-	~CNumberInterface();
+	CIndicatorsInterface();
+	~CIndicatorsInterface();
 	//////////////////////////////////////////////////////////////////////////
 	//从文件中读数据，并计算指标
 	//////////////////////////////////////////////////////////////////////////
-	bool GetDataAndNumbers(const string& filename ,const string& FilePath);
+	bool GetDataAndIndicators_History(const string& filename, const string& FilePath);
 
+	bool GetDataAndIndicators_SH(const string& filename, const string& FilePath);
+
+	//////////////////////////////////////////////////////////////////////////
+	//从文件中读数据，并计算指标
+	//////////////////////////////////////////////////////////////////////////
+	bool GetDataAndIndicatorMintue_History(const string& filename, const string& FilePath);
 	//
-	const StockDataTable& GetDayValue() const;
+	StockDataTable& GetResourceValue();
 	//
-	const StockDataTable& GetWeekValue() const;
+	StockDataTable& GetWeekValue();
 	//
-	const StockDataTable& GetMonthValue() const;
-	//从文件夹中读出当日的数据
-	bool GetTodayData(const string& fileFullPath, map<string, SinDayData>& TodayData);
+	StockDataTable& GetMonthValue();
+	//
+	StockDataTable& GetRealtimeValue();
+	//从MYSQL中读出所有股票的实时数据
+	void RefreshAllStockDate_RealTime();
+	//
+	bool GetIndicators_Realtime(const string& _stockName, BasisCycleType dataCycle);
+	//
+	CDate GetLastDate();
 private:
+	//返回实时的价格数据中目前股票的数据
+	bool GetStockPriceData_RealTime(const string& stockData,map<RealDataIndex, SinCyclePriceData>& returnData);
+	//计算指标
+	bool Cal30MinuteIndicators();
+	//计算指标
+	bool CalResourceIndicators();
+	//计算指标
+	bool CalWeekIndicators();
+	//计算指标
+	bool CalMonthIndicators();
 	//////////////////////////////////////////////////////////////////////////
-	//从文件中读出所有的数据
+	//从文件中读出所有的数据，全部保存为字符串在 AllString中
 	//////////////////////////////////////////////////////////////////////////
-	void RaedDateFromFile(const string& strFilePath);
+	void RaedDateFromFile(const string& strFilePath, StringBlock& AllString);
 	//////////////////////////////////////////////////////////////////////////
-	//读横向排列的数据
+	//将字符串数据翻译成可用于计算的数据
 	//////////////////////////////////////////////////////////////////////////
 	void ProcessingTransverseData(const StringBlock& AllString);
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
 	bool ResizeData(CDate beginData);
-	bool _IsInSale;
-	int index;
-	//CLog resultFile;
-	double startTime;
-	StockDataTable mDayValue;
+
+	StockDataTable mResourceValue;
 	StockDataTable mWeekValue;
 	StockDataTable mMonthValue;
+	bool IsLongitudinal;//标志数据是否横向排列
+	//用于存放实时数据
+	StockDataTable mRealTimeValue;
+	map<RealDataIndex, SinCyclePriceData> CurrentData;
+	vector<RealDataIndex> NoUpdatesTableType;
+
 };
 
 

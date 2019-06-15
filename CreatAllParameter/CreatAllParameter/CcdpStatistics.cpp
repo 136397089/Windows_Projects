@@ -11,13 +11,13 @@ CcdpStatistics::~CcdpStatistics()
 {
 }
 
-bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
+bool CcdpStatistics::CountCDPData(StockDataTable& _inputdata)
 {
-	const VStockData& AH = _inputdata._vAH_High;
-	const VStockData& NH = _inputdata._vNH_NormalHigh;
-	const VStockData& CDP = _inputdata._vCDP;
-	const VStockData& NL = _inputdata._vNL_NormalLow;
-	const VStockData& AL = _inputdata._vAL_Low;
+	const VStockData& AH = _inputdata._vTableAllIndex[_eCDP_AH];
+	const VStockData& NH = _inputdata._vTableAllIndex[_eCDP_NH];
+	const VStockData& CDP = _inputdata._vTableAllIndex[_eCDP_CDP];
+	const VStockData& NL = _inputdata._vTableAllIndex[_eCDP_NL];
+	const VStockData& AL = _inputdata._vTableAllIndex[_eCDP_AL];
 	const VStockData& high = _inputdata._vHigh;
 	const VStockData& low = _inputdata._vLow;
 	const VStockData& _vopen = _inputdata._vOpen;
@@ -66,7 +66,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
 			GetCDPDataByInedx(_inputdata, i, LastTimeCDP);
 			continue;
 		}
-		if (_inputdata._vAR[i - 1] > 0 && _inputdata._vAR[i - 1] < 50)
+		if (_inputdata._vTableAllIndex[_eAR][i - 1] > 0 && _inputdata._vTableAllIndex[_eAR][i - 1] < 50)
 		{
 			CDPGroupOneResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupOneResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -74,7 +74,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
 			CDPGroupOneResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPGroupOneResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (_inputdata._vAR[i - 1] >= 50 && _inputdata._vAR[i - 1] < 150)
+		if (_inputdata._vTableAllIndex[_eAR][i - 1] >= 50 && _inputdata._vTableAllIndex[_eAR][i - 1] < 150)
 		{
 			CDPGroupTwoResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupTwoResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -82,7 +82,7 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
 			CDPGroupTwoResult.ClosePriceIntervalFreq[closeIndex]++;
 			CDPGroupTwoResult.colseLine[lowIndex - highIndex] ++;
 		}
-		if (_inputdata._vAR[i - 1] >= 150)
+		if (_inputdata._vTableAllIndex[_eAR][i - 1] >= 150)
 		{
 			CDPGroupThreeResult.HighPriceIntervalFreq[highIndex] ++;
 			CDPGroupThreeResult.LowPriceIntervalFreq[lowIndex] ++;
@@ -96,14 +96,14 @@ bool CcdpStatistics::CountCDPData(const StockDataTable& _inputdata)
 	return true;
 }
 
-bool CcdpStatistics::CheckCDPData(const StockDataTable& _inputdata)
+bool CcdpStatistics::CheckCDPData(StockDataTable& _inputdata)
 {
-	const VStockData& CDP = _inputdata._vCDP;
+	const VStockData& CDP = _inputdata._vTableAllIndex[_eCDP_CDP];
 
-	if (_inputdata._vAH_High.size() != CDP.size() ||
-		_inputdata._vNH_NormalHigh.size() != CDP.size() ||
-		_inputdata._vNL_NormalLow.size() != CDP.size() ||
-		_inputdata._vAL_Low.size() != CDP.size() ||
+	if (_inputdata._vTableAllIndex[_eCDP_AH].size() != CDP.size() ||
+		_inputdata._vTableAllIndex[_eCDP_NH].size() != CDP.size() ||
+		_inputdata._vTableAllIndex[_eCDP_AL].size() != CDP.size() ||
+		_inputdata._vTableAllIndex[_eCDP_NL].size() != CDP.size() ||
 		_inputdata._vHigh.size() != CDP.size() ||
 		_inputdata._vLow.size() != CDP.size() ||
 		_inputdata._vClose.size() != CDP.size() ||
@@ -116,18 +116,18 @@ bool CcdpStatistics::CheckCDPData(const StockDataTable& _inputdata)
 }
 
 
-bool CcdpStatistics::GetCDPDataByInedx(const StockDataTable& _inputdata, unsigned int index, CDP& CDPdata)
+bool CcdpStatistics::GetCDPDataByInedx(StockDataTable& _inputdata, unsigned int index, CDP& CDPdata)
 {
-	if (index > _inputdata._vCDP.size())
+	if (index > _inputdata._vTableAllIndex[_eCDP_CDP].size())
 	{
 		_LastError = "Index out of cdp size in function(GetCDPDataByInedx).";
 		return false;
 	}
-	const VStockData& AH = _inputdata._vAH_High;
-	const VStockData& NH = _inputdata._vNH_NormalHigh;
-	const VStockData& CDP = _inputdata._vCDP;
-	const VStockData& NL = _inputdata._vNL_NormalLow;
-	const VStockData& AL = _inputdata._vAL_Low;
+	const VStockData& AH = _inputdata._vTableAllIndex[_eCDP_AH];
+	const VStockData& NH = _inputdata._vTableAllIndex[_eCDP_NH];
+	const VStockData& CDP = _inputdata._vTableAllIndex[_eCDP_CDP];
+	const VStockData& NL = _inputdata._vTableAllIndex[_eCDP_NL];
+	const VStockData& AL = _inputdata._vTableAllIndex[_eCDP_AL];
 
 	CDPdata._AH_High = AH[index];
 	CDPdata._NH_NormalHigh = NH[index];

@@ -216,6 +216,18 @@
     <ClInclude Include="FinaceData.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="Bool.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="RSICal.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="TopButRecord.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ComTime.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -369,6 +381,18 @@
       <Filter>Statistics</Filter>
     </ClCompile>
     <ClCompile Include="FinaceData.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="Bool.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="RSICal.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="TopButRecord.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ComTime.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

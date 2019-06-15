@@ -78,7 +78,7 @@ CDMACal::~CDMACal()
 // 
 // }
 
-void CDMACal::GetNextDMA(const SinDayPriceData& OneDayData, DMA_DATA& Dma)
+void CDMACal::GetNextDMA(const SinCyclePriceData& OneDayData, DMA_DATA& Dma)
 {
 	closelyData50.push_back(OneDayData._Close);
 	if (closelyData50.size() < Paremeter50)

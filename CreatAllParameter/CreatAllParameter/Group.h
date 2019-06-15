@@ -9,126 +9,28 @@
 #include "MeanVariance.h"
 using namespace std;
 
-enum BasisType
-{
-	_eDPUnknow = 0,
 
-	_eBasisDayDIFF = (1<<0),
-	_eBasisDeDayDIFF = (1 << 1),
-	_eBasisDayCR = (1 << 2),//
-// 	_eBasisDeDeDayDIFF = (1 << 2),//
-    _eBasisMonthKDJ_KJ = (1 << 3),
-	_eBasisDeDayKDJ_K = (1 << 4),
-// 	_eBasisDeDeDayKDJ_K = (1 << 5),
-
-	_eBasisShDayDIFF = (1 << 6),
-	_eBasisShDeDayDIFF = (1 << 7),
-// 	_eBasisShDeDeDayDIFF = (1 << 8),
-	_eBasisShDeDayKDJ_K = (1 << 9),
-// 	_eBasisShDeDeDayKDJ_K = (1 << 10),
-	_eBasisDayMean = (1 << 11),
-
-	_eBasisMonthDIFF = (1 << 12),
-	_eBasisDeMonthDIFF = (1 << 13),
-// 	_eBasisDeDeMonthDIFF = (1 << 14),
-	_eBasisMonthKDJ_K = (1 << 15),
-	_eBasisDeMonthKDJ_K = (1 << 16),
-// 	_eBasisDeDeMonthKDJ_K = (1 << 17),
-
-	_eBasisDeDayCRMA = (1 << 18),
-	_eBasisShDeDayCRMA = (1 << 19),
-
-	_eBasisDeDayMA1 = (1 << 20),
-	_eBasisDeDayMA2 = (1 << 21),
-	_eBasisDeDayMA3 = (1 << 22),
-	_eBasisDeDayMA4 = (1 << 23),
-
-	_eBasisDeDayCR = (1 << 24),
-	_eBasisShDeDayCR = (1 << 25),
-	_eBasisDayRate = (1 << 26),
-	_eBasisDeDayRate = (1 << 27),
-	_eBasisDeDayVR = (1 << 28)
-
-};
-
-enum PosNegType
-{
-	_eNegative = 0,
-
-	_eBasisDayDIFF_P = (1 << 0),
-	_eBasisDeDayDIFF_P = (1 << 1),
-	_eBasisDayCR_P = (1 << 2),
-// 	_eBasisDeDeDayDIFF_P = (1 << 2),//
-	_eBasisMonthKDJ_KJ_P = (1 << 3),
-	_eBasisDeDayKDJ_K_P = (1 << 4),
-// 	_eBasisDeDeDayKDJ_K_P = (1 << 5),//
-
-	_eBasisShDayDIFF_P = (1 << 6),
-	_eBasisShDeDayDIFF_P = (1 << 7),
-// 	_eBasisShDeDeDayDIFF_P = (1 << 8),
-	_eBasisShDeDayKDJ_K_P = (1 << 9),
-// 	_eBasisShDeDeDayKDJ_K_P = (1 << 10),
-	_eBasisDayMean_P = (1 << 11),
-
-	_eBasisMonthDIFF_P = (1 << 12),
-	_eBasisDeMonthDIFF_P = (1 << 13),
-// 	_eBasisDeDeMonthDIFF_P = (1 << 14),
-	_eBasisMonthKDJ_K_P = (1 << 15),
-	_eBasisDeMonthKDJ_K_P = (1 << 16),
-// 	_eBasisDeDeMonthKDJ_K_P = (1 << 17),
-
-	_eBasisDeDayCRMA_P = (1 << 18),
-	_eBasisShDeDayCRMA_P = (1 << 19),
-
-	_eBasisDeDayMA1_P = (1 << 20),
-	_eBasisDeDayMA2_P = (1 << 21),
-	_eBasisDeDayMA3_P = (1 << 22),
-	_eBasisDeDayMA4_P = (1 << 23),
-
-	_eBasisDeDayCR_P = (1 << 24),
-	_eBasisShDeDayCR_P = (1 << 25),
-	_eBasisDayRate_P = (1 << 26),
-	_eBasisDeDayRate_P = (1 << 27),
-	_eBasisDeDayVR_P = (1 << 28)
-
-};
-
-enum pChangeType
-{
-	_eCTUnknow = 0,
-	_eHighType = (1 << 0),
-	_eLowType = (1 << 1),
-	_eCloseType = (1 << 2),
-	_eOpenType = (1 << 3),
-	_eGroup1,
-	_eGroup2,
-	_eGroup3,
-	_eGroup4,
-	_eMixed = 0xeFFFFFFF
-};
-
-#define _Positive 1
-#define _Negative 2
-#define _NotSet 0
 #define  MinimumChangeRate -11
 #define  MaximumChangeRate 11
 #define  ChangeRateStep 0.1
 
-//外部输入的数据
+//外部输入的数据,用于分组的依据
 struct NumberEvent
 {
 	BasisType NumberType;
+	BasisCycleType CycleType;
 	StockDataType number;
 	NumberEvent IniData(BasisType NumberType, StockDataType number);
 };
 
+//用于标记Group
 struct Group
 {
 	BasisType NumberType;
 	PosNegType NPType;
-	pChangeType changeRateType;
+	pSpecGroupType changeRateType;
 	int pChangeGroupIndex;
-	void Inition(BasisType _NumberType, PosNegType _NPType, pChangeType _changeRateType, int _pChangeGroupIndex);
+	void Inition(BasisType _NumberType, PosNegType _NPType, pSpecGroupType _changeRateType, int _pChangeGroupIndex);
 	Group()
 		:NumberType(_eDPUnknow),
 		NPType(_eNegative),
@@ -139,6 +41,7 @@ struct Group
 	bool operator== (const Group & tempdata) const;
 };
 
+//用于对历史上的所有数据进行分组，主要用于分析单日的历史数据
 class CHistoryGroup
 {
 public:
@@ -146,7 +49,7 @@ public:
 	~CHistoryGroup();
 
 	//记录数据，进行分组
-	void RecordDataFreq(const vector<NumberEvent>& _data, StockDataType _pChange, pChangeType _changeType);
+	void RecordDataFreq(const vector<NumberEvent>& _data, StockDataType _pChange, pSpecGroupType _changeType);
 	//记录数据对应的日期
 	void RecordDay(const vector<NumberEvent>& _data, const CDate& _date);
 	//输入一个指标和价格变化率，返回分组类型
@@ -181,23 +84,82 @@ private:
 	//记录需要关注的指标类型分组日期
 	vector<CDate> dateRecord;
 	//
-	pChangeType changeRateType;
+	pSpecGroupType changeRateType;
 };
 
-class COnedayGrouping
+
+//用于对一天的数据指标进行分组，主要用于当前的股票数据进行分析
+class CCurrentGrouping
 {
 public:
-	COnedayGrouping(){}
-	~COnedayGrouping(){}
+	CCurrentGrouping(){}
+	~CCurrentGrouping(){}
 public:
 	void Inition();
 	bool GroupingNumbers(
 		const string& stockCode,
 		const vector<NumberEvent>& _data,
-		pChangeType _changeType);
+		pSpecGroupType _changeType);
 
 	bool GetGroup(BasisType NumberType, PosNegType NPType, vector<string>& TageGroup);
 	map<string, Group> stockGroupResult;
+};
+
+
+
+
+struct ProcessGroup
+{
+	BasisType NumberType;
+	PosNegType NPType;
+	pSpecGroupType SpecGroupType;
+	void Inition(BasisType _NumberType, PosNegType _NPType, pSpecGroupType _SpecGroupType);
+	vector<string> GetTypeString() const;
+	ProcessGroup()
+		:NumberType(_eDPUnknow),
+		NPType(_eNegative),
+		SpecGroupType(_eCTUnknow)
+	{}
+	bool operator < (const ProcessGroup & tempdata) const;
+	bool operator == (const ProcessGroup & tempdata) const;
+};
+struct ProcessNodes
+{
+	DayPrice beginNode;
+	DayPrice endNode;
+};
+class CProcessGrouping
+{
+public:
+	CProcessGrouping();
+	~CProcessGrouping();
+	//
+	void Inition(const string& stockCode);
+
+	//
+	void RecordDataFreq(
+		const vector<NumberEvent>& _data,
+		const DayPrice& _price,
+		pSpecGroupType _SpecGroupType);
+	void CalReturnRate();
+	//分组的开始条件触发
+	bool BeginTrigger(const vector<NumberEvent>& _data);
+	//分组的结束条件触发
+	bool EndTrigger(const vector<NumberEvent>& _data);
+
+	//需要关注的分组类型
+	vector<ProcessGroup> vkeyGroupType;
+	//
+	//map<ProcessGroup,vector<StockDataType>> ReturnRates;
+private:
+	//
+	void SetKeyGroupType();
+	//用于记录分组的开始节点，如果对应分组的开始节点存在，说明当前正处在对应的分组状态中
+	map<ProcessGroup, DayPrice> GroupBeginNodes;
+	//分组的结果
+	map<ProcessGroup, vector<ProcessNodes>> GroupRecord;
+	//记录当前分析的股票数据代码，在初始化时记录
+	string stockCode;
 };
 
 

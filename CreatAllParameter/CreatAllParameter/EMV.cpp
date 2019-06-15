@@ -6,10 +6,12 @@ CEMVCal::CEMVCal()
 {
 	EMVPara = 14;
 	MaPara = 9;
-	frontEMVSum = 0;
-	frontHighDivideLowSum = 0;
-	frontHighToHLMaSum = 0;
-	frontVolSum = 0;
+	VolSum = 0.0f;
+	HighToLowSum = 0.0f;
+	EMVResourceSum = 0.0f;
+	RefHigh = 0.0f;
+	RefLow = 0.0f;
+	EMVSum = 0.0f;
 }
 
 
@@ -17,58 +19,76 @@ CEMVCal::~CEMVCal()
 {
 }
 
-bool CEMVCal::GetNextEmv(const SinDayPriceData& TodayDayData, EMV& _data)
+bool CEMVCal::GetNextEmv(const SinCyclePriceData& TodayDayData, EMV& _data)
 {
-	if (RecordData.size() == 0)
+	VolSum += TodayDayData._Volume;
+	HistoryVol.push_back(TodayDayData._Volume);
+	if (HistoryVol.size() > EMVPara)
 	{
-		RecordData.push_front(TodayDayData);
-		EMVList.push_front(_data);
-		return true;
+		VolSum -= HistoryVol.front();
+		HistoryVol.pop_front();
 	}
-	SinDayPriceData refData = *RecordData.begin();
-	frontVolSum = frontVolSum + TodayDayData._Volume;
-	frontHighToHLMaSum = frontHighToHLMaSum + TodayDayData._High - TodayDayData._Low;
-	if (RecordData.size() == EMVPara)
-	{
-		frontVolSum = frontVolSum - RecordData.back()._Volume;
-		frontHighToHLMaSum = frontHighToHLMaSum - RecordData.back()._High + RecordData.back()._Low;
-		RecordData.pop_back();
-	}
-	RecordData.push_front(TodayDayData);
-
-	StockDataType TodayHighToHLMaSum = frontHighToHLMaSum;
-	StockDataType TodayVolSum = frontVolSum;
-
-	StockDataType volME = TodayVolSum / TodayDayData._Volume;
-	_data.highToLowMa = TodayHighToHLMaSum / RecordData.size();
-	StockDataType MID = 100 * (TodayDayData._High + TodayDayData._Low - (refData._High + refData._Low)) / (TodayDayData._High + TodayDayData._Low);
-	_data.TemporaryVariable = 0;
-	if (TodayDayData._High != TodayDayData._Low)
-		_data.TemporaryVariable = MID * volME * (TodayDayData._High - TodayDayData._Low);
-
-	if (EMVList.size() == EMVPara)
-	{
-		frontHighDivideLowSum = frontHighDivideLowSum - EMVList.back().TemporaryVariable / EMVList.back().highToLowMa;
-		frontEMVSum = frontEMVSum - EMVList.back().emv;
-		EMVList.pop_back();
-	}
-	frontHighDivideLowSum = frontHighDivideLowSum + _data.TemporaryVariable / _data.highToLowMa;
-	frontEMVSum = frontEMVSum + TodayHighToHLMaSum / EMVPara;
-
-	StockDataType TodayEMVSun = frontEMVSum;
-	StockDataType TodayHighDivideLowSum = frontHighDivideLowSum;
-
-	_data.emv = TodayHighDivideLowSum / EMVPara;
-	_data.emvma = TodayEMVSun / MaPara;
-	EMVList.push_front(_data);
-	
+	StockDataType VOLUME = VolSum / EMVPara / TodayDayData._Volume;
+	StockDataType MID = 100 * (TodayDayData._High + TodayDayData._Low - RefHigh - RefLow) / (TodayDayData._High + TodayDayData._Low);
+	StockDataType TEMP = MID*VOLUME*(TodayDayData._High - TodayDayData._Low);
+	if (TodayDayData._High == TodayDayData._Low)
+		TEMP = 0.0f;
+	StockDataType MAHighToLow = GetMaHighToLow(TodayDayData._High - TodayDayData._Low);
+	_data.emv = GetMaTempToHL(TEMP / MAHighToLow);
+	_data.emvma = GetEMVMA(_data.emv);
+	RefHigh = TodayDayData._High;
+	RefLow = TodayDayData._Low;
 	return true;
 }
 
 void CEMVCal::Inition()
 {
-	frontEMVSum = 0;
-	frontHighDivideLowSum = 0;
-	frontHighToHLMaSum = 0;
-	frontVolSum = 0;
+	VolSum = 0.0f;
+	HighToLowSum = 0.0f;
+	EMVResourceSum = 0.0f;
+	EMVSum = 0.0f;
+	RefHigh = 0.0f;
+	RefLow = 0.0f;
+	HistoryVol.clear();
+	HistoryHighToLow.clear();
+	HistoryTEMPtoHL.clear();
+	HistoryEMV.clear();
+
+}
+
+StockDataType CEMVCal::GetMaHighToLow(StockDataType HighToLow)
+{
+	HighToLowSum += HighToLow;
+	HistoryHighToLow.push_back(HighToLow);
+	if (HistoryHighToLow.size() > EMVPara)
+	{
+		HighToLowSum -= HistoryHighToLow.front();
+		HistoryHighToLow.pop_front();
+	}
+	return (HighToLowSum / EMVPara);
+}
+
+StockDataType CEMVCal::GetMaTempToHL(StockDataType HighToLow)
+{
+	EMVResourceSum += HighToLow;
+	HistoryTEMPtoHL.push_back(HighToLow);
+	if (HistoryTEMPtoHL.size() > EMVPara)
+	{
+		EMVResourceSum -= HistoryTEMPtoHL.front();
+		HistoryTEMPtoHL.pop_front();
+	}
+	return (EMVResourceSum / EMVPara);
+}
+
+StockDataType CEMVCal::GetEMVMA(StockDataType _emv)
+{
+	EMVSum += _emv;
+	HistoryEMV.push_back(_emv);
+	if (HistoryEMV.size() > MaPara)
+	{
+		EMVSum -= HistoryEMV.front();
+		HistoryEMV.pop_front();
+	}
+	return (EMVSum / MaPara);
+
 }

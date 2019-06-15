@@ -1,6 +1,8 @@
 #include "stdafx.h"
+#include <algorithm>
 #include "Group.h"
 #include "glog/logging.h"
+#include "NumbersToSql.h"
 
 CHistoryGroup::CHistoryGroup():
 FreqTool(ChangeRateStep, MinimumChangeRate / ChangeRateStep, MaximumChangeRate / ChangeRateStep)
@@ -32,8 +34,8 @@ FreqTool(ChangeRateStep, MinimumChangeRate / ChangeRateStep, MaximumChangeRate /
 	_GroupType.Inition(BasisType(_eBasisDeDayDIFF ),
 		PosNegType(_eBasisDeDayDIFF_P), _eMixed, 0);
 	vkeyGroupType.push_back(_GroupType);
-	_GroupType.Inition(BasisType(_eBasisDeDayDIFF | _eBasisShDeDayDIFF | _eBasisDeMonthDIFF),
-		PosNegType(_eBasisDeDayDIFF_P | _eBasisShDeDayDIFF_P | _eBasisDeMonthDIFF_P), _eMixed, 0);
+	_GroupType.Inition(BasisType(_eBasisDeDayDIFF | _eBasisShDeDayDIFF),
+		PosNegType(_eBasisDeDayDIFF_P | _eBasisShDeDayDIFF_P), _eMixed, 0);
 	vkeyGroupType.push_back(_GroupType);
 	// 	_GroupType.Inition(BasisType(_eBasisDeDayDIFF | _eBasisDeDayKDJ_K | _eBasisDeDayVR | _eBasisShDeDayDIFF),
 // 		PosNegType(_eBasisDeDayDIFF_P | _eBasisDeDayKDJ_K_P | _eBasisDeDayVR_P | _eBasisShDeDayDIFF_P), _eMixed, 0);
@@ -73,7 +75,7 @@ CHistoryGroup::~CHistoryGroup()
 }
 
 
-void CHistoryGroup::RecordDataFreq(const vector<NumberEvent>& _numberData, StockDataType _pChange, pChangeType _changeRateType)
+void CHistoryGroup::RecordDataFreq(const vector<NumberEvent>& _numberData, StockDataType _pChange, pSpecGroupType _changeRateType)
 {
 	changeRateType = _changeRateType;
 	Group dataGroup;
@@ -241,7 +243,7 @@ bool Group::operator == (const Group & tempdata) const
 	return (NumberType == tempdata.NumberType && NPType == tempdata.NPType && pChangeGroupIndex == tempdata.pChangeGroupIndex && changeRateType == tempdata.changeRateType);
 }
 
-void Group::Inition(BasisType _NumberType, PosNegType _NPType, pChangeType _changeRateType, int _pChangeGroupIndex)
+void Group::Inition(BasisType _NumberType, PosNegType _NPType, pSpecGroupType _changeRateType, int _pChangeGroupIndex)
 {
 	NumberType = _NumberType;
 	NPType = _NPType;
@@ -256,15 +258,15 @@ NumberEvent NumberEvent::IniData(BasisType _NumberType, StockDataType _number)
 	return *this;
 }
 
-void COnedayGrouping::Inition()
+void CCurrentGrouping::Inition()
 {
 	stockGroupResult.clear();
 }
 
-bool COnedayGrouping::GroupingNumbers(
+bool CCurrentGrouping::GroupingNumbers(
 	const string& stockCode, 
 	const vector<NumberEvent>& _numberData,
-	pChangeType _changeType)
+	pSpecGroupType _changeType)
 {
 	//将所有的类型组合到一起
 	Group allTypeGroup;
@@ -283,7 +285,7 @@ bool COnedayGrouping::GroupingNumbers(
 	return true;
 }
 
-bool COnedayGrouping::GetGroup(BasisType NumberType, PosNegType NPType, vector<string>& TageGroup)
+bool CCurrentGrouping::GetGroup(BasisType NumberType, PosNegType NPType, vector<string>& TageGroup)
 {
 	TageGroup.clear();
 	for (map<string, Group>::const_iterator ite = stockGroupResult.begin(); ite != stockGroupResult.end();ite++)
@@ -294,3 +296,215 @@ bool COnedayGrouping::GetGroup(BasisType NumberType, PosNegType NPType, vector<s
 	return true;
 }
 
+
+
+
+CProcessGrouping::CProcessGrouping()
+{
+}
+
+CProcessGrouping::~CProcessGrouping()
+{
+}
+
+void CProcessGrouping::Inition(const string& stockCode)
+{
+	this->stockCode = stockCode;
+	vkeyGroupType.clear();
+	GroupBeginNodes.clear();
+	ProcessGroup _GroupType;
+
+	_GroupType.Inition(BasisType(_eBasisDeDayDEA  | _eBasisDeDayKDJ_D ),
+		PosNegType(_eBasisDeDayDEA_P | _eBasisDeDayKDJ_D_P), _eGroup1);
+	vkeyGroupType.push_back(_GroupType);
+// 	_GroupType.Inition(BasisType(_eBasisDeDayDIFF),
+// 		PosNegType(_eBasisDeDayDIFF_P), _eGroup1);
+// 	vkeyGroupType.push_back(_GroupType);
+	// 
+}
+bool CProcessGrouping::BeginTrigger(const vector<NumberEvent>& _data)
+{
+	int number = 0;
+	for (unsigned int i = 0; i < _data.size(); i++)
+	{
+// 		if (_data[i].NumberType == _eBasisDeDayKDJ_D &&  _data[i].number > 0)
+// 			number++;
+		if (_data[i].NumberType == _eBasisDayKDJ_K &&  _data[i].number < 20)
+			number++;
+		if (_data[i].NumberType == _eBasisDeDayKDJ_K &&  _data[i].number > 0)
+			number++;
+		// 		if (_data[i].NumberType == _eBasisShDeDayKDJ_D &&  _data[i].number > 0)
+// 			number++;
+// 		if (_data[i].NumberType == _eBasisDeDayCRMA &&  _data[i].number < 0)
+// 			number++;
+		if (number >= 1)
+			return true;
+	}
+	return true;
+}
+
+bool CProcessGrouping::EndTrigger(const vector<NumberEvent>& _data)
+{
+	int number = 0;
+	for (unsigned int i = 0; i < _data.size(); i++)
+	{
+		if (_data[i].NumberType == _eBasisDeDayCRMA &&  _data[i].number < 0)
+			number++;
+		if (number >= 1)
+			return false;
+	}
+	return false;
+}
+void CProcessGrouping::RecordDataFreq(
+	const vector<NumberEvent>& _numberData, 
+	const DayPrice& _price,
+	pSpecGroupType _SpecGroupType)
+{
+	//将所有的类型组合到一起
+	ProcessGroup GroupTypeCombin;
+	GroupTypeCombin.SpecGroupType = _SpecGroupType;
+	for (unsigned int index = 0; index < _numberData.size(); index++)
+	{
+		GroupTypeCombin.NumberType = (BasisType)(GroupTypeCombin.NumberType | _numberData[index].NumberType);
+		if (_numberData[index].number > 0)
+		{
+			GroupTypeCombin.NPType = (PosNegType)(GroupTypeCombin.NPType | _numberData[index].NumberType);
+		}
+	}
+	vector<ProcessGroup> CompatibleGroup;
+	for (vector<ProcessGroup>::iterator ite = vkeyGroupType.begin(); ite != vkeyGroupType.end(); ite++)
+	{
+		if ( (ite->NPType & GroupTypeCombin.NPType) == ite->NPType
+			&& (ite->NumberType & GroupTypeCombin.NumberType) == ite->NumberType
+			&& ite->SpecGroupType == GroupTypeCombin.SpecGroupType)
+		{
+			CompatibleGroup.push_back(*ite);
+		}
+	}
+	for (vector<ProcessGroup>::iterator ite = CompatibleGroup.begin(); ite != CompatibleGroup.end();ite++)
+	{
+		//GroupBeginNodes没有记录到,表示出现新的关注点
+		if (GroupBeginNodes.count(*ite) == 0 && BeginTrigger(_numberData))
+		{
+			GroupBeginNodes[*ite] = _price;
+		}
+	}
+	vector<ProcessGroup> eraseGroups;
+	for (map<ProcessGroup, DayPrice>::iterator ite = GroupBeginNodes.begin(); ite != GroupBeginNodes.end();ite++)
+	{
+		vector<ProcessGroup>::iterator pite = find(CompatibleGroup.begin(), CompatibleGroup.end(), ite->first);
+		if (CompatibleGroup.end() == pite || EndTrigger(_numberData))
+		{
+			ProcessNodes tempNotes;
+			tempNotes.beginNode = GroupBeginNodes[ite->first];
+			tempNotes.endNode = _price;
+			if (GroupRecord.count(ite->first) == 0)
+			{
+				vector<ProcessNodes> emptyNodes;
+				GroupRecord[ite->first] = emptyNodes;
+			}
+			GroupRecord[ite->first].push_back(tempNotes);
+			eraseGroups.push_back(ite->first);
+		}
+	}
+	for (unsigned int i = 0; i < eraseGroups.size();i++)
+	{
+		GroupBeginNodes.erase(eraseGroups[i]);
+	}
+}
+
+void CProcessGrouping::CalReturnRate()
+{
+	vector<StockDataType> currentReturnRate;
+	currentReturnRate.clear();
+	//ReturnRates.clear();
+	vector<StockDataType> emptyReturnRate;
+	CNumbersToSql SQlTool;
+	SQlTool.IniMysqlTool();
+	ProcessGroup currentGroup;
+	for (map<ProcessGroup, vector<ProcessNodes>>::const_iterator ite = GroupRecord.begin();
+		ite != GroupRecord.end();ite++)
+	{
+		currentGroup = ite->first;
+		DayPrice beginNode;
+		DayPrice endNode;
+
+		currentReturnRate.clear();
+		for (unsigned int i = 0; i < ite->second.size(); i++)
+		{
+			endNode = ite->second[i].endNode;
+			beginNode = ite->second[i].beginNode;
+			currentReturnRate.push_back((endNode._frontClose + endNode._frontHigh + endNode._frontLow)/3 / (beginNode._openData));
+		}
+		currentGroup.SpecGroupType = _eMixed;
+		SQlTool.SaveProGroupRate(stockCode, currentReturnRate, currentGroup.GetTypeString());
+
+		currentReturnRate.clear();
+		for (unsigned int i = 0; i < ite->second.size(); i++)
+		{
+			endNode = ite->second[i].endNode;
+			beginNode = ite->second[i].beginNode;
+			currentReturnRate.push_back((endNode._frontClose) / (beginNode._openData));
+		}
+		currentGroup.SpecGroupType = _eCloseType;
+		SQlTool.SaveProGroupRate(stockCode, currentReturnRate, currentGroup.GetTypeString());
+
+		currentReturnRate.clear();
+		for (unsigned int i = 0; i < ite->second.size(); i++)
+		{
+			endNode = ite->second[i].endNode;
+			beginNode = ite->second[i].beginNode;
+			currentReturnRate.push_back((endNode._frontHigh) / (beginNode._openData));
+		}
+		currentGroup.SpecGroupType = _eHighType;
+		SQlTool.SaveProGroupRate(stockCode, currentReturnRate, currentGroup.GetTypeString());
+
+		currentReturnRate.clear();
+		for (unsigned int i = 0; i < ite->second.size(); i++)
+		{
+			endNode = ite->second[i].endNode;
+			beginNode = ite->second[i].beginNode;
+			currentReturnRate.push_back((endNode._frontLow) / (beginNode._openData));
+			LOG(INFO) << stockCode << " begin at " << beginNode._date.GetDay()<<" end at "<<endNode._date.GetDay();
+		}
+		currentGroup.SpecGroupType = _eLowType;
+		SQlTool.SaveProGroupRate(stockCode, currentReturnRate, currentGroup.GetTypeString());
+	}
+}
+
+
+
+bool ProcessGroup::operator<(const ProcessGroup & tempdata) const
+{
+	return (NumberType < tempdata.NumberType)
+		|| (NumberType == tempdata.NumberType && NPType < tempdata.NPType)
+		|| (NumberType == tempdata.NumberType && NPType == tempdata.NPType && SpecGroupType < tempdata.SpecGroupType);
+
+}
+bool ProcessGroup::operator == (const ProcessGroup & tempdata) const
+{
+	return (NumberType == tempdata.NumberType && NPType == tempdata.NPType && SpecGroupType == tempdata.SpecGroupType);
+}
+
+void ProcessGroup::Inition(BasisType _NumberType, PosNegType _NPType, pSpecGroupType _SpecGroupType)
+{
+	NumberType = _NumberType;
+	NPType = _NPType;
+	SpecGroupType = _SpecGroupType;
+}
+
+vector<string> ProcessGroup::GetTypeString() const
+{
+	ostringstream ossData;
+	vector<string> typeString;
+	ossData.str("");
+	ossData << (unsigned int )NumberType;
+	typeString.push_back(ossData.str());
+	ossData.str("");
+	ossData << (unsigned int)NPType;
+	typeString.push_back(ossData.str());
+	ossData.str("");
+	ossData << (unsigned int)SpecGroupType;
+	typeString.push_back(ossData.str());
+	return typeString;
+}

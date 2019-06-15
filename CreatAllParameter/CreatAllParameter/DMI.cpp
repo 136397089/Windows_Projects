@@ -4,10 +4,12 @@
 
 CDMI::CDMI()
 {
-	M1 = 12;//DI计算周期
-	M2 = 2;//ADXR计算周期 
-	_FrontDay = 0.0f;
-	_FrontADXDay = 0.0f;
+	M1 = 14;//DI计算周期
+	M2 = 6;//ADXR计算周期
+	ADXSum = 0.0f;
+	_DMTRSum.TR = 0.0f;
+	_DMTRSum.DMP = 0.0f;
+	_DMTRSum.DMM = 0.0f;
 }
 
 
@@ -15,86 +17,87 @@ CDMI::~CDMI()
 {
 }
 
-// void CDMI::UpdateFileColumn(string strFolderPath)
-// {
-// 
-// }
-// 
-// void CDMI::UpdatePathFilesRanks(string strPath)
-// {
-// 
-// }
-// 
-// void CDMI::UpdateFileRanks(string strfilename)
-// {
-// 
-// }
 
-bool CDMI::GetNextDMI(const SinDayPriceData& TodayDayData, Dmi& mDmi)
+bool CDMI::GetNextDMI(const SinCyclePriceData& TodayDayData, Dmi& mDmi)
 {
-	mDmi._PDI = 0;
-	mDmi._NDI = 0;
-	mDmi._ADX = 0;
-	mDmi._ADXR = 0;
+	DMTR _DayDMTR;
+	StockDataType _DayADX;
+	//1.1计算今日的上升动向（+DM）
+	_DayDMTR.DMP = 0;
+	StockDataType HD = TodayDayData._High - _FrontPriceData._High;
+	StockDataType LD = _FrontPriceData._Low - TodayDayData._Low;
+	if (HD > LD && HD>0)
+		_DayDMTR.DMP = HD;
+	//1.2计算今日的下降动向（DM）
+	_DayDMTR.DMM = 0;
+	if ((LD) > HD && LD>0)
+		_DayDMTR.DMM = LD;
+	//1.3计算今日的真实波幅（TR）
+	//StockDataType TR;
+	StockDataType A, B, C;
+	A = TodayDayData._High - TodayDayData._Low;
+	B = abs(TodayDayData._High - _FrontPriceData._Close);
+	C = abs(TodayDayData._Low - _FrontPriceData._Close);
+	_DayDMTR.TR = max(max(A, B), C);
 
-	if (_FrontDay != 0)
+	HistoryDMTRList.push_back(_DayDMTR);
+	//1.4计算DMTR求和
+	_DMTRSum.TR += _DayDMTR.TR;
+	_DMTRSum.DMM += _DayDMTR.DMM;
+	_DMTRSum.DMP += _DayDMTR.DMP;
+	if (HistoryDMTRList.size() > M1)
 	{
-		DMTR currentDMTR;
-		//1.1计算上升动向（+DM）
-		if (TodayDayData._High - _FrontPriceData._Low > abs(TodayDayData._Low - _FrontPriceData._Low))
-			currentDMTR.PDM = TodayDayData._High - _FrontPriceData._Low;
-		else
-			currentDMTR.PDM = 0;
-		//1.2计算下降动向（DM）
-		if (TodayDayData._Low - _FrontPriceData._Low > abs(TodayDayData._High - _FrontPriceData._Low))
-			currentDMTR.NDM = TodayDayData._Low - _FrontPriceData._Low;
-		else
-			currentDMTR.NDM = 0;
-		//1.3计算真实波幅（TR）
-		StockDataType TR; 
-		StockDataType A,B,C;
-		A = TodayDayData._High - TodayDayData._Low;
-		B = TodayDayData._High - _FrontPriceData._Close;
-		C = TodayDayData._Low - _FrontPriceData._Close;
-		TR = max(A, B);
-		currentDMTR.TR = max(TR, C);
-		//1.4计算平均DM 平均TR
-		DMTR currentAvgDMTR;
-		if (_FrontDay <= M1)
-		{
-			currentAvgDMTR.NDM = (_FrontAvgDMTR.NDM*_FrontDay + currentDMTR.NDM) / (_FrontDay + 1);
-			currentAvgDMTR.PDM = (_FrontAvgDMTR.PDM*_FrontDay + currentDMTR.PDM) / (_FrontDay + 1);
-			currentAvgDMTR.TR = (_FrontAvgDMTR.TR*_FrontDay + currentDMTR.TR) / (_FrontDay + 1);
-		}
-		else
-		{
-			currentAvgDMTR.NDM = (_FrontAvgDMTR.NDM* (M1-1) + currentDMTR.NDM) / M1;
-			currentAvgDMTR.PDM = (_FrontAvgDMTR.PDM* (M1 - 1) + currentDMTR.PDM) / M1;
-			currentAvgDMTR.TR = (_FrontAvgDMTR.TR* (M1 - 1) + currentDMTR.TR) / M1;
-		}
-		mDmi._PDI = (currentAvgDMTR.PDM / currentDMTR.TR) * 100;
-		mDmi._NDI = (currentAvgDMTR.NDM / currentDMTR.TR) * 100;
-		mDmi._ADX = abs(mDmi._PDI - mDmi._NDI) / (mDmi._PDI + mDmi._NDI) * 100;
-		if (_FrontADXDay <= M2)
-			mDmi._ADXR = (_FrontAvgDMTR.ADX*_FrontADXDay + currentDMTR.ADX) / (_FrontADXDay + 1);
-		else
-			mDmi._ADXR = (_FrontAvgDMTR.ADX*(_FrontADXDay + 1) + currentDMTR.ADX) * M2;
-		++_FrontADXDay;
+		_DMTRSum.TR -= HistoryDMTRList.front().TR;
+		_DMTRSum.DMM -= HistoryDMTRList.front().DMM;
+		_DMTRSum.DMP -= HistoryDMTRList.front().DMP;
+		HistoryDMTRList.pop_front();
 	}
-	++_FrontDay;
+	//1.5计算DMI中需要返回的DIP和DIN
+	mDmi._DIP = (_DMTRSum.DMP / _DMTRSum.TR) * 100;
+	mDmi._DIN = (_DMTRSum.DMM / _DMTRSum.TR) * 100;
+	//1.6计算需要返回的ADX平均值
+	_DayADX = abs(mDmi._DIP - mDmi._DIN) / (mDmi._DIP + mDmi._DIN) * 100;
+	HistoryDayADX.push_back(_DayADX);
+	//1.7ADX求和
+	if (HistoryDayADX.size() > M2)
+	{
+		ADXSum -= HistoryDayADX.front();
+		HistoryDayADX.pop_front();
+	}
+	ADXSum += _DayADX;
+	mDmi._ADX = ADXSum / (float)M2;
+	HistoryADX.push_back(mDmi._ADX);
+	//1.8求ADXR
+	mDmi._ADXR = mDmi._ADX;
+	if (HistoryADX.size() > M2)
+	{
+		mDmi._ADXR = (mDmi._ADXR + HistoryADX.front()) / 2;
+		HistoryADX.pop_front();
+	}
+	 //记录今是的价格，用于下次计算
 	_FrontPriceData = TodayDayData;
-// 	if (_vFrontPriceDataList.size() > M1)
-// 	{
-// 		_vFrontPriceDataList.pop_front();
-// 	}
+
 	return true;
 }
 
 bool CDMI::Inition()
 {
 	M1 = 12;//DI计算周期
-	M2 = 2;//ADXR计算周期 
-	_FrontDay = 0.0f;
-	_FrontADXDay = 0.0f;
+	M2 = 2;//ADXR计算周期
+	ADXSum = 0.0f;
+	_DMTRSum.TR = 0.0f;
+	_DMTRSum.DMP = 0.0f;
+	_DMTRSum.DMM = 0.0f;
+
+
+
+	HistoryDMTRList;
+	HistoryDayADX;
+	ADXSum = 0.0f;
+	_FrontPriceData.Inition();
+
+	HistoryDMTRList.clear();
+	HistoryDayADX.clear();
+	HistoryADX.clear();
 	return true;
 }

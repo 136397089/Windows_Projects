@@ -9,32 +9,24 @@
 #include "DataSizeSwich.h"
 #include "MeanVariance.h"
 #include "numberstosql.h"
-
-CRITICAL_SECTION MYSQLCS;
+#include "ComTime.h"
+CRITICAL_SECTION threadParamCS;
+static bool threadParamCSIsInition = false;
 int threadNumber = 0;
 int WINAPI TheadFunc(LPVOID lpParam);
+int WINAPI TheadFunc_Mintue(LPVOID lpParam);
 
-CMainLoop::CMainLoop()
-{
-
-
-}
+CMainLoop::CMainLoop(){}
 
 
-CMainLoop::~CMainLoop()
-{
-}
+CMainLoop::~CMainLoop(){}
 //成交量发生巨大变化是很能体现资金心态发生改变的
 
-bool CMainLoop::AnaHistory(string strFolderPath)
+bool CMainLoop::CreateThreadToAnaHistory_Daily(string strFolderPath)
 {
-#ifdef _MYDEBUG
-	CPythonInterface tempinterface;
-	tempinterface.Inition();
-#endif
 	//统计文件夹下的文件数
 	int filenumber;
-	StatisticalFileQuantity(strFolderPath, filenumber);
+	filenumber = StatisticalFileQuantity(strFolderPath);
 	WIN32_FIND_DATA p;
 	HANDLE h;
 	string mFilePath;
@@ -45,26 +37,26 @@ bool CMainLoop::AnaHistory(string strFolderPath)
 		return false;
 	}
 	//读取上证指数的数据
-	CNumberInterface shnumber;
-	shnumber.GetDataAndNumbers("sh.csv", "D:\\StockFile\\whole");
+	CIndicatorsInterface ShanghaiStockExchangeIndex;
+	ShanghaiStockExchangeIndex.GetDataAndIndicators_History("sh.csv", "D:\\StockFile\\whole");
 	string outPath = "D:\\StockFile\\OutPutFile\\";
-
-	CStatisticeInter statisticeInter;
-	statisticeInter.Inition();
-	InitializeCriticalSection(&MYSQLCS);
+	if (!threadParamCSIsInition)
+	{
+		InitializeCriticalSection(&threadParamCS);
+		threadParamCSIsInition = true;
+	}
 	ThreadParam* threadParam;
 	//遍历所有文件
 	do
 	{
-		while (threadNumber > 5) Sleep(10);//限制总的线程数量
+		while (threadNumber > 0) Sleep(10);//限制总的线程数量
 		threadNumber++;
-		EnterCriticalSection(&MYSQLCS);
+		EnterCriticalSection(&threadParamCS);
 		threadParam = new ThreadParam;
 		threadParam->fileName = p.cFileName;
 		threadParam->Filepath = strFolderPath;
-		threadParam->shnumber = &shnumber;
-		threadParam->statisticeInter = &statisticeInter;
-		LeaveCriticalSection(&MYSQLCS);
+		threadParam->shnumber = &ShanghaiStockExchangeIndex;
+		LeaveCriticalSection(&threadParamCS);
 		threadParam->hThread = CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE)TheadFunc,threadParam, NULL, NULL);
 		Sleep(10);
 	} while (FindNextFile(h, &p));
@@ -75,26 +67,18 @@ bool CMainLoop::AnaHistory(string strFolderPath)
 		LOG(INFO) << "Waiting for all thread exit.";
 		Sleep(100);
 	}
-	DeleteCriticalSection(&MYSQLCS);
-
-	CNumberBase FileTool;
-	FileTool.AddRanksToCsvFileBegin("D:\\StockFile\\returnrate\\returerate.csv");
-//	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.allDataVarList);
-//	FileTool.ReSavefileRanks("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.allDataMeanList);
-	FileTool.AddRanksToCsvFile("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.filterDataVarList);
-	FileTool.AddRanksToCsvFile("D:\\StockFile\\returnrate\\returerate.csv", statisticeInter.filterDataMeanList);
-	FileTool.AddRanksToCsvFileEnd("D:\\StockFile\\returnrate\\returerate.csv");
+	if (threadParamCSIsInition)
+	{
+		DeleteCriticalSection(&threadParamCS);
+		threadParamCSIsInition = false;
+	}
 
 	return true;
 }
 
-//
-//
-//
-//统计文件个数
 
 
-bool CMainLoop::StatisticalFileQuantity(string strPath, int & fileNumber)
+int CMainLoop::StatisticalFileQuantity(string strPath)
 {
 	WIN32_FIND_DATA p;
 	HANDLE h;
@@ -103,81 +87,45 @@ bool CMainLoop::StatisticalFileQuantity(string strPath, int & fileNumber)
 	mFilePath = strPath + "//*.csv";
 
 	h = FindFirstFile(mFilePath.c_str(), &p);
-	fileNumber = 0;
+	int fileNumber = 0;
 	int FileIndex = 0;
 	while (FindNextFile(h, &p))
 	{
 		fileNumber++;
 	}
-	return true;
+	return fileNumber;
 }
 
-bool CMainLoop::SaveDataToFile(const string& strFullFilePath, const StockDataTable & allData)
+bool CMainLoop::SaveDataToFile(const string& strFullFilePath, StockDataTable & allData) 
 {
 	CNumberBase FileTool;
 	FileTool.AddRanksToCsvFileBegin(strFullFilePath);
-	FileTool.AddRanksToCsvFile(strFullFilePath, allData._vTimeDay, GetIndexNameByIndexType(_eFile_Date_INDEX));
-	StockDataPointer pointers = allData.GetAllPointerToSave();
+	FileTool.AddRanksToCsvFile(strFullFilePath, allData._vTimeDay, GetNumberNameByIndexType(_eFile_Date_INDEX));
+	StockDataPointer const pointers = allData.GetAllPointerToSave();
 	for (StockDataPointer::const_iterator ite = pointers.cbegin(); ite != pointers.cend(); ite++)
 	{
-		FileTool.AddRanksToCsvFile(strFullFilePath, *(ite->second), GetIndexNameByIndexType(ite->first));
+		FileTool.AddRanksToCsvFile(strFullFilePath, *(ite->second), GetNumberNameByIndexType(ite->first));
 	}
 	FileTool.AddRanksToCsvFileEnd(strFullFilePath);
 	return true;
 }
 
-
-bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath, const string& strfilename)
-{
-	//从CSV读取今日的数据
-	CNumberInterface numtool;
-	map<string, SinDayData> CurrStockData;
-	//从MySQL读取最近的MACD KDJ Price
-	map<string, MACDCombin> YesTerdayMacdMap;
-	map<string, KDJCombin> YesTerdayKDJMap;
-	map<string, vector<SinDayPriceData>> FrontPrice;
-	numtool.GetTodayData(strFolderPath + "//" + strfilename, CurrStockData);
-	GetCloselyNumber_Current(CurrStockData, YesTerdayMacdMap, YesTerdayKDJMap, FrontPrice);
-	CRealTimeAna RealTimeTool;
-	while (true)
-	{
-		numtool.GetTodayData(strFolderPath + "//" + strfilename, CurrStockData);
-		GetNextNumber_Current(CurrStockData, YesTerdayMacdMap, YesTerdayKDJMap, FrontPrice);
-		RealTimeTool.AnalysisRealTimeData(YesTerdayMacdMap, YesTerdayKDJMap);
-		cout << endl;
-		system("pause");
-	}
-	
-	exit(1);
-
-	return true;
-}
-
-bool CMainLoop::AnaHistory_File(
-	const string& fileName,
-	const string& strFolderPath,
-	const CNumberInterface& shnumber,
-	CStatisticeInter& statisticeInter
-	)const
+bool CMainLoop::ReadDailyFileToAnaHistory(	const string& fileName,
+	const string& strFolderPath,	CIndicatorsInterface& shnumber	)const
 {
 	CStateInter daystate;
 	CStateInter weekstate;
 	CStateInter monthstate;
-	CNumberInterface numberTool;
-	numberTool.GetDataAndNumbers(fileName, strFolderPath);
+	CIndicatorsInterface numberTool;
+	numberTool.GetDataAndIndicators_History(fileName, strFolderPath);
 // 	SaveDataToFile(outPath + p.cFileName, numberTool.GetDayValue());
 //	daystate.Inter(numberTool.GetDayValue(), fileName);
 // 	weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
 // 	monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
 // 	statisticeInter.StatisticeASIData(numberTool.GetDayValue(), daystate, fileName);
-	statisticeInter.GroupDabug(
-		numberTool.GetDayValue(),
-		numberTool.GetWeekValue(),
-		numberTool.GetMonthValue(),
-		shnumber.GetDayValue(),
-		daystate,
-		weekstate,
-		monthstate);
+	CStatisticeInter statisticeInter;
+	statisticeInter.Inition();
+	statisticeInter.ReturnStatistics(numberTool,shnumber.GetResourceValue());
 // 	SaveDataToFile("D:\\StockFile\\OutPutFile\\" + fileName, numberTool.GetDayValue());
 //	allFreqlist[p.cFileName] = (statisticeInter._FreqList);
 	LOG(INFO) << fileName << " Finished";
@@ -185,48 +133,120 @@ bool CMainLoop::AnaHistory_File(
 	return true;
 }
 
-bool CMainLoop::GetCloselyNumber_Current(
-	const map<string, SinDayData>& CurrStockData,
-	map<string, MACDCombin>& YesTerdayMacdMap,
-	map<string, KDJCombin>& YesTerdayKDJMap,
-	map<string, vector<SinDayPriceData>>& FrontPrice)
+
+
+
+bool CMainLoop::ReadFileToAnaHistory_Minute(const string& fileName, const string& strFolderPath, CIndicatorsInterface& shnumber) const
 {
-	CNumbersToSql SQlTool;
-	MACDCombin _Todaymacd;
-	for (map<string, SinDayData>::const_iterator ite = CurrStockData.begin(); ite != CurrStockData.end(); ite++)
-	{
-		if (!SQlTool.RecoveryMACDData(ite->first, "day", _Todaymacd))
-			continue;
-		FrontPrice[ite->first].resize(8);
-		YesTerdayMacdMap[ite->first] = _Todaymacd;
-		SQlTool.RecoveryPriceData(ite->first, "day", FrontPrice[ite->first]);
-		SQlTool.RecoveryKDJData(ite->first, "day", YesTerdayKDJMap[ite->first]);
-	}
-	GetNextNumber_Current(CurrStockData, YesTerdayMacdMap, YesTerdayKDJMap, FrontPrice);
+	CStateInter daystate;
+	CStateInter weekstate;
+	CStateInter monthstate;
+	CIndicatorsInterface IndicatorsTool;
+	IndicatorsTool.GetDataAndIndicatorMintue_History(fileName, strFolderPath);
+	CRealTimeAna DataAnaTool;
+	DataAnaTool.Inition();
+	DataAnaTool.AnalysisRealTimeData(IndicatorsTool.GetResourceValue());
+	LOG(INFO) << fileName << " Finished";
 	return true;
 }
-
-bool CMainLoop::GetNextNumber_Current(
-	const map<string, SinDayData>& CurrStockData,
-	map<string, MACDCombin>& YesTerdayMacdMap,
-	map<string, KDJCombin>& YesTerdayKDJMap,
-	map<string, vector<SinDayPriceData>>& FrontPrice)
+bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath)
 {
-	CMacdCal macdCalTool;
-	CKDJCal KDJTool;
-	for (map<string, SinDayData>::const_iterator ite = CurrStockData.begin(); ite != CurrStockData.end(); ite++)
+	CRealTimeAna analTool;
+	CIndicatorsInterface IndicatorsTool;
+	WIN32_FIND_DATA p;
+	string mFileType = strFolderPath + "//*.csv";;
+	HANDLE h = nullptr;
+	string stockCode;
+	int loopTime = 0;
+	CNumbersToSql sqlTool;
+	sqlTool.IniMysqlTool();
+	CDate lastDate = IndicatorsTool.GetLastDate();
+	lastDate._hour = 15;
+	sqlTool.RefreshTemporaryNumberData(lastDate);
+	SYSTEMTIME starttime = { 0 };
+	SYSTEMTIME endtime = { 0 };
+	CComTime timeer;
+	IndicatorsTool.RefreshAllStockDate_RealTime();
+	while (true)
 	{
-		if (YesTerdayMacdMap.count(ite->first) == 0)
-			continue;
-		const SinDayData& TodayData = ite->second;
-		MACDCombin& CloselyMacd = YesTerdayMacdMap[ite->first];
-		KDJCombin& CloselyKDJ = YesTerdayKDJMap[ite->first];
-		vector<SinDayPriceData>& CloselyPrice = FrontPrice[ite->first];
-		CloselyMacd.CurrentMacd = CloselyMacd.TodayMacd;
-		macdCalTool.GetNextMacd(CloselyPrice[0], CloselyMacd.CurrentMacd);
-		CloselyKDJ.CurrentKDJ = CloselyKDJ.TodayKDJ;
-		KDJTool.StaticGetNextKDJ(CloselyPrice,TodayData, CloselyKDJ.CurrentKDJ);
+		cout << loopTime << "  ";
+		if (loopTime == 0)
+		{
+			cout << endl << "请输入循环次数：";
+			cin >> loopTime;
+		}
+		if (loopTime < 0) exit(1);
+		loopTime--;
+		IndicatorsTool.RefreshAllStockDate_RealTime();
+		h = FindFirstFile(mFileType.c_str(), &p);
+		do{
+			stockCode = p.cFileName;
+			if (stockCode.find(".") > 0 && stockCode.find(".") < 100)
+				stockCode = stockCode.substr(0, stockCode.find("."));
+			timeer.TimeBegin();
+			IndicatorsTool.GetIndicators_Realtime(stockCode,eMinute30);
+			timeer.TimeEnd("GetIndicators_Realtime:");
+			timeer.TimeBegin();
+			analTool.AnalysisRealTimeData(IndicatorsTool.GetRealtimeValue());
+			timeer.TimeEnd("AnalysisRealTimeData:");
+		} while (FindNextFile(h, &p));
 	}
+	exit(1);
+	return true;
+}
+//////////////////////////////////////////////////////////////////////////
+//新建多个线程，分析目标文件夹下的股票数据
+bool CMainLoop::CreateThreadToAnaHistory_Mintue(string strFolderPath)
+{
+	//1.1统计文件夹下的文件数
+	int filenumber;
+	filenumber = StatisticalFileQuantity(strFolderPath);
+	WIN32_FIND_DATA p;
+	HANDLE h;
+	string mFilePath;
+	mFilePath = strFolderPath + "\\*.csv";
+	h = FindFirstFile(mFilePath.c_str(), &p);
+	if (NULL == h){
+		LOG(ERROR) << "Get File handle from " << mFilePath << "error.";
+		return false;
+	}
+	//1.2读取上证指数的数据
+	CIndicatorsInterface ShanghaiStockExchangeIndex;
+	ShanghaiStockExchangeIndex.GetDataAndIndicators_SH("sh.csv", "D:\\StockFile\\whole");
+	string outPath = "D:\\StockFile\\OutPutFile\\";
+	//1.3遍历所有文件
+	if (!threadParamCSIsInition)
+	{
+		InitializeCriticalSection(&threadParamCS);
+		threadParamCSIsInition = true;
+	}	ThreadParam* threadParam;
+	do
+	{
+		while (threadNumber > 0) Sleep(10);//限制总的线程数量
+		threadNumber++;
+		EnterCriticalSection(&threadParamCS);
+		threadParam = new ThreadParam;
+		threadParam->fileName = p.cFileName;
+		threadParam->Filepath = strFolderPath;
+		threadParam->shnumber = &ShanghaiStockExchangeIndex;
+		LeaveCriticalSection(&threadParamCS);
+		threadParam->hThread = CreateThread(NULL, 0, (LPTHREAD_START_ROUTINE)TheadFunc_Mintue, threadParam, NULL, NULL);
+		Sleep(10);
+	} while (FindNextFile(h, &p));
+	//1.4如何线程还没有全部退出则等待
+	while (threadNumber != 0)
+	{
+		LOG(INFO) << "Waiting for all thread exit.";
+		Sleep(100);
+	}
+	//1.5
+	AnaCurrentRealTimeData(strFolderPath);
+	if (threadParamCSIsInition)
+	{
+		DeleteCriticalSection(&threadParamCS);
+		threadParamCSIsInition = false;
+	}
+
 	return true;
 }
 
@@ -234,22 +254,35 @@ bool CMainLoop::GetNextNumber_Current(
 
 int WINAPI TheadFunc(LPVOID lpParam)
 {
-	EnterCriticalSection(&MYSQLCS);
+	EnterCriticalSection(&threadParamCS);
 	ThreadParam*  threadParam = (ThreadParam *)lpParam;
 	int dwRtn = threadParam->nIndex;
 	string _filename = threadParam->fileName;
 	string _filepath = threadParam->Filepath;
-	CNumberInterface* _shnumber = threadParam->shnumber;
-	CStatisticeInter* _statisticeInter = threadParam->statisticeInter;
+	CIndicatorsInterface* _shnumber = threadParam->shnumber;
 	CMainLoop _mainloop;
-	LeaveCriticalSection(&MYSQLCS);
+	LeaveCriticalSection(&threadParamCS);
 
-	_mainloop.AnaHistory_File(
-		_filename,
-		_filepath,
-		*_shnumber,
-		*_statisticeInter);
+	_mainloop.ReadDailyFileToAnaHistory(_filename,_filepath,*_shnumber);
 	threadNumber --;
+	delete threadParam;
+	return dwRtn;
+}
+
+
+int WINAPI TheadFunc_Mintue(LPVOID lpParam)
+{
+	EnterCriticalSection(&threadParamCS);
+	ThreadParam*  threadParam = (ThreadParam *)lpParam;
+	int dwRtn = threadParam->nIndex;
+	string _filename = threadParam->fileName;
+	string _filepath = threadParam->Filepath;
+	CIndicatorsInterface* _shnumber = threadParam->shnumber;
+	CMainLoop _mainloop;
+	LeaveCriticalSection(&threadParamCS);
+
+	_mainloop.ReadFileToAnaHistory_Minute(_filename, _filepath, *_shnumber);
+	threadNumber--;
 	delete threadParam;
 	return dwRtn;
 }

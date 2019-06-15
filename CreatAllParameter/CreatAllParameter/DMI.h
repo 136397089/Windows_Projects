@@ -27,17 +27,18 @@ public:
 	//closeData:收盘价
 	//mMacd:前日的MACD
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextDMI(const SinDayPriceData& OneDayData, Dmi& mDmi);
+	bool GetNextDMI(const SinCyclePriceData& OneDayData, Dmi& mDmi);
 
 	bool Inition();
 private:
-	SinDayPriceData _FrontPriceData;
-	//list<DMTR> _vFrontDMTRList;
-	Dmi _FrontDMI;
-	DMTR _FrontAvgDMTR;
-	StockDataType M1;
-	StockDataType M2;
-	StockDataType _FrontDay;//之前已经加入数据的天数
-	StockDataType _FrontADXDay;
+	list<DMTR> HistoryDMTRList;
+	list<StockDataType> HistoryDayADX;
+	list<StockDataType> HistoryADX;
+	DMTR _DMTRSum;
+	StockDataType ADXSum;
+	SinCyclePriceData _FrontPriceData;
+
+	unsigned int  M1;
+	unsigned int M2;
 };
 

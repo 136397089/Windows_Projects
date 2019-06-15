@@ -232,7 +232,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ARBRCRVRPSY.h" />
+    <ClInclude Include="Bool.h" />
     <ClInclude Include="CcdpStatistics.h" />
+    <ClInclude Include="ComTime.h" />
     <ClInclude Include="DFT.h" />
     <ClInclude Include="EMV.h" />
     <ClInclude Include="FinaceData.h" />
@@ -241,6 +243,7 @@
     <ClInclude Include="Morphological.h" />
     <ClInclude Include="MySQLInterFace.h" />
     <ClInclude Include="NumbersToSql.h" />
+    <ClInclude Include="RSICal.h" />
     <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
     <ClInclude Include="BullMarkBearMark.h" />
@@ -284,12 +287,15 @@
     <ClInclude Include="targetver.h" />
     <ClInclude Include="tinyxml\tinystr.h" />
     <ClInclude Include="tinyxml\tinyxml.h" />
+    <ClInclude Include="TopButRecord.h" />
     <ClInclude Include="TrandRecord.h" />
     <ClInclude Include="TrendAnal.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ARBRCRVRPSY.cpp" />
+    <ClCompile Include="Bool.cpp" />
     <ClCompile Include="CcdpStatistics.cpp" />
+    <ClCompile Include="ComTime.cpp" />
     <ClCompile Include="DFT.cpp" />
     <ClCompile Include="EMV.cpp" />
     <ClCompile Include="FinaceData.cpp" />
@@ -298,6 +304,7 @@
     <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="MySQLInterFace.cpp" />
     <ClCompile Include="NumbersToSql.cpp" />
+    <ClCompile Include="RSICal.cpp" />
     <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
     <ClCompile Include="BullMarkBearMark.cpp" />
@@ -344,6 +351,7 @@
     <ClCompile Include="tinyxml\tinyxml.cpp" />
     <ClCompile Include="tinyxml\tinyxmlerror.cpp" />
     <ClCompile Include="tinyxml\tinyxmlparser.cpp" />
+    <ClCompile Include="TopButRecord.cpp" />
     <ClCompile Include="TrandRecord.cpp" />
     <ClCompile Include="TrendAnal.cpp" />
   </ItemGroup>

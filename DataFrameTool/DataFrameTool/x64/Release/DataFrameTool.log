@@ -1,0 +1,43 @@
+﻿生成启动时间为 2019/5/31 0:12:35。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\DataFrameTool\DataFrameTool\DataFrameTool.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D DATAFRAMETOOL_EXPORTS /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yc"stdafx.h" /Fp"x64\Release\DataFrameTool.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt stdafx.cpp
+         stdafx.cpp
+         D:\Program Files\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D DATAFRAMETOOL_EXPORTS /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Release\DataFrameTool.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt CcomputValueByMACD.cpp CGroupDataByBAR.cpp CommonFunction.cpp DataFrameTool.cpp GroupByMACD.cpp Number\IndexNumber.cpp Number\KDJ.cpp Number\Macd.cpp Operator.cpp
+         CcomputValueByMACD.cpp
+         CGroupDataByBAR.cpp
+     1>CGroupDataByBAR.cpp(112): warning C4244: “初始化”: 从“int”转换到“float”，可能丢失数据
+     1>CGroupDataByBAR.cpp(118): warning C4244: “初始化”: 从“double”转换到“float”，可能丢失数据
+         CommonFunction.cpp
+     1>CommonFunction.cpp(17): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+     1>CommonFunction.cpp(23): warning C4267: “=”: 从“size_t”转换到“int”，可能丢失数据
+         DataFrameTool.cpp
+         GroupByMACD.cpp
+         IndexNumber.cpp
+     1>Number\IndexNumber.cpp(130): warning C4244: “参数”: 从“float”转换到“char”，可能丢失数据
+         KDJ.cpp
+         Macd.cpp
+         Operator.cpp
+         D:\Program Files\VC\bin\x86_amd64\CL.exe /c /Zi /nologo /W3 /WX- /sdl /Od /Oi /GL /D WIN32 /D NDEBUG /D _WINDOWS /D _USRDLL /D DATAFRAMETOOL_EXPORTS /D _WINDLL /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt dllmain.cpp
+         dllmain.cpp
+       Link:
+         D:\Program Files\VC\bin\x86_amd64\link.exe /ERRORREPORT:PROMPT /OUT:"D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.dll" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.pdb" /SUBSYSTEM:WINDOWS /OPT:REF /OPT:ICF /LTCG /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.lib" /MACHINE:X64 /DLL x64\Release\CcomputValueByMACD.obj
+         x64\Release\CGroupDataByBAR.obj
+         x64\Release\CommonFunction.obj
+         x64\Release\DataFrameTool.obj
+         x64\Release\dllmain.obj
+         x64\Release\GroupByMACD.obj
+         x64\Release\IndexNumber.obj
+         x64\Release\KDJ.obj
+         x64\Release\Macd.obj
+         x64\Release\Operator.obj
+         x64\Release\stdafx.obj
+            正在创建库 D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.lib 和对象 D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.exp
+         正在生成代码
+         已完成代码的生成
+         DataFrameTool.vcxproj -> D:\MyProjects\win_project\Windows_Projects\DataFrameTool\x64\Release\DataFrameTool.dll
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\DataFrameTool\DataFrameTool\DataFrameTool.vcxproj”(Build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:05.69

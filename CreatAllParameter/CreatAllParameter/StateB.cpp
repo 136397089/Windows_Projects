@@ -251,3 +251,34 @@ StatePoint StateTable::VersatileCloselyPoint(unsigned int index, const StatePoin
 	return frontPoint;
 }
 
+
+void SigDayTechIndex::Inition()
+{
+	_Pchangerate = 0.0f;
+	_Volchagrate = 0.0f;
+	DMA_DATA temDMA;
+	Macd tempmacd;
+	TRIX temptrix;
+	KDJ tempkdj;
+	ASI tempasi;
+	CDP tempcdp;
+	Dmi tempdmi;
+	MA tempma;
+	ARBRCRVRPSY tempar;
+	EMV tempemv;
+	BOOLIndex tempbool;
+	RSI temprsi;
+	_DMAData = temDMA;
+	_MacdData = tempmacd;
+	_TrixData = temptrix;
+	_Kdj = tempkdj;
+	_Asi = tempasi;
+	_Cdp = tempcdp;
+	_Dmi = tempdmi;
+	_Ma = tempma;
+	_ArBrVrPsy = tempar;
+	_Emv = tempemv;
+	_Bool = tempbool;
+	_rsi = temprsi;
+
+}

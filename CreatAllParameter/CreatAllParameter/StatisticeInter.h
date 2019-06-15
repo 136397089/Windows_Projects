@@ -18,64 +18,64 @@ class CStatisticeInter
 public:
 	CStatisticeInter();
 	~CStatisticeInter();
-	//
-	bool Inition();
-	//
-	bool StatisticeASIData(
-		const StockDataTable& daynumber,
-		CStateInter& daystate,
-		const string& Stockcode);
-	//
-	bool Inter(const StockDataTable& daynumber,
-		const StockDataTable& weeknumber,
-		const StockDataTable& mounthnumber,
-		CStateInter& daystate,
-		CStateInter& weekstate,
-		CStateInter& monthstate);
+	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
-	//对均线_madata1在均线_madata2之上和之下的时长进行统计
-	void MALineStatistice(
-		const VStockData& _inputdata1,
-		const VStockData& _inputdata2,
-		vector<unsigned int>& _UpCloseresult,
-		vector<unsigned int>& _DownCloseresult);
-	//分组统计频次
-	template <class T>
-	void GroupStatistice(
-		const vector<T>& _inputdata1,
-		T GroupSize, map<T,
-		unsigned int>& _result);
-	//void GroupStatistice(const vector<unsigned int>& _inputdata1, unsigned int GroupSize, map<unsigned int, unsigned int>& _result);
-	StockDataType Autocorrelation(
-		const VStockData& _inputdata,
-		unsigned int interval);
-	//unsigned int GetIndexFromTimeList(vector<string> _vTimeDay, string time1);
+	bool Inition();
+	//////////////////////////////////////////////////////////////////////////
 	//
-	bool SaveMeanVarList_CS(
-		const string& Stockcoed,
-		const MeanVar& _lastMeanVar,
-		const MeanVar& _allDataMeanVar);
+	//////////////////////////////////////////////////////////////////////////
+	bool Inter(StockDataTable& daynumber, StockDataTable& weeknumber, StockDataTable& mounthnumber,
+		CStateInter& daystate,	CStateInter& weekstate,CStateInter& monthstate);
+	//////////////////////////////////////////////////////////////////////////
+	//对均线_madata1在均线_madata2之上和之下的时长进行统计
+	//返回的结果放在_UpCloseresult，_DownCloseresult当中
+	//////////////////////////////////////////////////////////////////////////
+	void MALineStatistice(const VStockData& _inputdata1, const VStockData& _inputdata2,
+		vector<unsigned int>& _UpCloseresult,vector<unsigned int>& _DownCloseresult);
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//收益率统计
+	//////////////////////////////////////////////////////////////////////////
+	bool ReturnStatistics(CIndicatorsInterface& daynumber, StockDataTable& shnumber);
+
+private:
+	//////////////////////////////////////////////////////////////////////////
+	//分组统计频次
+	//////////////////////////////////////////////////////////////////////////
+	template <class T>
+	void GroupStatistice(	const vector<T>& _inputdata1,T GroupSize, map<T,	unsigned int>& _result);
+	//////////////////////////////////////////////////////////////////////////
+	//求处相关系数
+	//////////////////////////////////////////////////////////////////////////
+	StockDataType Autocorrelation(const VStockData& _inputdata, unsigned int interval);
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+	bool SaveMeanVarList_CS(const string& Stockcoed, const MeanVar& _lastMeanVar, const MeanVar& _allDataMeanVar);
+	//
 	map<string, StockDataType> filterDataVarList;
 	map<string, StockDataType> filterDataMeanList;
 	map<string, StockDataType> allDataVarList;
 	map<string, StockDataType> allDataMeanList;
 	FreqListType _FreqList;
-	bool GroupDabug(
-		const StockDataTable& daynumber,
-		const StockDataTable& weeknumber,
-		const StockDataTable& mounthnumber,
-		const StockDataTable shnumber,
-		CStateInter& daystate,
-		CStateInter& weekstate,
-		CStateInter& monthstate);
-	bool SaveOneGroupFreqData(const string& stockCoed,Group _GroupType, CHistoryGroup& GroupTool);
-
-	bool GetMeanFromSQL(string columns,unsigned int Numtype);
-private:
-	void GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, const StockDataTable& daynumber) const ;
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+	bool GetMeanFromSQL(string columns, unsigned int Numtype);
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+	bool SaveOneGroupFreqData(const string& stockCoed, Group _GroupType, CHistoryGroup& GroupTool);
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+	void GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, const StockDataTable& daynumber) const;
+	//////////////////////////////////////////////////////////////////////////
+	//
+	//////////////////////////////////////////////////////////////////////////
+	inline StockDataType GetRandData(int _databegin, int _dataend);
 	string _LastError;
-	const unsigned int moveVarDaySize;
 };
 
 template <class T>
@@ -97,28 +97,24 @@ public:
 	CRealTimeAna();
 	~CRealTimeAna();
 
-	bool AnalysisRealTimeData(map<string, MACDCombin>& macdData, map<string, KDJCombin>& KDJData);
+	bool AnalysisRealTimeData(StockDataTable& Indicators);
 
 	void Inition();
 
 	void  ShowCurrentCode();
 	void  ShowYesterdayCode();
 private:
-	COnedayGrouping CurrentGroupingTool;
-	COnedayGrouping YesterdayGroupingTool;
+// 	CCurrentGrouping CurrentGroupingTool;
+// 	CCurrentGrouping YesterdayGroupingTool;
 
 };
 //
 static void CheckCurrentStockDataAndGetName(
-	const StockDataTable& AnaNumber,
-	const StockDataTable& mounthnumber,
+	StockDataTable& AnaNumber,
+	StockDataTable& mounthnumber,
 	const MeanVar& allDataMeanVar,
 	unsigned int Currentindex,
 	unsigned int monthIndex,
 	const string& StockCode);
-//
-// bool GroupFreqStatistice(
-// 	const StockDataTable& daynumber,
-// 	CStateInter& stateinter);
 
 #endif

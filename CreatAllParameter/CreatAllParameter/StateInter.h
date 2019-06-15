@@ -16,7 +16,7 @@ public:
 	CStateInter();
 	~CStateInter();
 
-	void Inter(const StockDataTable& allnumber, const string filename);
+	void Inter(StockDataTable& allnumber, const string filename);
 
 	StateTable GetOneNumberState(const VStockData& _datafast, const VStockData& _dataslow);
 

@@ -44,12 +44,15 @@ public:
 
 	bool SetTime(const string& _time);
 
+	bool IsOnTheSameDay(const CDate& d);
 	CDate GetFrontWeekDay(int day, int week);//获得前几个星期的周几日期
 
 	int GetWeekDay();//获得当日的星期数
 	int GetMonth();
 
 	string GetDay()const;//获得日期字符串
+	string GetDateTime()const;//获得日期时间字符串
+	string GetTime()const;//获得日期字符串
 	string GetDay(const string& splitter)const;//获得日期字符串
 
 	bool IsLeapYear(int year);//是否是润年

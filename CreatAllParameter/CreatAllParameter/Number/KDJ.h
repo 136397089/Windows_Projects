@@ -19,7 +19,7 @@ public:
 	//
 	//
 	//////////////////////////////////////////////////////////////////////////
-	bool GetNextKDJ(const SinDayPriceData& OneDayData, KDJ& mFrontKDJ);
+	bool GetNextKDJ(const SinCyclePriceData& OneDayData, KDJ& mFrontKDJ);
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//
@@ -29,7 +29,12 @@ public:
 	//
 	//
 	//////////////////////////////////////////////////////////////////////////
-	bool StaticGetNextKDJ(const vector<SinDayPriceData>& FrontPrice, const SinDayPriceData& OneDayData, KDJ& mFrontKDJ) const;
+	bool StaticGetNextKDJ(const vector<SinCyclePriceData>& FrontPrice, const SinCyclePriceData& OneDayData, KDJ& mFrontKDJ) const;
+
+	bool CurrentDataToVecter(vector<StockDataType>& CurrentData, const KDJ& mFrontKDJ);
+
+	bool RecoveryDataFromVecter(const vector<StockDataType>& CurrentData, KDJ& mFrontKDJ);
+
 private:
 	//CKDJCal();
 	void StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList);
@@ -37,6 +42,6 @@ private:
 	list<StockDataType> _lLow;
 	list<StockDataType> _lClose;
 	//KDJ指标的参数
-	const float _Nday, _M1, _M2;
+	StockDataType _Nday, _M1, _M2;
 };
 #endif

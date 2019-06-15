@@ -15,7 +15,7 @@ CKDJCal::~CKDJCal(void)
 {
 }
 
-bool CKDJCal::GetNextKDJ(const SinDayPriceData& OneDayData, KDJ& mFrontKDJ)
+bool CKDJCal::GetNextKDJ(const SinCyclePriceData& OneDayData, KDJ& mFrontKDJ)
 {
 	if (_lHigh.size() != _lLow.size() || _lHigh.size() != _lClose.size())
 		return false;
@@ -75,8 +75,8 @@ void CKDJCal::Inition()
 }
 
 bool CKDJCal::StaticGetNextKDJ(
-	const vector<SinDayPriceData>& FrontPrice,
-	const SinDayPriceData& OneDayData,
+	const vector<SinCyclePriceData>& FrontPrice,
+	const SinCyclePriceData& OneDayData,
 	KDJ& mFrontKDJ) const
 {
 	float HighestN = FrontPrice[0]._High;
@@ -110,5 +110,47 @@ bool CKDJCal::StaticGetNextKDJ(
 // 		mFrontKDJ.D_OF_KDJ = 0;
 // 	if (mFrontKDJ.J_OF_KDJ < 0)
 // 		mFrontKDJ.J_OF_KDJ = 0;
+	return true;
+}
+
+bool CKDJCal::CurrentDataToVecter(vector<StockDataType>& CurrentData, const KDJ& mFrontKDJ)
+{
+	CurrentData.clear();
+	CurrentData.push_back(_Nday);
+	CurrentData.push_back(_M1);
+	CurrentData.push_back(_M2);
+	CurrentData.push_back(mFrontKDJ.K_OF_KDJ);
+	CurrentData.push_back(mFrontKDJ.D_OF_KDJ);
+	CurrentData.push_back(mFrontKDJ.J_OF_KDJ);
+
+	for (list<StockDataType>::iterator ite = _lHigh.begin(); ite != _lHigh.end(); ite++)
+		CurrentData.push_back(*ite);
+	for (list<StockDataType>::iterator ite = _lLow.begin(); ite != _lLow.end(); ite++)
+		CurrentData.push_back(*ite);
+	for (list<StockDataType>::iterator ite = _lClose.begin(); ite != _lClose.end(); ite++)
+		CurrentData.push_back(*ite);
+
+	return true;
+}
+
+bool CKDJCal::RecoveryDataFromVecter(const vector<StockDataType>& CurrentData, KDJ& mFrontKDJ)
+{
+	if (CurrentData.size() < 6)
+		return false;
+
+	_Nday = CurrentData[0];
+	_M1 = CurrentData[1];
+	_M2 = CurrentData[2];
+	mFrontKDJ.K_OF_KDJ = CurrentData[3];
+	mFrontKDJ.D_OF_KDJ = CurrentData[4];
+	mFrontKDJ.J_OF_KDJ = CurrentData[5];
+	if (CurrentData.size() != 6 + 3 * _Nday)
+		return false;
+	for (unsigned int i = 6 + (_Nday * 0); i < 6 + (_Nday * 1); i++)
+		_lHigh.push_back(CurrentData[i]);
+	for (unsigned int i = 6 + (_Nday * 1); i < 6 + (_Nday * 2); i++)
+		_lLow.push_back(CurrentData[i]);
+	for (unsigned int i = 6 + (_Nday * 2); i < 6 + (_Nday * 3); i++)
+		_lClose.push_back(CurrentData[i]);
 	return true;
 }

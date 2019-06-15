@@ -29,11 +29,11 @@ public:
 
 	void Initon();
 	//主要函数，统计高点，低点价格在CDP区间的位置
-	bool CountCDPData(const StockDataTable& _inputdata);
+	bool CountCDPData(StockDataTable& _inputdata);
 	//检查CDP数据是否出错
-	bool CheckCDPData(const StockDataTable& _inputdata);
+	bool CheckCDPData(StockDataTable& _inputdata);
 	//通过index提取一天的CDP值，保存在CDPdata中
-	bool GetCDPDataByInedx(const StockDataTable& _inputdata, unsigned int index, CDP& CDPdata);
+	bool GetCDPDataByInedx(StockDataTable& _inputdata, unsigned int index, CDP& CDPdata);
 	//获得当日最高价处于CDP的哪个区间
 	unsigned int GetHighIntervalIndex(StockDataType highData);
 	//获得当日最低价处于CDP的哪个区间

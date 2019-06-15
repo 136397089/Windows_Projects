@@ -16,7 +16,7 @@ CAsiCal::~CAsiCal()
 }
 
 
-bool CAsiCal::GetNextASI(const SinDayPriceData& TodayData, ASI& mFrontASI)
+bool CAsiCal::GetNextASI(const SinCyclePriceData& TodayData, ASI& mFrontASI)
 {
 	ASI tempasi = mFrontASI;
 	float A = abs(TodayData._High - _YesterdayData._Close);

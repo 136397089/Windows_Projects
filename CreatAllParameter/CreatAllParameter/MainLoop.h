@@ -16,44 +16,33 @@ class CMainLoop
 public:
 	CMainLoop();
 	~CMainLoop();
-
-	HANDLE _StockCSVFileMutex;
-
 	//////////////////////////////////////////////////////////////////////////
-	//更新目录下所有CSV文件里的值
+	//新建多个线程，分析目标文件夹下的股票数据，用于日数据的分析
 	//////////////////////////////////////////////////////////////////////////
-	bool AnaHistory(string strFolderPath);
+	bool CreateThreadToAnaHistory_Daily(string strFolderPath);
 	//////////////////////////////////////////////////////////////////////////
-	//
+	//分析目标文件夹下的股票数据，用于日数据的分析，间线程运行函数
 	//////////////////////////////////////////////////////////////////////////
-	bool AnaHistory_File(
-		const string& fileName,
-		const string& strFolderPath,
-		const CNumberInterface& shnumber,
-		CStatisticeInter& statisticeInter) const ;
+	bool ReadDailyFileToAnaHistory(const string& fileName, const string& strFolderPath,	CIndicatorsInterface& shnumber) const;
 	//////////////////////////////////////////////////////////////////////////
-	//统计文件夹下文件的个数
+	//新建多个线程，分析目标文件夹下的股票数据
 	//////////////////////////////////////////////////////////////////////////
-	bool StatisticalFileQuantity(string strPath,int & fileNumber);
-	//分析实时数据
-	bool AnaCurrentRealTimeData(const string& strFolderPath,const string& _filename);
+	bool CreateThreadToAnaHistory_Mintue(string strFolderPath);
+	//////////////////////////////////////////////////////////////////////////
+	//分析目标文件夹下的股票数据，用于分钟数据的分析，间线程运行函数
+	//////////////////////////////////////////////////////////////////////////
+	bool ReadFileToAnaHistory_Minute(const string& fileName, const string& strFolderPath,CIndicatorsInterface& shnumber) const;
+private:
 	//////////////////////////////////////////////////////////////////////////
 	//将计算完的数据保存到文件当中
 	//////////////////////////////////////////////////////////////////////////
-	bool SaveDataToFile(const string& strFilePath,const StockDataTable & allData);
-
-
-private:
-	bool GetCloselyNumber_Current(
-		const map<string, SinDayData>& CurrStockData,
-		map<string, MACDCombin>& YesTerdayMacdMap,
-		map<string, KDJCombin>& YesTerdayKDJMap,
-		map<string, vector<SinDayPriceData>>& FrontPrice);
-	bool GetNextNumber_Current(
-		const map<string, SinDayData>& CurrStockData,
-		map<string, MACDCombin>& YesTerdayMacdMap,
-		map<string, KDJCombin>& YesTerdayKDJMap,
-		map<string, vector<SinDayPriceData>>& FrontPrice);
+	bool SaveDataToFile(const string& strFilePath,StockDataTable & allData);
+	//分析实时数据
+	bool AnaCurrentRealTimeData(const string& strFolderPath);
+	//////////////////////////////////////////////////////////////////////////
+	//统计文件夹下文件的个数
+	//////////////////////////////////////////////////////////////////////////
+	int StatisticalFileQuantity(string strPath);
 
 };
 
@@ -62,8 +51,7 @@ typedef struct
 	int nIndex;
 	string fileName;
 	string Filepath;
-	CNumberInterface* shnumber;
-	CStatisticeInter* statisticeInter;
+	CIndicatorsInterface* shnumber;
 // 	CMainLoop* mainloop;
 	HANDLE hThread;
 }ThreadParam;
