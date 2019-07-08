@@ -14,20 +14,22 @@ struct TransactionData
 	//bool _IsBay;//是不是买入
 	int _iStockCode;
 	string _strStockCode;
-	CDate _Date;
-	float _Volume;//交易量,小于0表示卖出，大于0表示买入
-	float _Price;//交易价格
+	CDate BuyDate;
+	float BuyPrice;//交易价格
+	CDate SellDate;
+	float SellPrice;//交易价格
+	float TransactionVolume;//交易量,小于0表示卖出，大于0表示买入
 };
 //类只对一个股票操作
 class CStockAccount
 {
 public:
-	CStockAccount(const string& StockDate, const float& InitCapital);
-	//CStockAccountNum(const CStockAccountNum& stockAccount);
+	CStockAccount(const float& InitCapital);
+
 	~CStockAccount();
 
 private:
-	CStockAccount();
+	CStockAccount(){};
 public:
 	//////////////////////////////////////////////////////////////////////////
 	//初始化账号
@@ -68,11 +70,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	//获取最后一次买入价格
 	//////////////////////////////////////////////////////////////////////////
-	float GetLastBuyPrice();
-	//////////////////////////////////////////////////////////////////////////
-	//获取最后一次卖出价格
-	//////////////////////////////////////////////////////////////////////////
-	float GetLastSellPrice();
+	TransactionData GetLastTransaction();
 	//////////////////////////////////////////////////////////////////////////
 	//打印出所有的操作
 	//////////////////////////////////////////////////////////////////////////
@@ -95,20 +93,36 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	bool SellStock(const TransactionData& mbusiness);
 	//初始变量，不变
-	string _OwnStockCode;//操作的股票代码
 	float _InitCapital;//初始的资金
 	//过程变量，可变
 	float _CurrentAvailableCapital;//当前的可用资金
-	float _StockQuantityOwned;//拥有的股票数量
-	//过程记录
 	list<TransactionData> _AllBusiness;//发生过的所有操作
-	//
-	string _LastError;
-	//最后一次交易价格
-	float _lastSellPrise;
-	float _lastBuyPrise;
-	//单笔成交基数
-	int _minVolu;
+	TransactionData HoldStock;//
+	string _LastError;//
+	int _minVolu;//单笔成交基数
+};
+
+
+class CSimpleAccount
+{
+public:
+	CSimpleAccount(const string& Stockcode);
+	CSimpleAccount(){};
+	~CSimpleAccount();
+	void Inition(const string& Stockcode);
+	bool BuyStock(StockDataType price, const CDate& date);
+	bool SellStock(StockDataType price, const CDate& date);
+	StockDataType GetCurrentIncomeRate();
+	StockDataType CheckHoldIncomeRate(StockDataType CurrentPrice);
+	void GetIncomeRateList(vector<StockDataType>& rateList);
+	unsigned int GetCount();
+	bool IsHoldStock();
+	void ClearHoldStockPrice();
+private:
+	TransactionData HoldStock;//
+	list<TransactionData> _AllBusiness;//发生过的所有操作
+
+
 };
 
 #endif

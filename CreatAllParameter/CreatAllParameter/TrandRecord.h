@@ -12,45 +12,38 @@ public:
 	///////////////////////////////////////////////////////////////////////////
 	//输入数据，进行趋势分析
 	///////////////////////////////////////////////////////////////////////////
-	StatePointsList ComTrendState();
+	const StatePointsList& GetComTrendState();
 	//
-	StatePointsList ButtonTrendState();
+	const StatePointsList& GetButtonTrendState();
 	//
-	StatePointsList TopTrendState();
+	const StatePointsList& GetTopTrendState();
 	//
 	void SetTrendStateData(const StatePointsList& LocalResult);
 	//
 	void Inition();
 private:
-	//获得单日低点的趋势--
-	CharaPointType GetBottonPointTrandResult() const;
+	//获得单日低点的趋势
+	CharaPointType GetBottonPointTrandResult(const StatePointsList& IndexRecord) const;
 	//获得单日高点的趋势
-	CharaPointType GetTopPointTrandResult() const ;
+	CharaPointType GetTopPointTrandResult(const StatePointsList& IndexRecord) const;
 	//获得单日综合趋势
-	CharaPointType GetCompositeTrandResult()const;
+	CharaPointType GetCompositeTrandResult();
 	//
-	StatePointsList _vIndexRecord_Local;
-
-	StatePointsList _vLowIndexRecord_Local;
-
-	StatePointsList _vHighIndexRecord_Local;
-
+	StatePointsList _vLowIndexRecord;
+	//
+	StatePointsList _vHighIndexRecord;
 	//记录综合趋势结果
 	StatePointsList  comtrend;
 	//记录底部趋势结果
 	StatePointsList  bottontrend;
 	//记录顶部趋势结果
 	StatePointsList  toptrend;
-
 	//当局部高点大于highminsize时才开始高点的趋势分析
 	unsigned int highminsize;
 	//当局部低点大于lowminsize时才开始低点的趋势分析
 	unsigned int lowminsize;
-	//当所有局部点大于compminsize时才开始所有的趋势分析
-	unsigned int compminsize;
 	//连续多少次
 	unsigned int frequUplimit;
-
 };
 
 #endif

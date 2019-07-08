@@ -2,17 +2,10 @@
 #include <numeric>
 #include "TRIX.h"
 
-
-CTRIXCal::CTRIXCal()
+CTRIXCal::CTRIXCal():
+TRMA(20)//
 {
-	_ParameterN = 18;
-	_ParameterM = 28;
-	_EMADenominator = 0;
-	for (int i = 1; i <= _ParameterN;i++)
-	{
-		_EMADenominator += i;
-	}
-// 	_vTrix.clear();
+	_EMAParameter = 12;
 }
 
 
@@ -22,57 +15,22 @@ CTRIXCal::~CTRIXCal()
 
 void CTRIXCal::GetNextTRIX(const SinCyclePriceData& OneDayData, TRIX& mTrix)
 {
-// 	_vTrix.push_back(mTrix);
 	TRIX FrontTrix;
 	FrontTrix = mTrix;
-	StaticSizePush(OneDayData._Close, _ParameterN, frontClose);
-	mTrix._AX = GetEMA(frontClose);
-	StaticSizePush(mTrix._AX, _ParameterN, frontTA);
-	mTrix._BX = GetEMA(frontTA);
-	StaticSizePush(mTrix._BX, _ParameterN, frontTB);
-	mTrix._TR = GetEMA(frontTB);
+	mTrix._AX = GetEMA(FrontTrix._AX, OneDayData._Close, _EMAParameter);
+	mTrix._BX = GetEMA(FrontTrix._BX, mTrix._AX, _EMAParameter);
+	mTrix._TR = GetEMA(FrontTrix._TR, mTrix._BX, _EMAParameter);
 	if (FrontTrix._TR != 0)
 	{
 		mTrix._TRIX = (mTrix._TR - FrontTrix._TR) * 100.0f / FrontTrix._TR;
-		mTrix._TRMA = 0;
-		StaticSizePush(mTrix._TRIX, _ParameterM, TrixData);
-		if (TrixData.size() >= _ParameterM)
-		{
-			float addin10 = accumulate(TrixData.begin(), TrixData.end(), 0.0f);
-			mTrix._TRMA = addin10 / _ParameterM;
-		}
+		mTrix._TRMA = TRMA.GetNextMA(mTrix._TRIX);
 	}
 
 }
 
-float CTRIXCal::GetEMA(const list<StockDataType>& dataList)
-{
-	float addIn = 0;
-	list<StockDataType>::const_iterator ite = dataList.begin();
-	float i = 1;
-	float iAdd = 0;
-	for (list<StockDataType>::const_iterator ite = dataList.begin(); ite != dataList.end(); ite++)
-	{
-		addIn = addIn + i*(*ite);
-		iAdd = iAdd + i;
-		++i;
-	}
-	return addIn / iAdd;
-}
 
-void CTRIXCal::StaticSizePush(StockDataType mdata, float msize, list<StockDataType>& mList)
-{
-	mList.push_back(mdata);
-	if (mList.size() > msize)
-		mList.pop_front();
-}
 
 void CTRIXCal::Inition()
 {
-	frontClose.clear();
-	frontTA.clear();
-	frontTB.clear();
-	frontTR.clear();
-	TrixData.clear();
-
+	TRMA.Inition();
 }

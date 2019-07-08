@@ -40,8 +40,8 @@ public:
 	bool RecoveryDataFromVecter(const vector<StockDataType>& CurrentData, Macd& mMacd);
 	void Inition();
 private:
-	StockDataType shortSmoothness;
-	StockDataType longSmoothness;
+	unsigned int shortSmoothness;
+	unsigned int longSmoothness;
 	StockDataType M;
 };
 

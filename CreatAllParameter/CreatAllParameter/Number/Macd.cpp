@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include <algorithm>
 #include "Macd.h"
-
+#include "../MovingAverage.h"
 
 
 CMacdCal::CMacdCal(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m)
@@ -22,11 +22,10 @@ bool CMacdCal::GetNextMacd(
 {
 	Macd FrontMacd;
 	FrontMacd = mMacd;
-	mMacd.m12 = (FrontMacd.m12*(shortSmoothness - 1) + (SigDayData._Close) * 2.0f) / (shortSmoothness + 1);
-	mMacd.m26 = (FrontMacd.m26*(longSmoothness - 1) + (SigDayData._Close) * 2.0f) / (longSmoothness + 1);
-	//mMacd.diff = mMacd.m12 - mMacd.m26;
-	mMacd.dif = 11.0f * FrontMacd.m12 / 13.0f - 25.0f * FrontMacd.m26 / 27.0f + (2.0f / 13.0f - 2.0f / 27.0f)*SigDayData._Close;
-	mMacd.dea = (FrontMacd.dea*(M - 1) + mMacd.dif * 2) / (M + 1);
+	mMacd.m12 = GetEMA(FrontMacd.m12, SigDayData._Close, shortSmoothness);
+	mMacd.m26 = GetEMA(FrontMacd.m26, SigDayData._Close, longSmoothness);
+	mMacd.dif = mMacd.m12 - mMacd.m26;
+	mMacd.dea = GetEMA(FrontMacd.dea, mMacd.dif, M);
 	mMacd.bar = 2.0f * (mMacd.dif - mMacd.dea);
 	return true;
 }

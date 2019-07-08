@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "StockDataTable.h"
-
+#include "glog/logging.h"
 
 
 void StockDataTable::clear()
@@ -92,19 +92,19 @@ void StockDataTable::clear()
 #define COPYVECTOR(VECTORNAME,BEGININDEX,ENDINDEX)\
 		if (	ENDINDEX < BEGININDEX ||\
 			BEGININDEX >= VECTORNAME.size())\
-			temp.VECTORNAME = VECTORNAME;\
+			NewDataReturn.VECTORNAME = VECTORNAME;\
 								else if(ENDINDEX >= VECTORNAME.size())\
-			temp.VECTORNAME.insert(temp.VECTORNAME.end(),\
+			NewDataReturn.VECTORNAME.insert(NewDataReturn.VECTORNAME.end(),\
 								VECTORNAME.begin() + BEGININDEX,\
 								VECTORNAME.end());\
 								else\
-			temp.VECTORNAME.insert(temp.VECTORNAME.end(),\
+			NewDataReturn.VECTORNAME.insert(NewDataReturn.VECTORNAME.end(),\
 								VECTORNAME.begin() + BEGININDEX,\
 								VECTORNAME.begin() + ENDINDEX)
 StockDataTable StockDataTable::NewDataByIndex(unsigned int beginindex, unsigned int endindex) const
 {
-	StockDataTable temp;
-
+	StockDataTable NewDataReturn;
+	NewDataReturn._strStockCode = _strStockCode;
 	//用宏截取新的vector
 	COPYVECTOR(_vTimeDay, beginindex, endindex);
 	COPYVECTOR(_vClose, beginindex, endindex);
@@ -112,10 +112,9 @@ StockDataTable StockDataTable::NewDataByIndex(unsigned int beginindex, unsigned 
 	COPYVECTOR(_vHigh, beginindex, endindex);
 	COPYVECTOR(_vLow, beginindex, endindex);
 	COPYVECTOR(_vVolume, beginindex, endindex);
-//	COPYVECTOR(_vPriChaRate, beginindex, endindex);
 	COPYVECTOR(_vDate, beginindex, endindex);
 
-	return temp;
+	return NewDataReturn;
 }
 
 bool StockDataTable::ChackDataSize() const
@@ -152,68 +151,6 @@ StockDataPointer const StockDataTable::GetAllPointerToSave()
 
 	return indexPointerMap;
 }
-//
-StockDataPointer StockDataTable::GetNumberPointer() const
-{
-	StockDataPointer indexPointerMap;
-	//
-// 	indexPointerMap[_eMA_MA1] = &_vMa1;
-// 	indexPointerMap[_eMA_MA2] = &_vMa2;
-// 	indexPointerMap[_eMA_MA3] = &_vMa3;
-// 	indexPointerMap[_eMA_MA4] = &_vMa4;
-	//
-// 	indexPointerMap[_eMACD_BAR] = &_vMACDValue;
-// 	indexPointerMap[_eMACD_MA12] = &_vMACDMa12;
-// 	indexPointerMap[_eMACD_MA26] = &_vMACDMa26;
-// 	indexPointerMap[_eMACD_DIFF] = &_vDiff;
-// 	indexPointerMap[_eMACD_DEA] = &_vDEA;
-	//
-// 	indexPointerMap[_eDMA_D] = &_vDMAValue;
-// 	indexPointerMap[_eDMA_A] = &_vAMAValue;
-	//
-// 	indexPointerMap[_eTRIX_TRIX] = &_vTRIX;
-// 	indexPointerMap[_eTRIX_MA] = &_vTRMA;
-// 	indexPointerMap[_eTRIX_VTR] = &_vtr;
-// 	indexPointerMap[_eTRIX_VTB] = &_vtb;
-// 	indexPointerMap[_eTRIX_VTA] = &_vta;
-	//
-// 	indexPointerMap[_eKDJ_K] = &_vK;
-// 	indexPointerMap[_eKDJ_D] = &_vD;
-// 	indexPointerMap[_eKDJ_J] = &_vJ;
-// 	//
-// 	indexPointerMap[_eASI_I] = &_vAsi_i;
-// 	indexPointerMap[_eASI_T] = &_vAsit;
-// 	//
-// 	indexPointerMap[_eCDP_CDP] = &_vCDP;
-// 	indexPointerMap[_eCDP_AH] = &_vAH_High;
-// 	indexPointerMap[_eCDP_NH] = &_vNH_NormalHigh;
-// 	indexPointerMap[_eCDP_NL] = &_vNL_NormalLow;
-// 	indexPointerMap[_eCDP_AL] = &_vAL_Low;
-	//
-// 	indexPointerMap[_eAR] = &_vAR;
-// 	indexPointerMap[_eBR] = &_vBR;
-// 	indexPointerMap[_eCR] = &_vCR;
-// 	indexPointerMap[_eCRMA1] = &_vCRMA1;
-// 	indexPointerMap[_eCRMA2] = &_vCRMA2;
-// 	indexPointerMap[_eCRMA3] = &_vCRMA3;
-// 	indexPointerMap[_eCRMA4] = &_vCRMA4;
-// 	indexPointerMap[_eVR] = &_vVR;
-// 	indexPointerMap[_ePSY] = &_vPSY;
-// 	//
-// 	indexPointerMap[_eEMV] = &_vEMV;
-// 	indexPointerMap[_eEMVMA] = &_vEMVMA;
-// 	//
-// 	indexPointerMap[_eBOOLMid] = &_vBOOLMid;
-// 	indexPointerMap[_eBOOLUp] = &_vBOOLUp;
-// 	indexPointerMap[_eBOOLDown] = &_vBOOLDown;
-	//
-// 	indexPointerMap[_eDMI_DIP] = &_vDIP;
-// 	indexPointerMap[_eDMI_DIN] = &_vDIN;
-// 	indexPointerMap[_eDMI_ADX] = &_vADX;
-// 	indexPointerMap[_eDMI_ADXR] = &_vADXR;
-
-	return indexPointerMap;
-}
 
 void StockDataTable::SetDate()
 {
@@ -226,30 +163,76 @@ void StockDataTable::SetDate()
 	}
 }
 
-unsigned int StockDataTable::GetLastTimeIndexByDate(CDate date)const
+unsigned int StockDataTable::GetCloselyFrontTimeIndexByDate(CDate inputdate)const
 {
+	//1.0处理特殊情况下的日期index
 	if (_vDate.size() < 2)//数据太少
 		return 0;
-	
-	for (unsigned int i = 1; i < _vDate.size();i++)
+	if (inputdate > _vDate.back())//大于最后一天的情况
+		return _vDate.size() - 1;
+	if (inputdate.IsOnTheSameDay(_vDate.back()))
+		return _vDate.size() - 2;
+	//2.0开始查找目标日期
+	unsigned int frontIndex = 0;
+	unsigned int backIndex = _vDate.size() - 1;
+	unsigned int midIndex = backIndex/2;
+	//2.1二分法缩小范围
+	while ((backIndex - frontIndex) > 5)
 	{
-		if (_vDate[i - 1] < date && date <= _vDate[i])
+		if (_vDate[midIndex] < inputdate && inputdate < _vDate[backIndex])
 		{
-			CDate weekdata = _vDate[i - 1];
-			return i - 1;
+			frontIndex = midIndex;
+			midIndex = (midIndex + backIndex) / 2+1;
+		}
+		else if (_vDate[midIndex] > inputdate && inputdate > _vDate[frontIndex])
+		{
+			backIndex = midIndex;
+			midIndex = (midIndex + frontIndex) / 2;
+		}
+		else if (_vDate[midIndex] == inputdate)
+		{
+			frontIndex = midIndex - 2;
+			break;
 		}
 	}
-	//找不到目标日期，只能返回用最开始的index
-	return _vDate.size() - 1;
+	//2.2查找目标日期index
+	for (unsigned int i = frontIndex; i < backIndex;i++)
+		if (_vDate[i] < inputdate && _vDate[i+1] >= inputdate)
+			midIndex = i;
+	//3.0检查输出是否正确
+	if (!(_vDate[midIndex] < inputdate && inputdate<=_vDate[midIndex+1]))
+		LOG(INFO) << "GetCloselyFrontTime IndexByDate return data error. return date:" << _vDate[midIndex].GetDay() << " inputdate:" << inputdate.GetDay();
+
+	return midIndex;
 }
 
-unsigned int StockDataTable::GetLastTimeIndexByDate(string strDate)const
+unsigned int StockDataTable::GetCloselyFrontTimeIndexByDate(string strDate)const
 {
 	CDate tempdate;
 	tempdate.SetDay(strDate);
-	unsigned int index = GetLastTimeIndexByDate(tempdate);
+	unsigned int index = GetCloselyFrontTimeIndexByDate(tempdate);
 	CDate weekdata = _vDate[index];
-	return GetLastTimeIndexByDate(tempdate);
+	return GetCloselyFrontTimeIndexByDate(tempdate);
+}
+
+void StockDataTable::GetIndexMap(const vector<CDate>& marketDate, map<unsigned int, unsigned int>& indexMap)
+{
+	indexMap.clear();
+	unsigned int marketIndex = 0;
+	CDate marketdate = marketDate[marketIndex];
+	for (unsigned int index = 0; index < _vDate.size(); index++)
+	{
+		while (!(marketdate.IsOnTheSameDay(_vDate[index])) && marketIndex < marketDate.size())
+		{
+			marketdate = marketDate[marketIndex];
+			if (marketdate.IsOnTheSameDay(_vDate[index]))
+			{
+				indexMap[index] = marketIndex;
+				break;
+			}
+			marketIndex++;
+		}
+	}
 }
 
 

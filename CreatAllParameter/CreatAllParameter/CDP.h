@@ -13,6 +13,5 @@ public:
 	//mMacd:Ç°ÈÕµÄMACD
 	//////////////////////////////////////////////////////////////////////////
 	bool GetNextCDP(const SinCyclePriceData& OneDayData, CDP& mCdp);
-
 };
 

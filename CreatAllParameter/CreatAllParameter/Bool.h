@@ -16,14 +16,14 @@ public:
 	bool Inition();
 
 	inline StockDataType GetRePrice1(const SinCyclePriceData& OneDayData);
-	inline StockDataType GetRePrice2(const SinCyclePriceData& OneDayData);
 
 	unsigned int N;
 	unsigned int P;
 	MeanVar MidMeanVar;
 	CMeanVariance MidCalTool;
-	MeanVar StdMeanVar;
-	CMeanVariance StdCalTool;
+
+	MeanVar HLMeanVar;
+	CMeanVariance HLCalTool;
 
 	list<SinCyclePriceData> priceList;
 };

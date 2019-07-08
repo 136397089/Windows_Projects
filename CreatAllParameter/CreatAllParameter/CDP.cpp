@@ -11,20 +11,6 @@ CCDPCal::~CCDPCal()
 {
 }
 
-// void CCDP::UpdateFileColumn(string strFolderPath)
-// {
-// 
-// }
-// 
-// void CCDP::UpdatePathFilesRanks(string strPath)
-// {
-// 
-// }
-// 
-// void CCDP::UpdateFileRanks(string strfilename)
-// {
-// 
-// }
 
 bool CCDPCal::GetNextCDP(const SinCyclePriceData& TodayDayData, CDP& mCdp)
 {
@@ -33,5 +19,7 @@ bool CCDPCal::GetNextCDP(const SinCyclePriceData& TodayDayData, CDP& mCdp)
 	mCdp._NH_NormalHigh = 2 * mCdp._CDP - TodayDayData._Low;
 	mCdp._AL_Low = mCdp._CDP - (TodayDayData._High - TodayDayData._Low);
 	mCdp._NL_NormalLow = 2 * mCdp._CDP - TodayDayData._High;
+	mCdp._Lowest = TodayDayData._Close * 0.9;
+
 	return true;
 }

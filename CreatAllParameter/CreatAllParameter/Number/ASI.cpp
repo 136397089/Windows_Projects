@@ -4,10 +4,10 @@
 #include "ASI.h"
 
 
-CAsiCal::CAsiCal()
+CAsiCal::CAsiCal():
+MovingSI(26),//M1
+MovingASIT(10)//M2
 {
-	_M1 = 26;
-	_M2 = 10;
 }
 
 
@@ -39,23 +39,9 @@ bool CAsiCal::GetNextASI(const SinCyclePriceData& TodayData, ASI& mFrontASI)
 	float K = max(A, B);
 	float SI = 16 * X * K / R;
 
-	_vSIList.push_back(SI);
-	StockDataType fristSI = 0; 
-	if (_vSIList.size() > _M1)
-	{
-		fristSI = *_vSIList.begin();
-		_vSIList.pop_front();
-	}
-	mFrontASI._asi = (mFrontASI._asi - fristSI + SI);
-
-	_vASIList.push_back(mFrontASI._asi);
-	StockDataType fristASI = 0;
-	if (_vASIList.size() > _M2)
-	{
-		fristASI = *_vASIList.begin();
-		_vASIList.pop_front();
-	}
-	mFrontASI._asit = (mFrontASI._asit*_M2 - fristASI + mFrontASI._asi) / _M2;
+	MovingSI.GetNextMA(SI);
+	mFrontASI._asi = MovingSI.GetDataMovingSum();
+	mFrontASI._asit = MovingASIT.GetNextMA(mFrontASI._asi);
 
 	_YesterdayData = TodayData;
 	return true;
@@ -63,7 +49,7 @@ bool CAsiCal::GetNextASI(const SinCyclePriceData& TodayData, ASI& mFrontASI)
 
 bool CAsiCal::Inition()
 {
-	_vSIList.clear();
-	_vASIList.clear();
+	MovingSI.Inition();
+	MovingASIT.Inition();
 	return true;
 }

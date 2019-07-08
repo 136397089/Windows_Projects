@@ -100,3 +100,8 @@ StockDataType CStatisticeTool::GetPricePosition(const StockDataTable& _inputdata
 
 
 
+
+StockDataType GetRandData(int _databegin, int _dataend)
+{
+	return (rand() % (_dataend - _databegin - 1)) + _databegin + (rand() / double(RAND_MAX));
+}

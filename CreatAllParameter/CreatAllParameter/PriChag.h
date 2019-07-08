@@ -5,17 +5,19 @@
 #include "Number\NumberBase.h"
 
 
-class CChagRate
+class CGeneraIindicators
 {
 public:
-	CChagRate();
-	~CChagRate();
+	CGeneraIindicators();
+	~CGeneraIindicators();
 
-	bool GetNextChangeRate(const StockDataType& OneDayData, float& changeRate);
+	bool GetNextGI(const SinCyclePriceData& TodayDayData, GeneralIndicators& changeRate);
 
 	bool Inition();
 private:
-	float frontValue;
+	SinCyclePriceData FrontData;
+	int EnableCount;
+	int IniEnableCount;
 };
 
 #endif

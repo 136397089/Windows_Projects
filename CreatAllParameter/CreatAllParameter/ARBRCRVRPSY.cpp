@@ -2,25 +2,29 @@
 #include "ARBRCRVRPSY.h"
 #include "glog/logging.h"
 
-CArBrCrVrPsy::CArBrCrVrPsy()
+CArBrCrVrPsy::CArBrCrVrPsy():
+VRMA(10),//
+AR_HighTo_Open(26),
+AR_OpenTo_Low(26),
+BR_HighTo_Close(26),
+BR_CloseTo_Low(26),
+VR_AVS(26),
+VR_BVS(26),
+CR_HighToMid(26),
+CR_MidToLow(26),
+PSYMA(24),
+LimitDownTimesMA(200),
+LimitUpTimesMA(200),
+CR_MA1Para(5),
+CR_MA2Para(10),
+CR_MA3Para(20),
+CRMA1(CR_MA1Para),
+CRMA2(CR_MA2Para),
+CRMA3(CR_MA3Para),
+RefCRMA1(CR_MA1Para / 2.5 + 1),
+RefCRMA2(CR_MA2Para / 2.5 + 1),
+RefCRMA3(CR_MA3Para / 2.5 + 1)
 {
-	VRParameter = 26;
-	ARBRParameter = 26;
-	PSYParameter = 24;
-	CRParameter = 26;
-	CR_Close_Weight = 1;
-	CR_Open_Weight = 0;
-	CR_High_Weight = 1;
-	CR_Low_Weight = 1;
-	CR_MA1Para = 5;
-	CR_MA2Para = 10;
-	CR_MA3Para = 20;
-	CR_MA4Para = 40;
-
-	CRMa1_List.clear();
-	CRMa2_List.clear();
-	CRMa3_List.clear();
-	CRMa4_List.clear();
 }
 
 
@@ -30,235 +34,129 @@ CArBrCrVrPsy::~CArBrCrVrPsy()
 
 bool CArBrCrVrPsy::GetNextArBrVrPsy(const SinCyclePriceData& OneDayData, ARBRCRVRPSY& mLastData)
 {
-	TemporaryStorageData.push_front(OneDayData);
-	if (TemporaryStorageData.size() > VRParameter &&
-		TemporaryStorageData.size() > ARBRParameter + 1 &&
-		TemporaryStorageData.size() > CRParameter + 1 &&
-		TemporaryStorageData.size() > PSYParameter )
-	{
-		TemporaryStorageData.pop_back();
-	}
+	CurrentData = OneDayData;
 
 	mLastData.AR = GetAR();
 	mLastData.BR = GetBR();
 	mLastData.VR = GetVR();
+	mLastData.VRMA = VRMA.GetNextMA(mLastData.VR);
 	mLastData.PSY = GetPSY();
-
+	mLastData.LimitUpTimes = GetLimitUpTimes();
+	mLastData.LimitDownTimes = GetLimitDownTimes();
 	mLastData.CR = GetCR();
-	CR_List.push_front(mLastData.CR);
-	if (CR_List.size() > CR_MA1Para &&
-		CR_List.size() > CR_MA2Para &&
-		CR_List.size() > CR_MA3Para &&
-		CR_List.size() > CR_MA4Para)
-		CR_List.pop_back();
 
-	mLastData.CRMa1 = GetCRMA(CR_MA1Para, CRMa1_List);
-	mLastData.CRMa2 = GetCRMA(CR_MA2Para, CRMa2_List);
-	mLastData.CRMa3 = GetCRMA(CR_MA3Para, CRMa3_List);
-	mLastData.CRMa4 = GetCRMA(CR_MA4Para, CRMa4_List);
 
+	mLastData.CRMa1 = RefCRMA1.GetRefData(CRMA1.GetNextMA(mLastData.CR));
+	mLastData.CRMa2 = RefCRMA2.GetRefData(CRMA2.GetNextMA(mLastData.CR));
+	mLastData.CRMa3 = RefCRMA3.GetRefData(CRMA3.GetNextMA(mLastData.CR));
+
+
+	RefData = CurrentData;
 	return true;
 }
 
-StockDataType CArBrCrVrPsy::GetCRMA(unsigned int maPara, list<StockDataType>& crmalist)
-{
-	StockDataType Sum = 0;
-	unsigned int j = 1;
-	list<StockDataType>::iterator currentIte = CR_List.begin();
-	while (currentIte != CR_List.end()){
-		Sum += *currentIte;
-		if (j >= maPara)
-		{
-			break;
-		}
-		currentIte++;
-		j++;
-	}
-	crmalist.push_back(Sum / maPara);
-	if (crmalist.size() > (maPara/2.5f+2))
-		crmalist.pop_front();
-	return crmalist.front();
-}
 
 StockDataType CArBrCrVrPsy::GetAR()
 {
-	if (TemporaryStorageData.size() == 0)
-		return 0.0f;
-
-	StockDataType sum_high_open = 0;
-	StockDataType sum_open_low = 0;
-	unsigned int j = 1;
-	list<SinCyclePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	while (currentIte != TemporaryStorageData.end())
-	{
-		sum_high_open = sum_high_open + (currentIte->_High - currentIte->_Open);
-		sum_open_low = sum_open_low + (currentIte->_Open - currentIte->_Low);
-
-		if ( j >= ARBRParameter)
-		{
-			break;
-		}
-		currentIte++;
-		j++;
-	}
-	if (sum_open_low == 0)
-	{
-		//LOG(ERROR) << "sum_open_low is 0.";
+	AR_HighTo_Open.GetNextMA(CurrentData._High - CurrentData._Open);
+	AR_OpenTo_Low.GetNextMA(CurrentData._Open - CurrentData._Low);
+	if (AR_OpenTo_Low.GetDataMovingSum() == 0)
 		return 0;
-	}
-
-	return sum_high_open / sum_open_low * 100;
+	return (AR_HighTo_Open.GetDataMovingSum() / AR_OpenTo_Low.GetDataMovingSum() * 100);
 }
 
 StockDataType CArBrCrVrPsy::GetBR()
 {
-	if (TemporaryStorageData.size() <= 1)
-		return 0.0f;
-
 	StockDataType sum_high_pcolse = 0;
 	StockDataType sum_pcolse_low = 0;
-
-	unsigned int j = 1;
-	list<SinCyclePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<SinCyclePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
-	lastTimeIte++;
-	while (lastTimeIte != TemporaryStorageData.end())
-	{
-		sum_high_pcolse = sum_high_pcolse + max(0.0f,(currentIte->_High - lastTimeIte->_Close));
-		sum_pcolse_low = sum_pcolse_low + max(0.0f,(lastTimeIte->_Close - currentIte->_Low));
-
-		if (j >= ARBRParameter)
-		{
-			break;
-		}
-		currentIte++;
-		lastTimeIte++;
-		j++;
-	}
-	if (sum_pcolse_low == 0)
-	{
-		//LOG(ERROR) << "sum_pcolse_low is 0.";
+	BR_HighTo_Close.GetNextMA(max(0,CurrentData._High - RefData._Close));
+	BR_CloseTo_Low.GetNextMA(max(0,RefData._Close - CurrentData._Low));
+	if (BR_CloseTo_Low.GetDataMovingSum() == 0)
 		return 0;
-	}
 
-	return sum_high_pcolse / sum_pcolse_low * 100;
+	return (BR_HighTo_Close.GetDataMovingSum() / BR_CloseTo_Low.GetDataMovingSum() * 100);
 }
 
 StockDataType CArBrCrVrPsy::GetVR()
 {
-	if (TemporaryStorageData.size() == 0)
-		return 0.0f;
 
-	StockDataType AVS = 0;
-	StockDataType BVS = 0;
-	StockDataType CVS = 0;
-	unsigned int j = 1;
-	list<SinCyclePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<SinCyclePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
-	lastTimeIte++;
-	while (lastTimeIte != TemporaryStorageData.end())
-	{
-		if (currentIte->_Close > lastTimeIte->_Close)
-			AVS = AVS + currentIte->_Volume;
-		if (currentIte->_Close < lastTimeIte->_Close)
-			BVS = BVS + currentIte->_Volume;
-		if (currentIte->_Close == lastTimeIte->_Close)
-			CVS = CVS + currentIte->_Volume;
-		if (j >= VRParameter)
-		{
-			break;
-		}
-		currentIte++;
-		lastTimeIte++;
-		j++;
-	}
-	if (BVS+CVS == 0)
-	{
-		//LOG(ERROR) << "BV+CV is 0.";
+	if (CurrentData._Close > RefData._Close)
+		VR_AVS.GetNextMA(CurrentData._Volume);
+	else
+		VR_AVS.GetNextMA(0.0f);
+	if (CurrentData._Close <= RefData._Close)
+		VR_BVS.GetNextMA(CurrentData._Volume);
+	else
+		VR_BVS.GetNextMA(0.0f);
+	
+	if (VR_BVS.GetDataMovingSum() == 0)
 		return 0;
-	}
 
-	return 100*(2*AVS+CVS) / (2*BVS+CVS);
+	return (100 * VR_AVS.GetDataMovingSum() / VR_BVS.GetDataMovingSum());
 
 }
 
 StockDataType CArBrCrVrPsy::GetPSY()
 {
-	if (TemporaryStorageData.size() == 0)
-		return 0.0f;
-
-	float PSY = 0;
-	unsigned int j = 1;
-	list<SinCyclePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<SinCyclePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
-	lastTimeIte++;
-	while (lastTimeIte != TemporaryStorageData.end())
-	{
-		if (currentIte->_Close > lastTimeIte->_Close)
-		{
-			PSY++;
-		}
-		if (j >= PSYParameter)
-		{
-			break;
-		}
-		currentIte++;
-		lastTimeIte++;
-		j++;
-	}
-
-	return PSY *100.f / PSYParameter;
+	if (CurrentData._Close > RefData._Close)
+		return PSYMA.GetNextMA(1.0) * 100;
+	else
+		return PSYMA.GetNextMA(0.0) * 100;
 }
 
 StockDataType CArBrCrVrPsy::GetCR()
 {
-	if (TemporaryStorageData.size() <= 1)
-	{
+	StockDataType MidPrice = (RefData._High + RefData._Close + RefData._Low) / 3;
+	CR_HighToMid.GetNextMA(max(0,CurrentData._High - MidPrice));
+	CR_MidToLow.GetNextMA(max(0, MidPrice - CurrentData._Low));
+
+	if (CR_MidToLow.GetDataMovingSum() == 0)
 		return 0.0f;
-	}
-
-	StockDataType PSY = 0;
-	StockDataType YesterdayM = 0;
-	StockDataType P1 = 0;
-	StockDataType P2 = 0;
-
-	unsigned int j = 1;
-	list<SinCyclePriceData>::iterator currentIte = TemporaryStorageData.begin();
-	list<SinCyclePriceData>::iterator lastTimeIte = TemporaryStorageData.begin();
-	lastTimeIte++;
-	while (lastTimeIte != TemporaryStorageData.end())
-	{
-		YesterdayM = 
-			(lastTimeIte->_Close *CR_Close_Weight
-			+ lastTimeIte->_High * CR_High_Weight
-			+ lastTimeIte->_Low * CR_Low_Weight
-			+ lastTimeIte->_Open * CR_Open_Weight)
-			/ (CR_Close_Weight + CR_High_Weight + CR_Low_Weight + CR_Open_Weight);
-		if (currentIte->_High > YesterdayM)
-			P1 = P1 + (currentIte->_High - YesterdayM);
-		if (YesterdayM > currentIte->_Low)
-			P2 = P2 + (YesterdayM - currentIte->_Low);
-		if (j >= CRParameter){
-			break;
-		}
-		currentIte++;
-		lastTimeIte++;
-		j++;
-	}
-	if (P2 == 0)
-		return 0;
-	return P1 / P2 *100;
+	return (100 * CR_HighToMid.GetDataMovingSum() / CR_MidToLow.GetDataMovingSum());
 
 }
 
 void CArBrCrVrPsy::Inition()
 {
+	VRMA.Inition();
+	AR_HighTo_Open.Inition();
+	AR_OpenTo_Low.Inition();
+	BR_HighTo_Close.Inition();
+	BR_CloseTo_Low.Inition();
+	VR_AVS.Inition();
+	VR_BVS.Inition();
+	CR_HighToMid.Inition();
+	CR_MidToLow.Inition();
+	PSYMA.Inition();
+	CRMA1.Inition();
+	CRMA2.Inition();
+	CRMA3.Inition();
+	RefCRMA1.Inition();
+	RefCRMA2.Inition();
+	RefCRMA3.Inition();
 
-	TemporaryStorageData.clear();
-	CRMa1_List.clear();
-	CRMa2_List.clear();
-	CRMa3_List.clear();
-	CRMa4_List.clear();
-	CR_List.clear();
+	RefData.Inition();
+	CurrentData.Inition();
+}
+
+StockDataType CArBrCrVrPsy::GetLimitDownTimes()
+{
+	if (CurrentData._Close/RefData._Close < 0.902)
+		LimitDownTimesMA.GetNextMA(1);
+	else
+		LimitDownTimesMA.GetNextMA(0);
+
+	return LimitDownTimesMA.GetDataMovingSum();
+}
+
+StockDataType CArBrCrVrPsy::GetLimitUpTimes()
+{
+	if (CurrentData._Close / RefData._Close > 1.098)
+		LimitUpTimesMA.GetNextMA(1);
+	else
+		LimitUpTimesMA.GetNextMA(0);
+
+	return LimitUpTimesMA.GetDataMovingSum();
 
 }
+

@@ -13,7 +13,7 @@ class CKDJCal
 {
 	friend class CNumbersToSql;
 public:
-	CKDJCal(StockDataType day1 = 9, StockDataType day2 = 3, StockDataType day3 = 3);
+	CKDJCal(StockDataType day1 = 90, StockDataType day2 = 30, StockDataType day3 = 30);
 	~CKDJCal(void);
 	//////////////////////////////////////////////////////////////////////////
 	//

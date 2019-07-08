@@ -1,7 +1,6 @@
 #pragma once
 #include "Number\NumberBase.h"
-
-
+#include "MovingAverage.h"
 class CDMI// :public CNumberManager
 {
 public:
@@ -31,11 +30,11 @@ public:
 
 	bool Inition();
 private:
-	list<DMTR> HistoryDMTRList;
-	list<StockDataType> HistoryDayADX;
-	list<StockDataType> HistoryADX;
-	DMTR _DMTRSum;
-	StockDataType ADXSum;
+	CMovingAverage DayADXMA;
+	CMovingAverage DMPMA;
+	CMovingAverage DMMMA;
+	CMovingAverage TRMA;
+	CREFMA _ADXRMA;
 	SinCyclePriceData _FrontPriceData;
 
 	unsigned int  M1;

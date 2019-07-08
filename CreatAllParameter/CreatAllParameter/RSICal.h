@@ -11,7 +11,6 @@ public:
 	~CRSICal();
 	void GetNextRSI(const SinCyclePriceData& OneDayData,RSI& _FrontRSI);
 
-	StockDataType GetSMA(StockDataType _FrontMa,StockDataType _currentData,unsigned int _Count,unsigned int _ParaM);
 	void Inition();
 	SinCyclePriceData REFPrice;
 	StockDataType _FrontMax1, _FrontMax2, _FrontMax3;

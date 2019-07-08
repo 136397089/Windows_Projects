@@ -16,7 +16,7 @@ static vector<Column> ProGroupdataHeader;
 static vector<Column> FreqGroupingTableHeader;
 static CRITICAL_SECTION _NUMTOMYSQLCS;
 static string _TemporaryNumberTableName = "TempNumber";
-static map<DataTypeToSave, vector<StockDataType>> _TemporaryIndi;
+static map<DataTypeToSave, vector<StockDataType>> _IndiIndex;
 
 
 CNumbersToSql::CNumbersToSql()
@@ -59,35 +59,39 @@ CNumbersToSql::~CNumbersToSql()
 
 
 void CNumbersToSql::SaveProGroupRate(
+	const string& tableName,
 	const string& codeName,
 	const vector<StockDataType>& returnRate,
 	const vector<string>& GroupType) const
 {
-	if (GroupType.size() != 3)
+	if (GroupType.size() == 0)
 		return;
 	unsigned int columnSize = 1000;
 	if (returnRate.size() > columnSize)
 		return;
-	string _TebleName = "ProGroupRate";
+	string _TebleName = tableName;
 	EnterCriticalSection(&_NUMTOMYSQLCS);
 	if (ProGroupdataHeader.empty())
-		SetProGroupColumnsType(ProGroupdataHeader, columnSize);
+		SetProGroupColumnsType(ProGroupdataHeader, columnSize, GroupType);
 	string strColumnName = "";
 	//如果表不存在则创建新表
-	if (!psqlTool->CheckTableExists(_TebleName))
+	if (!psqlTool->CheckTableExists(tableName))
 	{
-		psqlTool->CreatTable(_TebleName, ProGroupdataHeader);
-		psqlTool->SetColumnIndex(_TebleName, "indexname");
+		psqlTool->CreatTable(tableName, ProGroupdataHeader);
+		psqlTool->SetColumnIndex(tableName, "indexname");
 	}
 	//生成指令
-	string command = "INSERT INTO " + _TebleName + "(" + ProGroupdataHeader[1].Dataname;
+	string command = "INSERT INTO " + tableName + "(" + ProGroupdataHeader[1].Dataname;
 	for (unsigned int i = 2; i < ProGroupdataHeader.size(); i++)
 	{
 		command += "," + ProGroupdataHeader[i].Dataname;
 	}
-	command += ") VALUES (" + codeName + "," + GroupType[0] + "," + GroupType[1] + "," + GroupType[2];
+	string GroupTypeString = "";
+	for (unsigned int groupIndex = 0; groupIndex < GroupType.size(); groupIndex++)
+		GroupTypeString = GroupTypeString + "," + GroupType[groupIndex];
+	command += ") VALUES (" + codeName + GroupTypeString;
 	string valueString = "";
-	GetReturnRateValueString(valueString, returnRate);
+	GetReturnRateValueString(valueString, GroupType.size()+2/**/, returnRate);
 	command = command + valueString + ");";
 	sql_index->RunCommand(command);
 	LeaveCriticalSection(&_NUMTOMYSQLCS);
@@ -120,7 +124,7 @@ void CNumbersToSql::GetNumberColumnsType(vector<Column>& vdataType)
 }
 
 
-void CNumbersToSql::SetProGroupColumnsType(vector<Column>& vdataType, unsigned int typeSize) const
+void CNumbersToSql::SetProGroupColumnsType(vector<Column>& vdataType, unsigned int typeSize, const vector<string>& GroupType) const
 {
 	vdataType.clear();
 	ostringstream  DataOss;
@@ -131,12 +135,14 @@ void CNumbersToSql::SetProGroupColumnsType(vector<Column>& vdataType, unsigned i
 	vdataType.push_back(tempColumn);
 	tempColumn.InitionData("CodeName", _eINT, 0, _eNULL, "");
 	vdataType.push_back(tempColumn);
-	tempColumn.InitionData("NumberType", _eINT, 0, DataAttribute(_eNULL | _eUNSIGNED), "");
-	vdataType.push_back(tempColumn);
-	tempColumn.InitionData("NPType", _eINT, 0, DataAttribute(_eNULL | _eUNSIGNED), "");
-	vdataType.push_back(tempColumn);
-	tempColumn.InitionData("SpecGroupType", _eINT, 0, DataAttribute(_eNULL | _eUNSIGNED), "");
-	vdataType.push_back(tempColumn);
+	ostringstream ossData;
+	for (unsigned int i = 0; i < GroupType.size(); i++)
+	{
+		ossData.str("");
+		ossData << "GroupType" << (unsigned int)i;
+		tempColumn.InitionData(ossData.str(), _eINT, 0, DataAttribute(_eNULL | _eUNSIGNED), "");
+		vdataType.push_back(tempColumn);
+	}
 	for (unsigned int i = 1; i <= typeSize; i++)
 	{
 		DataOss.str("");
@@ -299,17 +305,31 @@ bool CNumbersToSql::RecoveryPriceData(
 
 int CNumbersToSql::CheckStockFundCount(const string& stockcode)
 {
-	string sqlIns = "select count from financedata.fundstockcount_2019_03_31 where code=" + stockcode + ";";
+	string sqlIns = "select count from fundstockcount_2019_03_31 where code='" + stockcode + "';";
+	EnterCriticalSection(&_NUMTOMYSQLCS);
 	if (!sql_index->RunCommand(sqlIns))
+	{
+		LOG(ERROR) << "Get stockfund count error.";
+		LeaveCriticalSection(&_NUMTOMYSQLCS);
 		return 0;
+	}
 	vector<vector<string>> resultTable;
 	sql_index->GetTableResult(resultTable);
 	if (resultTable.size() != 2)
+	{
+		LOG(ERROR) << "stockfund result table count error.";
+		LeaveCriticalSection(&_NUMTOMYSQLCS);
 		return 0;
+	}
 	vector<string> countData = resultTable[1];
 	if (countData.size() != 1)
+	{
+		LOG(ERROR) << "count data error.";
+		LeaveCriticalSection(&_NUMTOMYSQLCS);
 		return 0;
+	}
 	int count = atoi(countData[0].c_str());
+	LeaveCriticalSection(&_NUMTOMYSQLCS);
 	return count;
 }
 
@@ -330,10 +350,10 @@ float CNumbersToSql::ReadPEFromSQL(const string& stockcode)
 	return count;
 }
 
-bool CNumbersToSql::GetReturnRateValueString(string& valueString, const vector<StockDataType>& returnRate) const
+bool CNumbersToSql::GetReturnRateValueString(string& valueString, unsigned int typeColumnSize, const vector<StockDataType>& returnRate) const
 {
 	ostringstream dataOss;
-	for (unsigned int i = 0; i < ProGroupdataHeader.size()-5; i++)
+	for (unsigned int i = 0; i < ProGroupdataHeader.size() - typeColumnSize; i++)
 	{
 		if (i < returnRate.size())
 			dataOss << "," << returnRate[i];
@@ -386,12 +406,14 @@ bool CNumbersToSql::SaveTemporaryIndicatorsData(const DataTypeToSave& numbertype
 bool CNumbersToSql::GetTemporaryNumberData(const DataTypeToSave& _indicatorsType, vector<StockDataType>& _DataReadFromSQL)
 {
 	_DataReadFromSQL.clear();
-	if (_TemporaryIndi.count(_indicatorsType) != 0)
+	if (_IndiIndex.count(_indicatorsType) != 0)
 	{
 		LOG(INFO) << "_TemporaryIndi";
-		_DataReadFromSQL.assign(_TemporaryIndi[_indicatorsType].begin(), _TemporaryIndi[_indicatorsType].end());
+		_DataReadFromSQL.assign(_IndiIndex[_indicatorsType].begin(), _IndiIndex[_indicatorsType].end());
 		return true;
 	}
+	LOG(INFO) << "Can not read data from SQL:" << _indicatorsType.StockCode << " time:" << _indicatorsType._time.GetDateTime() << " Name:" << _indicatorsType.IndicatorsName << " cycle:" << _indicatorsType.cycle;
+	return false;
 	vector<WhereCommand> whereList;
 	WhereCommand command1;
 	command1.IniCommand("CodeName", _eIs, _indicatorsType.StockCode, _eAnd);
@@ -426,7 +448,7 @@ bool CNumbersToSql::GetTemporaryNumberData(const DataTypeToSave& _indicatorsType
 
 bool CNumbersToSql::RefreshTemporaryNumberData(const CDate& _date)
 {
-	_TemporaryIndi.clear();
+	_IndiIndex.clear();
 	vector<WhereCommand> whereList;
 	WhereCommand command1;
 	command1.IniCommand("date", _eIs, "'" + _date.GetDateTime() + "'", _eAnd);
@@ -457,14 +479,14 @@ bool CNumbersToSql::RefreshTemporaryNumberData(const CDate& _date)
 				break;
 			IndicatorData.push_back(atof(ReturnData[i].c_str()));
 		}
-		_TemporaryIndi[datatype] = IndicatorData;
+		_IndiIndex[datatype] = IndicatorData;
 	}
 	LeaveCriticalSection(&_NUMTOMYSQLCS);
 
 	return true;
 }
 
-bool CNumbersToSql::GetCurrentData(map<RealDataIndex, SinCyclePriceData>& realtimeData, vector<RealDataIndex>& _TableType)
+bool CNumbersToSql::GetCurrentData(map<RealDataIndex, SinCyclePriceData>& TodayRealtimeData, vector<RealDataIndex>& _TableType)
 {
 	//获得当前时间
 	SYSTEMTIME st = { 0 };
@@ -511,12 +533,12 @@ bool CNumbersToSql::GetCurrentData(map<RealDataIndex, SinCyclePriceData>& realti
 				priceData._High = atof(allDataFromSql[j][3].c_str());
 				priceData._Low = atof(allDataFromSql[j][4].c_str());
 				priceData._Volume = atof(allDataFromSql[j][5].c_str());
-				if (realtimeData[rDataIndex] == priceData)
+				if (TodayRealtimeData[rDataIndex] == priceData)
 				{
 					dataSameNumberOfTimes++;
 					continue;
 				}
-				realtimeData[rDataIndex] = priceData;
+				TodayRealtimeData[rDataIndex] = priceData;
 				dataSameNumberOfTimes = 0;
 			}
 			allDataFromSql.clear();

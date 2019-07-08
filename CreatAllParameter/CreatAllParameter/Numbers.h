@@ -34,8 +34,7 @@ public:
 	//
 private:
 	void PushBackIndex(const SigDayTechIndex& AllIndex, StockDataTable& datas);
-	CChagRate hPriChaRate;
-	CChagRate hVolChaRate;
+	CGeneraIindicators hGI;
 	CMacdCal hMacd;
 	CDMACal hDMA;
 	CTRIXCal hTRIX;
@@ -52,7 +51,7 @@ private:
 	//½á¹ûÊä³ö
 	SigDayTechIndex currentIndicators;
 	string stockCode;
-
+	BasisCycleType DataCycle;
 };
 
 #endif

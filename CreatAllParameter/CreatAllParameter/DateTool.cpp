@@ -157,8 +157,43 @@ CDate CDate::operator+(int dayNum)
 		}
 	}
 	return tmpDate;
-
 }
+
+CDate CDate::operator+(const CDate& d)
+{
+	CDate tmpDate(*this);//拷贝this指针
+	if (	d._year != 0 || d._month != 0
+		|| d._hour > 23 || d._hour <0 
+		|| tmpDate._minute>59 || tmpDate._minute < 0
+		|| tmpDate._second > 59 || tmpDate._second<0
+		)
+	{
+		return tmpDate;
+	}
+	tmpDate._hour += d._hour;
+	tmpDate._minute += d._minute;
+	tmpDate._second += d._second;
+	int DeltDay = 0;
+	while (tmpDate._second >= 60)
+	{
+		tmpDate._second -= 60;
+		tmpDate._minute++;
+	}
+	while (tmpDate._minute >= 60)
+	{
+		tmpDate._minute -= 60;
+		tmpDate._hour++;
+	}
+	while (tmpDate._hour >= 24)
+	{
+		tmpDate._hour -= 24;
+		DeltDay++;
+	}
+	DeltDay += d._day;
+	tmpDate += DeltDay;
+	return tmpDate;
+}
+
 CDate& CDate::operator+=(int days)// +=,会改变原来的值，进而在原来的值上面继续加指定的天数
 {
 	_day += days;
@@ -401,7 +436,7 @@ bool CDate::SetTime(const string& _time)
 	return true;
 }
 
-bool CDate::IsOnTheSameDay(const CDate& d)
+bool CDate::IsOnTheSameDay(const CDate& d) const
 {
 	return _year == d._year && _month == d._month && _day == d._day;
 }

@@ -32,6 +32,9 @@ enum StockNumberType
 	_eFile_Low_INDEX,
 	_eFile_HighLow_INDEX,
 	_eFile_Volume_INDEX,
+	_ePriceChangeRate,
+	_eVolChangeRate,
+	_eDataEnable,
 	_Debug_Index,
 	//
 	_eMACD,
@@ -76,6 +79,7 @@ enum StockNumberType
 	_eCDP_NH,
 	_eCDP_NL,
 	_eCDP_AL,
+	_eCDP_LOWEST,
 	//
 	_eAR,
 	_eBR,
@@ -85,7 +89,10 @@ enum StockNumberType
 	_eCRMA3,
 	_eCRMA4,
 	_eVR,
+	_eVRMA,
 	_ePSY,
+	_eLimitUpTime,
+	_eLimitDownTime,
 	//
 	_eEMV,
 	_eEMVMA,
@@ -94,6 +101,11 @@ enum StockNumberType
 	_eBOOLUp,
 	_eBOOLSTD,
 	_eBOOLDown,
+	_eBOOLCDP,
+	_eBOOLCDPAUP,
+	_eBOOLCDPNUP,
+	_eBOOLCDPNDown,
+	_eBOOLCDPADown,
 	//
 	_eDMI_DIP,
 	_eDMI_DIN,
@@ -111,56 +123,6 @@ enum StockNumberType
 #define File_High_INDEX "high"
 #define File_Low_INDEX "low"
 #define File_Volume_INDEX "volume"
-//MACD
-// #define MACD_MA12  "MACD_Ma12"
-// #define MACD_MA26  "MACD_Ma26"
-// #define MACD_DIFF "MACD_Diff"
-// #define MACD_DEA "MACD_DEA"
-// #define MACD_BAR "MACD_BAR"
-// //KDJ
-// #define KDJ_K "KDJ_K"
-// #define KDJ_D "KDJ_D"
-// #define KDJ_J "KDJ_J"
-// //DMA
-// #define  DMA_D "DMA_D"
-// #define  DMA_A "DMA_A"
-// //TRIX
-// #define TRIX_TRIX "TRIX_IX"
-// #define TRIX_MA "TRIX_MA"
-// #define TRIX_VTR "TRIX_tr"
-// #define TRIX_VTB "TRIX_tb"
-// #define TRIX_VTA "TRIX_ta"
-// //MA
-// #define MA_MA5 "MA_M5"
-// #define MA_MA10 "MA_M10"
-// #define MA_MA20 "MA_M20"
-// #define MA_MA40 "MA_M40"
-// #define MA_UPRATE "MA_UPRATE"
-// //ChangeRate
-// #define PRICECHANGE "pChange"
-// #define VOLHANGE "volChange"
-// //ASI
-// #define ASI_I "ASI_I"
-// #define ASI_T "ASI_T"
-// //CDP
-// #define CDP_CDP "CDP_CDP"
-// #define CDP_AH "CDP_AH"
-// #define CDP_NH "CDP_NH"
-// #define CDP_NL "CDP_NL"
-// #define CDP_AL "CDP_AL"
-// //AR_BR_VR_PSY
-// #define ABVP_AR "ABVP_AR"
-// #define ABVP_BR "ABVP_BR"
-// #define ABVP_CR "ABVP_CR"
-// #define ABVP_CRMA1 "ABVP_CRMA1"
-// #define ABVP_CRMA2 "ABVP_CRMA2"
-// #define ABVP_CRMA3 "ABVP_CRMA3"
-// #define ABVP_CRMA4 "ABVP_CRMA4"
-// #define ABVP_VR "ABVP_VR"
-// #define ABVP_PSY "ABVP_PSY"
-// #define EMV_EMV "EMV_EMV"
-// #define EMV_EMVMA "EMV_EMVMA"
-
 
 std::string GetNumberNameByIndexType(StockNumberType _indextype);
 map<StockNumberType, string> GetAllNumberype();
@@ -386,18 +348,27 @@ struct DayHLCOV
 
 struct ARBRCRVRPSY
 {
-	ARBRCRVRPSY() :AR(0), BR(0), VR(0), CR(0), CRMa1(0), CRMa2(0), CRMa3(0), CRMa4(0), PSY(0){}
+	ARBRCRVRPSY() :AR(0), BR(0), VR(0), CR(0), CRMa1(0), CRMa2(0), CRMa3(0), CRMa4(0), PSY(0), VRMA(0){}
 	StockDataType AR;
 	StockDataType BR;
 	StockDataType VR;
+	StockDataType VRMA;
 	StockDataType CR;
 	StockDataType CRMa1;
 	StockDataType CRMa2;
 	StockDataType CRMa3;
 	StockDataType CRMa4;
 	StockDataType PSY;
+	StockDataType LimitUpTimes;
+	StockDataType LimitDownTimes;
 };
-
+struct GeneralIndicators
+{
+	GeneralIndicators(): PriceChangeRate(0),VolChangerate(0),Dataable(0){}
+	StockDataType PriceChangeRate;
+	StockDataType VolChangerate;
+	StockDataType Dataable;
+};
 struct DMA_DATA
 {
 	DMA_DATA() :_DDD(0), _AMA(0){}
@@ -420,6 +391,7 @@ struct CDP
 	StockDataType _NH_NormalHigh;
 	StockDataType _AL_Low;
 	StockDataType _NL_NormalLow;
+	StockDataType _Lowest;
 
 };
 
@@ -437,7 +409,6 @@ struct DMTR
 	StockDataType DMP;
 	StockDataType DMM;
 	StockDataType TR;
-// 	StockDataType ADX;
 
 };
 
@@ -445,9 +416,7 @@ struct EMV
 {
 	StockDataType emv;
 	StockDataType emvma;
-	StockDataType TemporaryVariable;
-	StockDataType highToLowMa;
-	EMV() :emv(0), emvma(0), TemporaryVariable(1), highToLowMa(1){}
+	EMV() :emv(0), emvma(0){}
 };
 
 struct MA
@@ -476,6 +445,11 @@ struct BOOLIndex
 	StockDataType PriceSTD;
 	StockDataType Uper;
 	StockDataType Downer;
+	StockDataType cdp;
+	StockDataType cdpNUp;
+	StockDataType cdpNDown;
+	StockDataType cdpAUp;
+	StockDataType cdpADown;
 };
 struct RSI
 {
@@ -540,96 +514,66 @@ struct DayPrice
 
 
 
-enum BasisType
+enum HigherOrderType :long long
 {
 	_eDPUnknow = 0,
 
-	_eBasisDayDIFF = (1 << 0),
-	_eBasisDeDayDIFF = (1 << 1),
-	_eBasisDayCR = (1 << 2),//
+	DayDIFF = (1 << 0),
+	DeDayDIFF = (1 << 1),
+	DeWeekDEA = (1 << 2),//
 	_eBasisDayKDJ_D = (1 << 3),
-	_eBasisDeDayKDJ_K = (1 << 4),
-	_eBasisDeDayDEA = (1 << 5),
+	DeDayKDJ_K = (1 << 4),
+	DeDayDEA = (1 << 5),
 
 	_eBasisShDayDIFF = (1 << 6),
-	_eBasisShDeDayDIFF = (1 << 7),
-	_eBasisShDeDayDEA = (1 << 8),
-	_eBasisShDeDayKDJ_K = (1 << 9),
-	_eBasisDeDayKDJ_D = (1 << 10),
-	_eBasisDayCTO = (1 << 11),
+	ShDeDayDIFF = (1 << 7),
+	ShDeDayDEA = (1 << 8),
+	ShDeDayKDJ_K = (1 << 9),
+	DeDayKDJ_D = (1 << 10),
+	DayAble = (1 << 11),
 
-	_eBasisDayKDJ_K = (1 << 12),
-	_eBasisShDeDayBAR = (1 << 13),
-	_eBasisShDeDayKDJ_D = (1 << 14),
-	_eBasisDeDayBar = (1 << 15),
-	_eBasisShDeKDJ_D = (1 << 16),
-	_eBasisDeMa = (1 << 17),
+	DayKDJ_K = (1 << 12),
+	ShDeDayBAR = (1 << 13),
+	ShDeDayKDJ_D = (1 << 14),
+	ShDeDayMAEMV = (1 << 15),
+	ShDeKDJ_D = (1 << 16),
+	ShDeWeekDEA = (1 << 17),
 
-	_eBasisDeDayCRMA = (1 << 18),
-	_eBasisDayEMV = (1 << 19),
+	DeDayCRMA = (1 << 18),
+	DayKDJ_J = (1 << 19),
 
-	_eBasisDeDEA = (1 << 20),
-	_eBasisDeMonthDEA = (1 << 21),
-	_eBasisDeMonthDIFF = (1 << 22),
-	_eBasisDeDayMA4 = (1 << 23),
+	DeMonthDEA = (1 << 20),
+	DeMonthDIFF = (1 << 21),
 
-	_eBasisDeDayCR = (1 << 24),
-	_eBasisDayRSI1 = (1 << 25),
-	_eBasisDeDayRSI1 = (1 << 26),
-	_eBasisFroDayRSI1 = (1 << 27),
-	_eBasisDayVR = (1 << 28),
-	_eBasisDeDayVR = (1 << 29)
-
+	WeekKDJ_K = (1 << 22),
+	DeWeekKDJ_K = (1 << 23),
+	WeekKDJ_D = (1 << 24),
+	DeWeekKDJ_D = (1 << 25),
+	MonthKDJ_K = (1 << 26),
+	DeMonthKDJ_K = (1 << 27),
+	MonthKDJ_D = (1 << 28),
+	DeMonthKDJ_D = (1 << 29),
+	DeWeekVRMA = (1 << 30),
+	DayVRMA = (1 << 31)
 };
 
-enum PosNegType
-{
-	_eNegative = 0,
 
-	_eBasisDayDIFF_P = (1 << 0),
-	_eBasisDeDayDIFF_P = (1 << 1),
-	_eBasisDayCR_P = (1 << 2),
-	// 	_eBasisDeDeDayDIFF_P = (1 << 2),//
-	_eBasisDayKDJ_D_P = (1 << 3),
-	_eBasisDeDayKDJ_K_P = (1 << 4),
-	_eBasisDeDayDEA_P = (1 << 5),
-
-	_eBasisShDayDIFF_P = (1 << 6),
-	_eBasisShDeDayDIFF_P = (1 << 7),
-	_eBasisShDeDayDEA_P = (1 << 8),
-	_eBasisShDeDayKDJ_K_P = (1 << 9),
-	_eBasisDeDayKDJ_D_P = (1 << 10),
-	_eBasisDayCTO_P = (1 << 11),
-
-	_eBasisDayKDJ_K_P = (1 << 12),
-	_eBasisShDeDayBAR_P = (1 << 13),
-	_eBasisShDeDayKDJ_D_P = (1 << 14),
-	_eBasisDeDayBar_P = (1 << 15),
-	_eBasisShDeKDJ_D_P = (1 << 16),
-	_eBasisupRate_P = (1 << 17),
-
-	_eBasisDeDayCRMA_P = (1 << 18),
-	_eBasisDayEMV_P = (1 << 19),
-
-	_eBasisDeDEA_P = (1 << 20),
-	_eBasisDeMonthDEA_P = (1 << 21),
-	_eBasisDeMonthDIFF_P = (1 << 22),
-	_eBasisDeDayMA4_P = (1 << 23),
-
-	_eBasisDeDayCR_P = (1 << 24),
-	_eBasisDayRSI1_P = (1 << 25),
-	_eBasisDeDayRSI1_P = (1 << 26),
-	_eBasisFroDayRSI1_P = (1 << 27),
-	_eBasisDeDayVR_P = (1 << 28)
-};
-
-enum pSpecGroupType
+enum ENotesType
 {
 	_eCTUnknow = 0,
-	_eHighType = (1 << 0),
-	_eLowType = (1 << 1),
-	_eCloseType = (1 << 2),
-	_eOpenType = (1 << 3),
+	_Mid2MidType = 1<<0,
+	_BClose = 1 << 1,
+	_BHigh = 1 << 2,
+	_BLow = 1 << 3,
+	_BFClose = 1 << 4,
+	_BFHigh = 1 << 5,
+	_BFLow = 1 << 6,
+	_EHigh = 1 << 7,
+	_EClose = 1 << 8,
+	_ELow = 1 << 9,
+	_EFClose = 1 << 10,
+	_EFHigh = 1 << 11,
+	_EFLow = 1 << 12,
 	_eGroup1,
 	_eGroup2,
 	_eGroup3,
@@ -646,11 +590,7 @@ enum BasisCycleType
 	eMinute120 = 5,
 	eDay = 6,
 	eWeek = 7,
-	eMonth = 8,
-	eSH = 1 << 8,
-	eSZ = 2 << 8,
-	eCY = 3 << 8,
-	eResource
+	eMonth = 8
 };
 
 

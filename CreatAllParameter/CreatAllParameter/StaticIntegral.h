@@ -10,7 +10,7 @@ public:
 	~CStaticIntegral();
 	void Inition();
 
-	bool GetsStaticIng(
+	bool GetsStaticIntegral(
 		const VStockData& _data ,
 		const StatePointsList& _staticPoint,
 		StatePointsList& _staticIng);

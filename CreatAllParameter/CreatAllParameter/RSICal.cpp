@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "RSICal.h"
 #include <cmath>
+#include "MovingAverage.h"
 
 CRSICal::CRSICal():
 N1(6),
@@ -20,12 +21,6 @@ CRSICal::~CRSICal()
 {
 }
 
-StockDataType CRSICal::GetSMA(StockDataType _FrontMa, StockDataType _currentData, unsigned int _Count, unsigned int _ParaM)
-{
-	if (_ParaM > _Count)
-		return 0.0;
-	return (_ParaM*_currentData + (_Count - _ParaM)*_FrontMa) / _Count;
-}
 
 void CRSICal::GetNextRSI(const SinCyclePriceData& OneDayData, RSI& _FrontRSI)
 {

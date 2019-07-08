@@ -55,7 +55,7 @@ public:
 	//
 	float ReadPEFromSQL(const string& stockcode);
 	//保存分组之后的收益率
-	void SaveProGroupRate(const string& codeName, const vector<StockDataType>& returnRate,const vector<string>& GroupType) const;
+	void SaveProGroupRate(const string& tableName ,const string& codeName, const vector<StockDataType>& returnRate,const vector<string>& GroupType) const;
 	//
 	bool SaveTemporaryIndicatorsData(const DataTypeToSave& numbertype, const vector<StockDataType>& _DataToSave);
 	//
@@ -70,11 +70,11 @@ private:
 	//
 	bool GetNumberValueString(string& valueString, const vector<StockDataType>& _vNumberDataToSave, const DataTypeToSave& numbertype);
 	//
-	void SetProGroupColumnsType(vector<Column>& vdataType, unsigned int typeSize) const ;
+	void SetProGroupColumnsType(vector<Column>& vdataType, unsigned int typeSize, const vector<string>& GroupType) const;
 	//
 	void SetFreqGroupingColumnsType(int beginGroupIndex, int endGroupIndex);
 	//
-	bool GetReturnRateValueString(string& valueString, const vector<StockDataType>& returnRate) const ;
+	bool GetReturnRateValueString(string& valueString,unsigned int typeColumnSize, const vector<StockDataType>& returnRate) const ;
 	//
 	unsigned int GetBeginIndexToSave(vector<CDate>& _vDate,const string& tebleName);
 	//

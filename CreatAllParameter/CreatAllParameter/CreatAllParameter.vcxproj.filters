@@ -28,9 +28,6 @@
     <Filter Include="Statistics">
       <UniqueIdentifier>{4f5623b8-c8bf-4c85-892a-5a7d48807ceb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Status">
-      <UniqueIdentifier>{2c7b3149-1857-4905-b2be-bf2cdfaa242d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Number\SingleNumber">
       <UniqueIdentifier>{79edb531-38c0-42de-8265-feb26fc95c6b}</UniqueIdentifier>
     </Filter>
@@ -45,6 +42,12 @@
     </Filter>
     <Filter Include="Mysql">
       <UniqueIdentifier>{4631924e-c097-40ed-96c3-348f8d427d70}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="StateMachine\Status">
+      <UniqueIdentifier>{2c7b3149-1857-4905-b2be-bf2cdfaa242d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Number\Forecast">
+      <UniqueIdentifier>{fc15f2bf-d242-4790-bae3-9e0c6f420a64}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -91,22 +94,19 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="StaticRecord.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="TrandRecord.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="TrendAnal.h">
-      <Filter>Status</Filter>
-    </ClInclude>
-    <ClInclude Include="Matrix.h">
-      <Filter>Matrix</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="StatisticeInter.h">
       <Filter>Statistics</Filter>
     </ClInclude>
     <ClInclude Include="CLocalRecordTool.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="Number\NumberInter.h">
       <Filter>Number</Filter>
@@ -154,19 +154,19 @@
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="StaticIntegral.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="DataSizeSwich.h">
       <Filter>Number</Filter>
     </ClInclude>
     <ClInclude Include="StateB.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="StateInter.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="Number\StateRecords.h">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClInclude>
     <ClInclude Include="StatisticeTool.h">
       <Filter>Statistics</Filter>
@@ -228,6 +228,12 @@
     <ClInclude Include="ComTime.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="MovingAverage.h">
+      <Filter>Number\SingleNumber</Filter>
+    </ClInclude>
+    <ClInclude Include="RateStatistics.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -252,22 +258,19 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StaticRecord.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="TrandRecord.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="TrendAnal.cpp">
-      <Filter>Status</Filter>
-    </ClCompile>
-    <ClCompile Include="Matrix.cpp">
-      <Filter>Matrix</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="StatisticeInter.cpp">
       <Filter>Statistics</Filter>
     </ClCompile>
     <ClCompile Include="CLocalRecordTool.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="Number\_DMA.cpp">
       <Filter>Number\SingleNumber</Filter>
@@ -318,19 +321,19 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="StaticIntegral.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="DataSizeSwich.cpp">
       <Filter>Number</Filter>
     </ClCompile>
     <ClCompile Include="StateB.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="StateInter.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="Number\StateRecords.cpp">
-      <Filter>Status</Filter>
+      <Filter>StateMachine\Status</Filter>
     </ClCompile>
     <ClCompile Include="StatisticeTool.cpp">
       <Filter>Statistics</Filter>
@@ -394,6 +397,12 @@
     </ClCompile>
     <ClCompile Include="ComTime.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="MovingAverage.cpp">
+      <Filter>Number\SingleNumber</Filter>
+    </ClCompile>
+    <ClCompile Include="RateStatistics.cpp">
+      <Filter>Statistics</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

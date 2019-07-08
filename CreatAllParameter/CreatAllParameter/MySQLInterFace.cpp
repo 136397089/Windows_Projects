@@ -783,7 +783,6 @@ bool MySQLInterFace::RunCommand(const string& command)
 		LOG(ERROR) <<"Run Commend Error: "<< command << endl;
 		return false;
 	}
-	LOG(INFO) << "Run Commend Success: " << command << endl;
 	return true;
 }
 

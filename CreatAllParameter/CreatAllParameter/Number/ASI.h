@@ -1,5 +1,6 @@
 #pragma once
 #include "NumberBase.h"
+#include "../MovingAverage.h"
 class CAsiCal// :public CNumberManager
 {
 public:
@@ -14,10 +15,12 @@ public:
 	bool Inition();
 private:
 	SinCyclePriceData _YesterdayData;
-	list<StockDataType> _vSIList;
+	CMovingAverage MovingSI;
+	//list<StockDataType> _vSIList;
 	list<StockDataType> _vASIList;
+	CMovingAverage MovingASIT;
 
-	unsigned int _M1;
-	unsigned int _M2;
+	//unsigned int _M1;
+// 	unsigned int _M2;
 };
 

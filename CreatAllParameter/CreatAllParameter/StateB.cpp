@@ -254,8 +254,6 @@ StatePoint StateTable::VersatileCloselyPoint(unsigned int index, const StatePoin
 
 void SigDayTechIndex::Inition()
 {
-	_Pchangerate = 0.0f;
-	_Volchagrate = 0.0f;
 	DMA_DATA temDMA;
 	Macd tempmacd;
 	TRIX temptrix;
@@ -268,6 +266,9 @@ void SigDayTechIndex::Inition()
 	EMV tempemv;
 	BOOLIndex tempbool;
 	RSI temprsi;
+	GeneralIndicators tempGI;
+
+	_GI = tempGI;
 	_DMAData = temDMA;
 	_MacdData = tempmacd;
 	_TrixData = temptrix;

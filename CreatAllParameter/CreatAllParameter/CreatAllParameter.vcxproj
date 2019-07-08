@@ -198,7 +198,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\eigen3</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\Eigen</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -241,8 +241,10 @@
     <ClInclude Include="Group.h" />
     <ClInclude Include="MeanVariance.h" />
     <ClInclude Include="Morphological.h" />
+    <ClInclude Include="MovingAverage.h" />
     <ClInclude Include="MySQLInterFace.h" />
     <ClInclude Include="NumbersToSql.h" />
+    <ClInclude Include="RateStatistics.h" />
     <ClInclude Include="RSICal.h" />
     <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
@@ -263,7 +265,6 @@
     <ClInclude Include="Log.h" />
     <ClInclude Include="Ma.h" />
     <ClInclude Include="MainLoop.h" />
-    <ClInclude Include="Matrix.h" />
     <ClInclude Include="Numbers.h" />
     <ClInclude Include="Number\ASI.h" />
     <ClInclude Include="Number\commonfunction.h" />
@@ -302,8 +303,10 @@
     <ClCompile Include="Group.cpp" />
     <ClCompile Include="MeanVariance.cpp" />
     <ClCompile Include="Morphological.cpp" />
+    <ClCompile Include="MovingAverage.cpp" />
     <ClCompile Include="MySQLInterFace.cpp" />
     <ClCompile Include="NumbersToSql.cpp" />
+    <ClCompile Include="RateStatistics.cpp" />
     <ClCompile Include="RSICal.cpp" />
     <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
@@ -319,7 +322,6 @@
     <ClCompile Include="Log.cpp" />
     <ClCompile Include="Ma.cpp" />
     <ClCompile Include="MainLoop.cpp" />
-    <ClCompile Include="Matrix.cpp" />
     <ClCompile Include="Numbers.cpp" />
     <ClCompile Include="Number\ASI.cpp" />
     <ClCompile Include="Number\CommonFunction.cpp" />

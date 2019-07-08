@@ -1,7 +1,6 @@
 #include "stdafx.h"
 // #include <windows.h>
 #include "MainLoop.h"
-#include "Matrix.h"
 #include "glog/logging.h"
 #include "StockAccountNum.h"
 #include "PythonInterface.h"
@@ -38,7 +37,7 @@ bool CMainLoop::CreateThreadToAnaHistory_Daily(string strFolderPath)
 	}
 	//读取上证指数的数据
 	CIndicatorsInterface ShanghaiStockExchangeIndex;
-	ShanghaiStockExchangeIndex.GetDataAndIndicators_History("sh.csv", "D:\\StockFile\\whole");
+	ShanghaiStockExchangeIndex.GetDataAndIndicators_SH("1In_sh.csv", "D:\\StockFile\\whole");
 	string outPath = "D:\\StockFile\\OutPutFile\\";
 	if (!threadParamCSIsInition)
 	{
@@ -49,14 +48,14 @@ bool CMainLoop::CreateThreadToAnaHistory_Daily(string strFolderPath)
 	//遍历所有文件
 	do
 	{
-		while (threadNumber > 0) Sleep(10);//限制总的线程数量
-		threadNumber++;
+		while (threadNumber > 2) Sleep(10);//限制总的线程数量
 		EnterCriticalSection(&threadParamCS);
 		threadParam = new ThreadParam;
 		threadParam->fileName = p.cFileName;
 		threadParam->Filepath = strFolderPath;
 		threadParam->shnumber = &ShanghaiStockExchangeIndex;
 		LeaveCriticalSection(&threadParamCS);
+		threadNumber++;
 		threadParam->hThread = CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE)TheadFunc,threadParam, NULL, NULL);
 		Sleep(10);
 	} while (FindNextFile(h, &p));
@@ -110,14 +109,15 @@ bool CMainLoop::SaveDataToFile(const string& strFullFilePath, StockDataTable & a
 	return true;
 }
 
-bool CMainLoop::ReadDailyFileToAnaHistory(	const string& fileName,
+bool CMainLoop::ReadFileToAnaHistory_Daily(	const string& fileName,
 	const string& strFolderPath,	CIndicatorsInterface& shnumber	)const
 {
-	CStateInter daystate;
-	CStateInter weekstate;
-	CStateInter monthstate;
+	CStateAnalysisInter daystate;
+	CStateAnalysisInter weekstate;
+	CStateAnalysisInter monthstate;
 	CIndicatorsInterface numberTool;
 	numberTool.GetDataAndIndicators_History(fileName, strFolderPath);
+	numberTool.MappingToSH(shnumber.GetResourceValue());
 // 	SaveDataToFile(outPath + p.cFileName, numberTool.GetDayValue());
 //	daystate.Inter(numberTool.GetDayValue(), fileName);
 // 	weekstate.Inter(numberTool.GetWeekValue(), p.cFileName);
@@ -125,9 +125,9 @@ bool CMainLoop::ReadDailyFileToAnaHistory(	const string& fileName,
 // 	statisticeInter.StatisticeASIData(numberTool.GetDayValue(), daystate, fileName);
 	CStatisticeInter statisticeInter;
 	statisticeInter.Inition();
-	statisticeInter.ReturnStatistics(numberTool,shnumber.GetResourceValue());
-// 	SaveDataToFile("D:\\StockFile\\OutPutFile\\" + fileName, numberTool.GetDayValue());
-//	allFreqlist[p.cFileName] = (statisticeInter._FreqList);
+// 	statisticeInter.CDPInter(numberTool, shnumber);
+	statisticeInter.ReturnRateStatistics(numberTool, shnumber);
+	// 	SaveDataToFile("D:\\StockFile\\OutPutFile\\" + fileName, numberTool.GetDayValue());
 	LOG(INFO) << fileName << " Finished";
 //	continue;
 	return true;
@@ -138,14 +138,15 @@ bool CMainLoop::ReadDailyFileToAnaHistory(	const string& fileName,
 
 bool CMainLoop::ReadFileToAnaHistory_Minute(const string& fileName, const string& strFolderPath, CIndicatorsInterface& shnumber) const
 {
-	CStateInter daystate;
-	CStateInter weekstate;
-	CStateInter monthstate;
+	CStateAnalysisInter daystate;
+	CStateAnalysisInter weekstate;
+	CStateAnalysisInter monthstate;
 	CIndicatorsInterface IndicatorsTool;
-	IndicatorsTool.GetDataAndIndicatorMintue_History(fileName, strFolderPath);
+	if (!IndicatorsTool.GetDataAndIndicatorMintue_History(fileName, strFolderPath))
+		return false;
 	CRealTimeAna DataAnaTool;
 	DataAnaTool.Inition();
-	DataAnaTool.AnalysisRealTimeData(IndicatorsTool.GetResourceValue());
+	DataAnaTool.AnalysisRealTimeData(IndicatorsTool.GetRealtimeValue());
 	LOG(INFO) << fileName << " Finished";
 	return true;
 }
@@ -153,7 +154,7 @@ bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath)
 {
 	CRealTimeAna analTool;
 	CIndicatorsInterface IndicatorsTool;
-	WIN32_FIND_DATA p;
+	WIN32_FIND_DATA fileData;
 	string mFileType = strFolderPath + "//*.csv";;
 	HANDLE h = nullptr;
 	string stockCode;
@@ -163,8 +164,6 @@ bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath)
 	CDate lastDate = IndicatorsTool.GetLastDate();
 	lastDate._hour = 15;
 	sqlTool.RefreshTemporaryNumberData(lastDate);
-	SYSTEMTIME starttime = { 0 };
-	SYSTEMTIME endtime = { 0 };
 	CComTime timeer;
 	IndicatorsTool.RefreshAllStockDate_RealTime();
 	while (true)
@@ -178,9 +177,9 @@ bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath)
 		if (loopTime < 0) exit(1);
 		loopTime--;
 		IndicatorsTool.RefreshAllStockDate_RealTime();
-		h = FindFirstFile(mFileType.c_str(), &p);
+		h = FindFirstFile(mFileType.c_str(), &fileData);
 		do{
-			stockCode = p.cFileName;
+			stockCode = fileData.cFileName;
 			if (stockCode.find(".") > 0 && stockCode.find(".") < 100)
 				stockCode = stockCode.substr(0, stockCode.find("."));
 			timeer.TimeBegin();
@@ -189,7 +188,7 @@ bool CMainLoop::AnaCurrentRealTimeData(const string& strFolderPath)
 			timeer.TimeBegin();
 			analTool.AnalysisRealTimeData(IndicatorsTool.GetRealtimeValue());
 			timeer.TimeEnd("AnalysisRealTimeData:");
-		} while (FindNextFile(h, &p));
+		} while (FindNextFile(h, &fileData));
 	}
 	exit(1);
 	return true;
@@ -212,7 +211,7 @@ bool CMainLoop::CreateThreadToAnaHistory_Mintue(string strFolderPath)
 	}
 	//1.2读取上证指数的数据
 	CIndicatorsInterface ShanghaiStockExchangeIndex;
-	ShanghaiStockExchangeIndex.GetDataAndIndicators_SH("sh.csv", "D:\\StockFile\\whole");
+	ShanghaiStockExchangeIndex.GetDataAndIndicators_SH("1In_sh.csv", "D:\\StockFile\\whole");
 	string outPath = "D:\\StockFile\\OutPutFile\\";
 	//1.3遍历所有文件
 	if (!threadParamCSIsInition)
@@ -222,7 +221,7 @@ bool CMainLoop::CreateThreadToAnaHistory_Mintue(string strFolderPath)
 	}	ThreadParam* threadParam;
 	do
 	{
-		while (threadNumber > 0) Sleep(10);//限制总的线程数量
+		while (threadNumber > 4) Sleep(10);//限制总的线程数量
 		threadNumber++;
 		EnterCriticalSection(&threadParamCS);
 		threadParam = new ThreadParam;
@@ -263,7 +262,7 @@ int WINAPI TheadFunc(LPVOID lpParam)
 	CMainLoop _mainloop;
 	LeaveCriticalSection(&threadParamCS);
 
-	_mainloop.ReadDailyFileToAnaHistory(_filename,_filepath,*_shnumber);
+	_mainloop.ReadFileToAnaHistory_Daily(_filename,_filepath,*_shnumber);
 	threadNumber --;
 	delete threadParam;
 	return dwRtn;

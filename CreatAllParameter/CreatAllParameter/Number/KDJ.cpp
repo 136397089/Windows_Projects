@@ -34,27 +34,15 @@ bool CKDJCal::GetNextKDJ(const SinCyclePriceData& OneDayData, KDJ& mFrontKDJ)
 		return true;
 	}
 	//找到最大值和最小值
-	float HighestN = *max_element(_lHigh.begin(), _lHigh.end());
-	float LowestN = *min_element(_lLow.begin(), _lLow.end());
+	StockDataType HighestN = *max_element(_lHigh.begin(), _lHigh.end());
+	StockDataType LowestN = *min_element(_lLow.begin(), _lLow.end());
 	KDJ m_kdj = mFrontKDJ;
 	//计算KDJ
-	float RSV = (OneDayData._Close - LowestN) / (HighestN - LowestN) * 100;
+	StockDataType RealPrice = OneDayData._Low;// (OneDayData._Close + OneDayData._Open + OneDayData._High + OneDayData._Low) / 4;
+	StockDataType RSV = (RealPrice - LowestN) / (HighestN - LowestN) * 100;
 	mFrontKDJ.K_OF_KDJ = RSV / _M1 + (_M1 - 1) * m_kdj.K_OF_KDJ / _M1;
 	mFrontKDJ.D_OF_KDJ = mFrontKDJ.K_OF_KDJ / _M2 + (_M2 - 1) * m_kdj.D_OF_KDJ / _M2;
 	mFrontKDJ.J_OF_KDJ = 3 * mFrontKDJ.K_OF_KDJ - 2 * mFrontKDJ.D_OF_KDJ;
-	//KDJ参数有门限在0到100之间
-// 	if (mFrontKDJ.K_OF_KDJ > 100)
-// 		mFrontKDJ.K_OF_KDJ = 100;
-// 	if (mFrontKDJ.D_OF_KDJ > 100)
-// 		mFrontKDJ.D_OF_KDJ = 100;
-// 	if (mFrontKDJ.J_OF_KDJ > 100)
-// 		mFrontKDJ.J_OF_KDJ = 100;
-// 	if (mFrontKDJ.K_OF_KDJ < 0)
-// 		mFrontKDJ.K_OF_KDJ = 0;
-// 	if (mFrontKDJ.D_OF_KDJ < 0)
-// 		mFrontKDJ.D_OF_KDJ = 0;
-// 	if (mFrontKDJ.J_OF_KDJ < 0)
-// 		mFrontKDJ.J_OF_KDJ = 0;
 
 
 	return true;
@@ -97,19 +85,6 @@ bool CKDJCal::StaticGetNextKDJ(
 	mFrontKDJ.K_OF_KDJ = RSV / _M1 + (_M1 - 1) * m_kdj.K_OF_KDJ / _M1;
 	mFrontKDJ.D_OF_KDJ = mFrontKDJ.K_OF_KDJ / _M2 + (_M2 - 1) * m_kdj.D_OF_KDJ / _M2;
 	mFrontKDJ.J_OF_KDJ = 3 * mFrontKDJ.K_OF_KDJ - 2 * mFrontKDJ.D_OF_KDJ;
-	//KDJ参数有门限在0到100之间
-// 	if (mFrontKDJ.K_OF_KDJ > 100)
-// 		mFrontKDJ.K_OF_KDJ = 100;
-// 	if (mFrontKDJ.D_OF_KDJ > 100)
-// 		mFrontKDJ.D_OF_KDJ = 100;
-// 	if (mFrontKDJ.J_OF_KDJ > 100)
-// 		mFrontKDJ.J_OF_KDJ = 100;
-// 	if (mFrontKDJ.K_OF_KDJ < 0)
-// 		mFrontKDJ.K_OF_KDJ = 0;
-// 	if (mFrontKDJ.D_OF_KDJ < 0)
-// 		mFrontKDJ.D_OF_KDJ = 0;
-// 	if (mFrontKDJ.J_OF_KDJ < 0)
-// 		mFrontKDJ.J_OF_KDJ = 0;
 	return true;
 }
 

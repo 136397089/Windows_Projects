@@ -2,7 +2,7 @@
 #include <queue>
 #include <list>
 #include "Number/NumberBase.h"
-
+#include "MovingAverage.h"
 
 
 class CArBrCrVrPsy
@@ -12,36 +12,43 @@ public:
 	~CArBrCrVrPsy();
 	bool GetNextArBrVrPsy(const SinCyclePriceData& OneDayData, ARBRCRVRPSY& mLastData);
 
-
 	void Inition();
-
 
 	StockDataType GetAR();
 	StockDataType GetBR();
 	StockDataType GetCR();
-	StockDataType GetCRMA(unsigned int maPara,list<StockDataType>& crmalist);
 	StockDataType GetVR();
 	StockDataType GetPSY();
+	StockDataType GetLimitDownTimes();
+	StockDataType GetLimitUpTimes();
 
-	list<SinCyclePriceData> TemporaryStorageData;
-	unsigned int VRParameter;
-	unsigned int ARBRParameter;
-	unsigned int CRParameter;
-	unsigned int PSYParameter;
-
-	unsigned int CR_Close_Weight;
-	unsigned int CR_Open_Weight;
-	unsigned int CR_High_Weight;
-	unsigned int CR_Low_Weight;
 	unsigned int CR_MA1Para;
 	unsigned int CR_MA2Para;
 	unsigned int CR_MA3Para;
 	unsigned int CR_MA4Para;
-	list<StockDataType> CR_List;
-	list<StockDataType> CRMa1_List;
-	list<StockDataType> CRMa2_List;
-	list<StockDataType> CRMa3_List;
-	list<StockDataType> CRMa4_List;
+
+	CMovingAverage VRMA;
+	CMovingAverage AR_HighTo_Open;
+	CMovingAverage AR_OpenTo_Low;
+	CMovingAverage BR_HighTo_Close;
+	CMovingAverage BR_CloseTo_Low;
+	CMovingAverage VR_AVS;
+	CMovingAverage VR_BVS;
+	CMovingAverage CR_HighToMid;
+	CMovingAverage CR_MidToLow;
+	CMovingAverage PSYMA;
+	CMovingAverage LimitDownTimesMA;
+	CMovingAverage LimitUpTimesMA;
+	CMovingAverage CRMA1;
+	CMovingAverage CRMA2;
+	CMovingAverage CRMA3;
+	CRefData RefCRMA1;
+	CRefData RefCRMA2;
+	CRefData RefCRMA3;
+
+
+	SinCyclePriceData CurrentData;
+	SinCyclePriceData RefData;
 
 };
 

@@ -2,36 +2,57 @@
 #include "PriChag.h"
 
 
-CChagRate::CChagRate():
-frontValue(0)
+CGeneraIindicators::CGeneraIindicators():
+EnableCount(0),
+IniEnableCount(100)
 {
 }
 
 
-CChagRate::~CChagRate()
+CGeneraIindicators::~CGeneraIindicators()
 {
 }
 
-bool CChagRate::GetNextChangeRate(const StockDataType& OneDayData, float& changeRate)
+bool CGeneraIindicators::GetNextGI(const SinCyclePriceData& TodayDayData, GeneralIndicators& changeRate)
 {
-	//当frontValue等于0的时候认为当前输入的是第一个数据
-	if (frontValue <= 0.001)
+	if (FrontData._Open <=0.001)
 	{
-		changeRate = 0.0f;
-		frontValue = OneDayData;
+		changeRate.VolChangerate = 1.0f;
+		changeRate.PriceChangeRate = 1.0f;
+		changeRate.Dataable = 0;
+		EnableCount = IniEnableCount;
+		FrontData = TodayDayData;
 		return true;
 	}
-	//frontValue不等于0的时候计算价格变化
+
+	if (FrontData._Volume >= 0.01)
+		changeRate.VolChangerate = TodayDayData._Volume / FrontData._Volume - 1;
 	else
+		changeRate.VolChangerate = 0.0f;
+
+	if (FrontData._Volume >= 0.01)
+		changeRate.PriceChangeRate = TodayDayData._Close / FrontData._Close - 1;
+	else
+		changeRate.PriceChangeRate = 0.0f;
+
+	if (changeRate.PriceChangeRate < -0.101 || changeRate.PriceChangeRate > 0.101)
+		EnableCount = IniEnableCount;
+	if (EnableCount > 0)
 	{
-		changeRate = (OneDayData - frontValue) / frontValue * 100;
-		frontValue = OneDayData;
-		return true;
+		changeRate.Dataable = 0;
+		EnableCount--;
 	}
+	else
+		changeRate.Dataable = 1;
+
+	FrontData = TodayDayData;
+	return true;
 }
 
-bool CChagRate::Inition()
+bool CGeneraIindicators::Inition()
 {
-	frontValue = 0;
+	SinCyclePriceData emptyData;
+	FrontData = emptyData;
+	EnableCount = 0;
 	return true;
 }

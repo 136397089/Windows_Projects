@@ -5,8 +5,6 @@
 CStaticIntegral::CStaticIntegral()
 {
 }
-
-
 CStaticIntegral::~CStaticIntegral()
 {
 }
@@ -17,7 +15,7 @@ void CStaticIntegral::Inition()
 }
 
 
-bool CStaticIntegral::GetsStaticIng(
+bool CStaticIntegral::GetsStaticIntegral(
 	const VStockData& _inputdata,
 	const StatePointsList& _staticPoint,
 	StatePointsList& _staticIng)

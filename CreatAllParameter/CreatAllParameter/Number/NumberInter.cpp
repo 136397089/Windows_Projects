@@ -2,12 +2,13 @@
 #include "NumberInter.h"
 #include "../TrendAnal.h"
 #include <time.h>  
-#include "..\glog\logging.h"
+#include "../glog/logging.h"
 #include "../PriChag.h"
 #include "../Numbers.h"
 #include "../DataSizeSwich.h"
 #include "../ComTime.h"
 
+//所有的开盘日期，从上证指数读出的日期
 static vector<CDate> DateOfTransaction;
 CIndicatorsInterface::CIndicatorsInterface()
 {
@@ -56,15 +57,17 @@ bool CIndicatorsInterface::GetDataAndIndicators_History(const string& filename, 
 {
 	LOG(INFO) << "************************************" << filename << "************************************" << endl;
 	//从文件中读出需要的数据
-	LOG(ERROR) << "Read Data begin." ;
+	LOG(INFO) << filename << " Read Data begin.";
+	cout  << filename << " Read Data begin."<<endl;
 	StringBlock AllString;
 	RaedDateFromFile(FilePath + "\\" + filename, AllString);
 	if (IsLongitudinal)
-		ProcessingTransverseData(AllString);
+		ProcessingTransverseData(AllString,mResourceValue);
 	else
 		cout << "Error:Can not do.";
 
-	LOG(ERROR) << "Read Data finish.";
+	LOG(INFO) << " Read Data finish.";
+	cout << " Read Data finish." << endl;
 	if (!mResourceValue.ChackDataSize())
 	{
 		LOG(ERROR) << "NumberAll error: size of data read from file is not equal.";
@@ -72,7 +75,18 @@ bool CIndicatorsInterface::GetDataAndIndicators_History(const string& filename, 
 	}
 	mResourceValue.SetDate();
 	if (filename.find(".") > 0 && filename.find(".") < 100)
+	{
 		mResourceValue._strStockCode = filename.substr(0, filename.find("."));
+		mWeekValue._strStockCode = mResourceValue._strStockCode;
+		mMonthValue._strStockCode = mResourceValue._strStockCode;
+		mRealTimeValue._strStockCode = mResourceValue._strStockCode;
+
+	}
+	if (mResourceValue._strStockCode.size() != 6)
+	{
+		LOG(ERROR) << "Error file: " << filename;
+	}
+
 	//处理日数据,计算日指标
 		CalResourceIndicators();
 	//处理周数据，计算指标
@@ -86,15 +100,17 @@ bool CIndicatorsInterface::GetDataAndIndicators_SH(const string& filename, const
 {
 	LOG(INFO) << "************************************" << filename << "************************************" << endl;
 	//从文件中读出需要的数据
-	LOG(ERROR) << "Read Data begin.";
+	LOG(ERROR) << "SH Read Data begin.";
+	cout << "SH Read Data begin.";
 	StringBlock AllString;
 	RaedDateFromFile(FilePath + "\\" + filename, AllString);
 	if (IsLongitudinal)
-		ProcessingTransverseData(AllString);
+		ProcessingTransverseData(AllString,mResourceValue);
 	else
 		cout << "Error:Can not do.";
 
-	LOG(ERROR) << "Read Data finish.";
+	LOG(INFO) << "SH Read Data finish.";
+	cout << "SH Read Data finish.";
 	if (!mResourceValue.ChackDataSize())
 	{
 		LOG(ERROR) << "NumberAll error: size of data read from file is not equal.";
@@ -118,7 +134,7 @@ bool CIndicatorsInterface::GetDataAndIndicators_SH(const string& filename, const
 //
 //
 ////////////////////////////////////////////////////////////////////////
-void CIndicatorsInterface::ProcessingTransverseData(const StringBlock& AllString)
+void CIndicatorsInterface::ProcessingTransverseData(const StringBlock& AllString, StockDataTable& mTargetValue)
 {
 	VStockData* plist = nullptr;
 	for (StringBlock::const_iterator iteB = AllString.begin(); iteB != AllString.end(); iteB++)
@@ -127,20 +143,20 @@ void CIndicatorsInterface::ProcessingTransverseData(const StringBlock& AllString
 			continue;
 		plist = nullptr;
 		if (*(iteB->begin()) == File_Open_INDEX)
-			plist = &mResourceValue._vOpen;
+			plist = &mTargetValue._vOpen;
 		if (*(iteB->begin()) == File_Close_INDEX)
-			plist = &mResourceValue._vClose;
+			plist = &mTargetValue._vClose;
 		if (*(iteB->begin()) == File_High_INDEX)
-			plist = &mResourceValue._vHigh;
+			plist = &mTargetValue._vHigh;
 		if (*(iteB->begin()) == File_Low_INDEX)
-			plist = &mResourceValue._vLow;
+			plist = &mTargetValue._vLow;
 		if (*(iteB->begin()) == File_Volume_INDEX)
-			plist = &mResourceValue._vVolume;
+			plist = &mTargetValue._vVolume;
 
 		if (*(iteB->begin()) == "date")//开头是空字符串的为日期行
 		{
 			for (StringList::const_iterator iteL = (++iteB->begin()); iteL != iteB->end(); iteL++)
-				mResourceValue._vTimeDay.push_back(*iteL);
+				mTargetValue._vTimeDay.push_back(*iteL);
 			continue;
 		}
 
@@ -150,6 +166,7 @@ void CIndicatorsInterface::ProcessingTransverseData(const StringBlock& AllString
 				plist->push_back((float)atof(iteL->c_str()));
 		}
 	}
+	mTargetValue.SetDate();
 }
 ////////////////////////////////////////////////////////////////////////
 //
@@ -189,7 +206,6 @@ bool CIndicatorsInterface::ResizeData(CDate beginData)
 	for (i = 0; i < mResourceValue._vDate.size(); i++)
 		if (mResourceValue._vDate[i] >= beginData)
 			break;
-
 	mResourceValue = mResourceValue.NewDataByIndex(i, mResourceValue._vDate.size());
 	return true;
 }
@@ -202,8 +218,8 @@ bool CIndicatorsInterface::CalResourceIndicators()
 	CIndicatorsCalculator IndicatorsCal;
 	CDataSizeSwich datasizetool;
 	LOG(INFO) << "mDayValue Data begin.";
-	IndicatorsCal.GetAllNumbers(mResourceValue);
 	ResizeData(BeginDate);
+	IndicatorsCal.GetAllNumbers(mResourceValue);
 	IndicatorsCal.SaveTempIndicators(mResourceValue._strStockCode, eDay, mResourceValue._vDate.back());
 	LOG(INFO) << "mDayValue Data finish.";
 	return true;
@@ -250,24 +266,27 @@ bool CIndicatorsInterface::GetDataAndIndicatorMintue_History(const string& filen
 {
 	LOG(INFO) << "************************************" << filename << "************************************" << endl;
 	//从文件中读出需要的数据
-	LOG(INFO) << "Read Data begin.";
+	LOG(INFO) << filename << " Read Data begin.";
+	cout << filename << " Read Data begin." << endl;
 	StringBlock AllString;
 	RaedDateFromFile(FilePath + "\\" + filename, AllString);
 	if (IsLongitudinal)
-		ProcessingTransverseData(AllString);
+		ProcessingTransverseData(AllString,mRealTimeValue);
 	else
 		cout << "Error:Can not do.";
 
-	LOG(INFO) << "Read Data finish.";
-	if (!mResourceValue.ChackDataSize())
+	LOG(INFO) << filename << " Read Data finish.";
+	cout << filename << " Read Data finish." << endl;
+	if (!mRealTimeValue.ChackDataSize())
 	{
 		LOG(ERROR) << "NumberAll error: size of data read from file is not equal.";
 		return false;
 	}
 	if (filename.find(".") > 0 && filename.find(".") < 100)
-		mResourceValue._strStockCode = filename.substr(0, filename.find("."));
+		mRealTimeValue._strStockCode = filename.substr(0, filename.find("."));
 	//处理30分钟数据，计算指标
-	Cal30MinuteIndicators();
+	if (!Cal30MinuteIndicators())
+		return false;
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////
@@ -279,10 +298,15 @@ bool CIndicatorsInterface::Cal30MinuteIndicators()
 	CIndicatorsCalculator Indicatorscal;
 	CDataSizeSwich datasizetool;
 	LOG(INFO) << "mDayValue Data begin.";
-	Indicatorscal.GetAllNumbers(mResourceValue);
-	ResizeData(BeginDate);
+	//ResizeData(BeginDate);
+	if (mRealTimeValue._vDate.size() == 0)
+	{
+		LOG(ERROR) << "mRealTimeValue size error.";
+		return false;
+	}
+	Indicatorscal.GetAllNumbers(mRealTimeValue);
 	//保存指标当前的临时变量
-	Indicatorscal.SaveTempIndicators(mResourceValue._strStockCode, eMinute30, mResourceValue._vDate.back());
+	Indicatorscal.SaveTempIndicators(mRealTimeValue._strStockCode, eMinute30, mRealTimeValue._vDate.back());
 	LOG(INFO) << "mDayValue Data finish.";
 	return true;
 }
@@ -300,7 +324,7 @@ void CIndicatorsInterface::RefreshAllStockDate_RealTime()
 	return;
 }
 //
-bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, map<RealDataIndex, SinCyclePriceData>& returnData)
+bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, BasisCycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData)
 {
 	returnData.clear();
 	RealDataIndex tempIndex;
@@ -308,11 +332,17 @@ bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, m
 	{
 		tempIndex = NoUpdatesTableType[i];
 		tempIndex.SetStockCode(stockData);
-		if (CurrentData.find(tempIndex) != CurrentData.end())
+		if (CurrentData.find(tempIndex) != CurrentData.end() && dataCycle == tempIndex._cycletype)
 			returnData[tempIndex] = CurrentData[tempIndex];
 		else
 		{
 			LOG(INFO) << "Can not get data." << tempIndex._stockCode<<" " << tempIndex._date.GetDateTime();
+		}
+		tempIndex._date = tempIndex._date + GetCycleTime(dataCycle);;
+		if (CurrentData.find(tempIndex) != CurrentData.end() && dataCycle == tempIndex._cycletype)
+		{
+			LOG(INFO) << "Found next time data.";
+			returnData[tempIndex] = CurrentData[tempIndex];
 		}
 	}
 	LOG(INFO) << "returnData size." << returnData.size();
@@ -326,13 +356,13 @@ bool CIndicatorsInterface::GetIndicators_Realtime(const string& _stockName, Basi
 	map<RealDataIndex, SinCyclePriceData> returnData;
 	mRealTimeValue.clear();
 	mRealTimeValue._strStockCode = _stockName;
-	GetStockPriceData_RealTime(_stockName, returnData);//读取当前最新数据
-	if (returnData.size() <= 2)
+	GetStockPriceData_RealTime(_stockName, dataCycle, returnData);//读取当前最新数据
+	if (returnData.size() <= 1)
 	{
 		LOG(INFO) << "returnData size is too small. " << _stockName;
 		return false;
 	}
-
+	 
 	for (map<RealDataIndex, SinCyclePriceData>::iterator ite = returnData.begin(); ite != returnData.end(); ite++)
 	{
 		mRealTimeValue._vOpen.push_back(ite->second._Open);
@@ -371,6 +401,56 @@ StockDataTable& CIndicatorsInterface::GetRealtimeValue()
 CDate CIndicatorsInterface::GetLastDate()
 {
 	return DateOfTransaction.back();
+}
+
+CDate CIndicatorsInterface::GetCycleTime(BasisCycleType dataCycle)
+{
+	CDate retDate;
+	if (eMinute5 == dataCycle)
+		retDate._minute = 5;
+	else if (eMinute15 == dataCycle)
+		retDate._minute = 15;
+	else if (eMinute30 == dataCycle)
+		retDate._minute = 30;
+	else if (eMinute60 == dataCycle)
+		retDate._hour = 1;
+	else if (eMinute120 == dataCycle)
+		retDate._hour = 2;
+	else if (eDay == dataCycle)
+		retDate._day = 1;
+	else if (eWeek == dataCycle)
+		retDate._day = 7;
+	else if (eMonth == dataCycle)
+		retDate._month = 1;
+
+
+	return retDate;
+}
+
+bool CIndicatorsInterface::MappingToSH(const StockDataTable& shdata)
+{
+	if (mResourceValue._vCumulativeChangerate.size() == 0)
+	{
+		LOG(ERROR) << mResourceValue._strStockCode << " mResourceValue._vCumulativeChangerate is empty.";
+		return false;
+	}
+	mResourceValue._vMapToMarket.clear();
+	mResourceValue.GetIndexMap(shdata._vDate,IndexMap);
+	StockDataType shBase = shdata._vCumulativeChangerate[IndexMap[0]];
+	StockDataType selfBase = mResourceValue._vCumulativeChangerate.front();
+	StockDataType shChangeRate = 0;
+	StockDataType selfChangeRate = 0;
+	for (unsigned int i = 0; i != mResourceValue._vTimeDay.size(); i++)
+	{
+		selfChangeRate = mResourceValue._vCumulativeChangerate[i];
+		shChangeRate = shdata._vCumulativeChangerate[IndexMap[i]];
+		mResourceValue._vMapToMarket.push_back((selfChangeRate / shChangeRate / selfBase * shBase));
+	} 
+// 	if (mResourceValue._vMapToMarket.back() < 1.0)
+// 	{
+// 		LOG(INFO) << mResourceValue._strStockCode << " bottom income stock.";
+// 	}
+	return true;
 }
 
 

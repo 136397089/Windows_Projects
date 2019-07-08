@@ -13,8 +13,8 @@ public:
 		const StockDataTable& daynumber,
 		const StockDataTable& weeknumber,
 		const StockDataTable& mounthnumber,
-		CStateInter& daystate,
-		CStateInter& weekstate,
-		CStateInter& monthstate);
+		CStateAnalysisInter& daystate,
+		CStateAnalysisInter& weekstate,
+		CStateAnalysisInter& monthstate);
 };
 

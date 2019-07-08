@@ -44,7 +44,7 @@ public:
 
 	bool SetTime(const string& _time);
 
-	bool IsOnTheSameDay(const CDate& d);
+	bool IsOnTheSameDay(const CDate& d) const;
 	CDate GetFrontWeekDay(int day, int week);//获得前几个星期的周几日期
 
 	int GetWeekDay();//获得当日的星期数
@@ -60,6 +60,7 @@ public:
 	int GetDayByYearAndMonth(int year, int month);//判断返回的月份的天数
 	//日期加上天数，并不会改变原来的日期值
 	CDate operator+(int dayNum);
+	CDate operator+(const CDate& d);
 	CDate& operator+=(int days);// +=,会改变原来的值，进而在原来的值上面继续加指定的天数
 	CDate& operator++(); //前置++
 	CDate operator++(int);//后置++ 

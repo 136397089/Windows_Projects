@@ -22,8 +22,13 @@
 //所有的指标－－单日分析时的入参
 struct SigDayTechIndex
 {
-	StockDataType _Pchangerate;
-	StockDataType _Volchagrate;
+	StockDataType _Open;
+	StockDataType _Close;
+	StockDataType _High;
+	StockDataType _Low;
+
+	StockDataType _CumulativeChangeRate;
+	GeneralIndicators _GI;
 	DMA_DATA _DMAData;
 	Macd _MacdData;
 	TRIX _TrixData;

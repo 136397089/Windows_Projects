@@ -55,6 +55,9 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 	bool GetDataAndIndicators_History(const string& filename, const string& FilePath);
 
+	//
+	bool MappingToSH(const StockDataTable& shdata);
+
 	bool GetDataAndIndicators_SH(const string& filename, const string& FilePath);
 
 	//////////////////////////////////////////////////////////////////////////
@@ -77,7 +80,7 @@ public:
 	CDate GetLastDate();
 private:
 	//返回实时的价格数据中目前股票的数据
-	bool GetStockPriceData_RealTime(const string& stockData,map<RealDataIndex, SinCyclePriceData>& returnData);
+	bool GetStockPriceData_RealTime(const string& stockData, BasisCycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData);
 	//计算指标
 	bool Cal30MinuteIndicators();
 	//计算指标
@@ -93,12 +96,13 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	//将字符串数据翻译成可用于计算的数据
 	//////////////////////////////////////////////////////////////////////////
-	void ProcessingTransverseData(const StringBlock& AllString);
+	void ProcessingTransverseData(const StringBlock& AllString, StockDataTable& mTargetValue);
 	//////////////////////////////////////////////////////////////////////////
 	//
 	//////////////////////////////////////////////////////////////////////////
 	bool ResizeData(CDate beginData);
-
+	//获得周期对应的时间
+	CDate GetCycleTime(BasisCycleType dataCycle);
 	StockDataTable mResourceValue;
 	StockDataTable mWeekValue;
 	StockDataTable mMonthValue;
@@ -107,7 +111,7 @@ private:
 	StockDataTable mRealTimeValue;
 	map<RealDataIndex, SinCyclePriceData> CurrentData;
 	vector<RealDataIndex> NoUpdatesTableType;
-
+	map<unsigned int, unsigned int> IndexMap;
 };
 
 

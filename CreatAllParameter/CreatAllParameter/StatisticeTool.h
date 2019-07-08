@@ -67,6 +67,7 @@ inline StockDataType GetLogarithmicReturnRate_H(DayPrice oneDayPrice);
 inline StockDataType GetLogarithmicReturnRate_L(DayPrice oneDayPrice);
 inline StockDataType GetLogarithmicReturnRate_C(DayPrice oneDayPrice);
 inline StockDataType GetLogarithmicReturnRate_O(DayPrice oneDayPrice);
+inline StockDataType GetRandData(int _databegin, int _dataend);
 StockDataType GetReturnRate_H(DayPrice oneDayPrice){
 	StockDataType frontRealPrice = oneDayPrice._frontClose;//(oneDayPrice._frontclose + oneDayPrice._fronthigh + oneDayPrice._frontlow) / 3;
 	StockDataType ReturnRate = (oneDayPrice._highData - frontRealPrice) / frontRealPrice * 100;
