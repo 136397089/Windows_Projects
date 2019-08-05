@@ -324,7 +324,7 @@ void CIndicatorsInterface::RefreshAllStockDate_RealTime()
 	return;
 }
 //
-bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, BasisCycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData)
+bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, CycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData)
 {
 	returnData.clear();
 	RealDataIndex tempIndex;
@@ -350,7 +350,7 @@ bool CIndicatorsInterface::GetStockPriceData_RealTime(const string& stockData, B
 	return true;
 }
 
-bool CIndicatorsInterface::GetIndicators_Realtime(const string& _stockName, BasisCycleType dataCycle)
+bool CIndicatorsInterface::GetIndicators_Realtime(const string& _stockName, CycleType dataCycle)
 {
 	CComTime Timeer;
 	map<RealDataIndex, SinCyclePriceData> returnData;
@@ -403,7 +403,7 @@ CDate CIndicatorsInterface::GetLastDate()
 	return DateOfTransaction.back();
 }
 
-CDate CIndicatorsInterface::GetCycleTime(BasisCycleType dataCycle)
+CDate CIndicatorsInterface::GetCycleTime(CycleType dataCycle)
 {
 	CDate retDate;
 	if (eMinute5 == dataCycle)

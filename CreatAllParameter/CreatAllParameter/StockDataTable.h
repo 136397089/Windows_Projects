@@ -31,7 +31,7 @@ struct StockDataTable
 	//通过日期查找前一时刻的Index
 	unsigned int GetCloselyFrontTimeIndexByDate(CDate date)const;
 	//读取的股票成交信息
-	BasisCycleType DataCycle;
+	CycleType DataCycle;
 	string _strStockCode;
 	vector<string> _vTimeDay;
 	vector<CDate> _vDate;

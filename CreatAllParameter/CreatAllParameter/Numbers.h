@@ -28,14 +28,15 @@ public:
 	//
 	void Inition();
 	//
-	bool SaveTempIndicators(string& _stockName, BasisCycleType cycle, CDate _date);
+	bool SaveTempIndicators(string& _stockName, CycleType cycle, CDate _date);
 	//
-	bool GetTempIndicators(StockDataTable& mValue,const string& _stockName, BasisCycleType cycle, const CDate& _date);
+	bool GetTempIndicators(StockDataTable& mValue,const string& _stockName, CycleType cycle, const CDate& _date);
 	//
 private:
 	void PushBackIndex(const SigDayTechIndex& AllIndex, StockDataTable& datas);
 	CGeneraIindicators hGI;
 	CMacdCal hMacd;
+	CKDJCal hMACDKDJ;
 	CDMACal hDMA;
 	CTRIXCal hTRIX;
 	CKDJCal hKDJ;
@@ -51,7 +52,7 @@ private:
 	//½á¹ûÊä³ö
 	SigDayTechIndex currentIndicators;
 	string stockCode;
-	BasisCycleType DataCycle;
+	CycleType DataCycle;
 };
 
 #endif

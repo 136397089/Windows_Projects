@@ -66,7 +66,7 @@ void CNumbersToSql::SaveProGroupRate(
 {
 	if (GroupType.size() == 0)
 		return;
-	unsigned int columnSize = 1000;
+	unsigned int columnSize = 888;
 	if (returnRate.size() > columnSize)
 		return;
 	string _TebleName = tableName;
@@ -93,7 +93,8 @@ void CNumbersToSql::SaveProGroupRate(
 	string valueString = "";
 	GetReturnRateValueString(valueString, GroupType.size()+2/**/, returnRate);
 	command = command + valueString + ");";
-	sql_index->RunCommand(command);
+	if (sql_index->RunCommand(command))
+		cout << "Save ProGroup rate success." << endl;
 	LeaveCriticalSection(&_NUMTOMYSQLCS);
 }
 
@@ -140,7 +141,7 @@ void CNumbersToSql::SetProGroupColumnsType(vector<Column>& vdataType, unsigned i
 	{
 		ossData.str("");
 		ossData << "GroupType" << (unsigned int)i;
-		tempColumn.InitionData(ossData.str(), _eINT, 0, DataAttribute(_eNULL | _eUNSIGNED), "");
+		tempColumn.InitionData(ossData.str(), _eBIGINT, 0, DataAttribute(_eNULL), "");
 		vdataType.push_back(tempColumn);
 	}
 	for (unsigned int i = 1; i <= typeSize; i++)
@@ -470,7 +471,7 @@ bool CNumbersToSql::RefreshTemporaryNumberData(const CDate& _date)
 		IndicatorData.clear();
 		vector<string>& ReturnData = _datas[j];
 		datatype.StockCode = ReturnData[1];
-		datatype.cycle = (BasisCycleType)atoi(ReturnData[2].c_str());
+		datatype.cycle = (CycleType)atoi(ReturnData[2].c_str());
 		datatype._time.SetDay(ReturnData[3]);
 		datatype.IndicatorsName = ReturnData[4];
 		for (unsigned int i = 5; i < ReturnData.size(); i++)
@@ -547,7 +548,7 @@ bool CNumbersToSql::GetCurrentData(map<RealDataIndex, SinCyclePriceData>& TodayR
 	return true;
 }
 
-bool CNumbersToSql::CheckRealtimeTableName(const string& tableName,CDate& tebleDate, BasisCycleType& tableCycleType)
+bool CNumbersToSql::CheckRealtimeTableName(const string& tableName,CDate& tebleDate, CycleType& tableCycleType)
 {
 	if (tableName.find("cycletype") != 0)
 	{
@@ -589,7 +590,7 @@ bool CNumbersToSql::CheckRealtimeTableName(const string& tableName,CDate& tebleD
 }
 
 
-void DataTypeToSave::Inition(const string& StockName, BasisCycleType _cycle, const CDate& strtime, const string& Number)
+void DataTypeToSave::Inition(const string& StockName, CycleType _cycle, const CDate& strtime, const string& Number)
 {
 	StockCode = StockName;
 	cycle = _cycle;

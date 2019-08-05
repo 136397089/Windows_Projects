@@ -48,6 +48,9 @@ enum StockNumberType
 	_eMACD_DIFF,
 	_eMACD_DEA,
 	_eMACD_BAR,
+	_eMACD_K,
+	_eMACD_D,
+	_eMACD_J,
 	//KDJ
 	_eKDJ_K,
 	_eKDJ_D,
@@ -484,19 +487,16 @@ struct KDJCombin
 	CDate	CurrentDate;
 };
 
-
-
-
 struct realTimeDataToAna
 {
 	KDJCombin CloselyKDJs;
 	MACDCombin CloselyMACDs;
 };
 
-
-
 struct DayPrice
 {
+	DayPrice() :_closeData(0), _highData(0), _lowData(0),_openData(0),
+		_frontClose(0), _frontHigh(0), _frontLow(0), _frontOpen(0) {}
 	StockDataType _closeData;
 	StockDataType _highData;
 	StockDataType _lowData;
@@ -511,50 +511,46 @@ struct DayPrice
 
 };
 
-
-
-
-enum HigherOrderType :long long
+enum HigherOrderType : unsigned int
 {
 	_eDPUnknow = 0,
 
-	DayDIFF = (1 << 0),
-	DeDayDIFF = (1 << 1),
-	DeWeekDEA = (1 << 2),//
-	_eBasisDayKDJ_D = (1 << 3),
-	DeDayKDJ_K = (1 << 4),
-	DeDayDEA = (1 << 5),
+	DIP = (1 << 0),
+	DIN = (1 << 1),
+	DeDIN = (1 << 2),//
+	DeDIPN = (1 << 3),
+	ADX = (1 << 4),
+	DeADX = (1 << 5),
 
-	_eBasisShDayDIFF = (1 << 6),
-	ShDeDayDIFF = (1 << 7),
-	ShDeDayDEA = (1 << 8),
-	ShDeDayKDJ_K = (1 << 9),
-	DeDayKDJ_D = (1 << 10),
-	DayAble = (1 << 11),
+	BAR = (1 << 6),
+	DeBAR = (1 << 7),
+	Dif = (1 << 8),
+	DeDif = (1 << 9),
+	DEA = (1 << 10),
+	DeDEA = (1 << 11),
 
-	DayKDJ_K = (1 << 12),
-	ShDeDayBAR = (1 << 13),
-	ShDeDayKDJ_D = (1 << 14),
-	ShDeDayMAEMV = (1 << 15),
-	ShDeKDJ_D = (1 << 16),
-	ShDeWeekDEA = (1 << 17),
+	KDJ_K = (1 << 12),
+	KDJ_D = (1 << 13),
+	DeKDJ_K = (1 << 14),
+	DeKDJ_D = (1 << 15),
+	DeKDJ_J = (1 << 16),
 
-	DeDayCRMA = (1 << 18),
-	DayKDJ_J = (1 << 19),
 
-	DeMonthDEA = (1 << 20),
-	DeMonthDIFF = (1 << 21),
+	HOVR = (1 << 17),
+	HOVRMA = (1 << 18),
+	DeVR = (1 << 19),
+	HOCR = (1 << 20),
+	DeCR = (1 << 21),
+	DeCRMA = (1 << 22),
 
-	WeekKDJ_K = (1 << 22),
-	DeWeekKDJ_K = (1 << 23),
+
+	Able = (1 << 23),
 	WeekKDJ_D = (1 << 24),
 	DeWeekKDJ_D = (1 << 25),
 	MonthKDJ_K = (1 << 26),
 	DeMonthKDJ_K = (1 << 27),
 	MonthKDJ_D = (1 << 28),
-	DeMonthKDJ_D = (1 << 29),
-	DeWeekVRMA = (1 << 30),
-	DayVRMA = (1 << 31)
+	DeMonthKDJ_D = (1 << 29)
 };
 
 
@@ -574,6 +570,8 @@ enum ENotesType
 	_EFClose = 1 << 10,
 	_EFHigh = 1 << 11,
 	_EFLow = 1 << 12,
+	_Max = 1<<13,
+	_Min = 1<<14,
 	_eGroup1,
 	_eGroup2,
 	_eGroup3,
@@ -581,7 +579,7 @@ enum ENotesType
 	_eMixed = 0xeFFFFFFF
 };
 
-enum BasisCycleType
+enum CycleType
 {
 	eMinute5 = 1,
 	eMinute15 = 2,
@@ -590,7 +588,11 @@ enum BasisCycleType
 	eMinute120 = 5,
 	eDay = 6,
 	eWeek = 7,
-	eMonth = 8
+	eMonth = 8,
+	eMarketDay = 9,
+	eMarketWeek = 10,
+	eMarketMonth = 11,
+	eUnkCycle
 };
 
 

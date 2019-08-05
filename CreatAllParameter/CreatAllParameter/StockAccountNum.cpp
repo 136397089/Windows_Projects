@@ -206,9 +206,10 @@ unsigned int CSimpleAccount::GetCount()
 
 void CSimpleAccount::GetIncomeRateList(vector<StockDataType>& rateList)
 {
+	StockDataType ServiceChargeRate = 0.0015;
 	for (list<TransactionData>::iterator ite = _AllBusiness.begin(); ite != _AllBusiness.end(); ite++)
 	{
-		rateList.push_back(ite->SellPrice / ite->BuyPrice - 0.001);
+		rateList.push_back(ite->SellPrice / ite->BuyPrice - ServiceChargeRate);
 		if (ite->SellPrice / ite->BuyPrice < 0.8)
 		{
 			LOG(INFO) 

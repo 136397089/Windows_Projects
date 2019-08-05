@@ -1,13 +1,13 @@
 #include "StdAfx.h"
 #include <algorithm>
 #include "Macd.h"
-#include "../MovingAverage.h"
 
 
 CMacdCal::CMacdCal(StockDataType shortsmoothness, StockDataType longsmoothness,StockDataType m)
 :shortSmoothness(shortsmoothness),
 longSmoothness(longsmoothness),
-M(m)
+M(m),
+PriceMa(100)
 {
 }
 
@@ -20,12 +20,13 @@ bool CMacdCal::GetNextMacd(
 	const SinCyclePriceData& SigDayData,
 	Macd& mMacd)
 {
-	Macd FrontMacd;
-	FrontMacd = mMacd;
-	mMacd.m12 = GetEMA(FrontMacd.m12, SigDayData._Close, shortSmoothness);
-	mMacd.m26 = GetEMA(FrontMacd.m26, SigDayData._Close, longSmoothness);
-	mMacd.dif = mMacd.m12 - mMacd.m26;
-	mMacd.dea = GetEMA(FrontMacd.dea, mMacd.dif, M);
+	Macd TempMacd;
+	TempMacd = mMacd;
+ 	StockDataType MaData = PriceMa.GetNextMA(SigDayData._Close);
+	mMacd.m12 = GetEMA(TempMacd.m12, SigDayData._Close, shortSmoothness);
+	mMacd.m26 = GetEMA(TempMacd.m26, SigDayData._Close, longSmoothness);
+	mMacd.dif = (mMacd.m12 - mMacd.m26) / MaData * 100;
+	mMacd.dea = GetEMA(TempMacd.dea, mMacd.dif, M);
 	mMacd.bar = 2.0f * (mMacd.dif - mMacd.dea);
 	return true;
 }
@@ -61,5 +62,6 @@ bool CMacdCal::RecoveryDataFromVecter(const vector<StockDataType>& CurrentData, 
 
 void CMacdCal::Inition()
 {
+	PriceMa.Inition();
 	return;
 }

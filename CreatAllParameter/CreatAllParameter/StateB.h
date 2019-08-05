@@ -31,6 +31,7 @@ struct SigDayTechIndex
 	GeneralIndicators _GI;
 	DMA_DATA _DMAData;
 	Macd _MacdData;
+	KDJ _Macd_Kdj;
 	TRIX _TrixData;
 	KDJ _Kdj;
 	ASI _Asi;

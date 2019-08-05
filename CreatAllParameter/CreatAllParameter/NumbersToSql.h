@@ -16,10 +16,10 @@
 struct DataTypeToSave
 {
 	string StockCode;//股票代码
-	BasisCycleType cycle;//数据的周期
+	CycleType cycle;//数据的周期
 	CDate _time;//记录数据的时间点
 	string IndicatorsName;//数据名
-	void Inition(const string& StockName, BasisCycleType _cycle, const CDate& strtime, const string& Number);
+	void Inition(const string& StockName, CycleType _cycle, const CDate& strtime, const string& Number);
 	bool operator ==(const DataTypeToSave& d)const;
 	bool operator <(const DataTypeToSave& d)const;
 // 	bool operator <=(const DataTypeToSave& d)const;
@@ -29,7 +29,7 @@ struct DataTypeToSave
 struct RealDataIndex
 {
 	CDate _date;//记录数据的时间点
-	BasisCycleType _cycletype;//数据的周期
+	CycleType _cycletype;//数据的周期
 	int _stockCode;//股票代码
 
 	void SetStockCode(const string& codename);
@@ -80,7 +80,7 @@ private:
 	//
 	bool GetDuplicataUpdateValue(vector<Column>& vdataType, unsigned int beginIndex,unsigned int count, string& result);
 	//
-	bool CheckRealtimeTableName(const string& tableName, CDate& tebleDate, BasisCycleType& tableCycleType);
+	bool CheckRealtimeTableName(const string& tableName, CDate& tebleDate, CycleType& tableCycleType);
 	//
 	MySQLInterFace *psqlTool;
 	//

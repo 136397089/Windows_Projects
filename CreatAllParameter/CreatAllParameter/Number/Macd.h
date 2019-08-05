@@ -6,6 +6,7 @@
 #include <Windows.h>
 #include "NumberBase.h"
 #include "CommonFunction.h"
+#include "../MovingAverage.h"
 
 
 using namespace std;
@@ -42,6 +43,7 @@ public:
 private:
 	unsigned int shortSmoothness;
 	unsigned int longSmoothness;
+	CMovingAverage PriceMa;
 	StockDataType M;
 };
 

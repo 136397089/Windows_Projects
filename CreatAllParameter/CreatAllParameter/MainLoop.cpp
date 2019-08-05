@@ -9,6 +9,7 @@
 #include "MeanVariance.h"
 #include "numberstosql.h"
 #include "ComTime.h"
+#include "SaveResult.h"
 CRITICAL_SECTION threadParamCS;
 static bool threadParamCSIsInition = false;
 int threadNumber = 0;
@@ -45,6 +46,8 @@ bool CMainLoop::CreateThreadToAnaHistory_Daily(string strFolderPath)
 		threadParamCSIsInition = true;
 	}
 	ThreadParam* threadParam;
+	CSaveCodeList CodeFileTool;
+	CodeFileTool.ClearCodeList();
 	//遍历所有文件
 	do
 	{
@@ -59,13 +62,13 @@ bool CMainLoop::CreateThreadToAnaHistory_Daily(string strFolderPath)
 		threadParam->hThread = CreateThread(NULL, 0,(LPTHREAD_START_ROUTINE)TheadFunc,threadParam, NULL, NULL);
 		Sleep(10);
 	} while (FindNextFile(h, &p));
-
 	//如何线程还没有全部退出则等待
 	while (threadNumber != 0)
 	{
 		LOG(INFO) << "Waiting for all thread exit.";
 		Sleep(100);
 	}
+	CodeFileTool.SaveCode();
 	if (threadParamCSIsInition)
 	{
 		DeleteCriticalSection(&threadParamCS);
@@ -117,6 +120,8 @@ bool CMainLoop::ReadFileToAnaHistory_Daily(	const string& fileName,
 	CStateAnalysisInter monthstate;
 	CIndicatorsInterface numberTool;
 	numberTool.GetDataAndIndicators_History(fileName, strFolderPath);
+	if (numberTool.GetResourceValue()._vTimeDay.size() < 300)
+		return false;;
 	numberTool.MappingToSH(shnumber.GetResourceValue());
 // 	SaveDataToFile(outPath + p.cFileName, numberTool.GetDayValue());
 //	daystate.Inter(numberTool.GetDayValue(), fileName);
@@ -124,9 +129,11 @@ bool CMainLoop::ReadFileToAnaHistory_Daily(	const string& fileName,
 // 	monthstate.Inter(numberTool.GetMonthValue(), p.cFileName);
 // 	statisticeInter.StatisticeASIData(numberTool.GetDayValue(), daystate, fileName);
 	CStatisticeInter statisticeInter;
+
 	statisticeInter.Inition();
-// 	statisticeInter.CDPInter(numberTool, shnumber);
-	statisticeInter.ReturnRateStatistics(numberTool, shnumber);
+//	statisticeInter.CDPInter(numberTool, shnumber);
+	statisticeInter.LastDayInter(numberTool, shnumber);
+	//  	statisticeInter.ReturnRateStatistics(numberTool, shnumber);
 	// 	SaveDataToFile("D:\\StockFile\\OutPutFile\\" + fileName, numberTool.GetDayValue());
 	LOG(INFO) << fileName << " Finished";
 //	continue;
@@ -213,6 +220,7 @@ bool CMainLoop::CreateThreadToAnaHistory_Mintue(string strFolderPath)
 	CIndicatorsInterface ShanghaiStockExchangeIndex;
 	ShanghaiStockExchangeIndex.GetDataAndIndicators_SH("1In_sh.csv", "D:\\StockFile\\whole");
 	string outPath = "D:\\StockFile\\OutPutFile\\";
+
 	//1.3遍历所有文件
 	if (!threadParamCSIsInition)
 	{

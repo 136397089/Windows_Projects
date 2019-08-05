@@ -237,48 +237,54 @@ void CcdpStatistics::AnaIncomeRate()
 {
 	StockDataTable* _shNumber = &inputSh->GetResourceValue();
 	unsigned int shIndex = _shNumber->GetCloselyFrontTimeIndexByDate(Inputdata->_vDate[index]);
-	if ( Inputdata->_vTableAllIndex[_eDMI_DIN][index - 1] < 20 
-		&& Inputdata->_vTableAllIndex[_eDMI_DIP][index - 1] < 40
-		&& Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 1] - Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 2] > 0
-// 		&& Inputdata->_vTableAllIndex[_eVRMA][index - 1] - Inputdata->_vTableAllIndex[_eVRMA][index - 2] > 0
-		&& Inputdata->_vTableAllIndex[_eLimitDownTime][index - 1] < 5
-		&& Inputdata->_vTableAllIndex[_eDataEnable][index] > 0.5f )
+	if (Inputdata->_vTableAllIndex[_eDMI_DIN][index - 1] < 30
+		&& Inputdata->_vTableAllIndex[_eDMI_DIP][index - 1] > 30
+		&& Inputdata->_vTableAllIndex[_eDMI_ADX][index - 1] - Inputdata->_vTableAllIndex[_eDMI_ADX][index - 2] > 0
+		&& Inputdata->_vTableAllIndex[_eMACD_BAR][index - 1] > 0
+// 		&& Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 1] - Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 2]> 0
+// 		&& _shNumber->_vTableAllIndex[_eMACD_DIFF][shIndex] - _shNumber->_vTableAllIndex[_eMACD_DIFF][shIndex - 1] > 0
+//		&& _shNumber->_vTableAllIndex[_eMACD_BAR][shIndex] > 0
+		)
 		BuyPermit = true;
 	else
 		BuyPermit = false;
 
-	if (Inputdata->_vTableAllIndex[_eDataEnable][index] < 0.5f)
+	if (Inputdata->_vTableAllIndex[_eDataEnable][index] < 0.5f)//_eDataEnable小于0.5表示最近数据可能有除权，价格不是真正的发生了变动
 	{
 		BuyPermit = false;
 		Account1.ClearHoldStockPrice();
 		Account2.ClearHoldStockPrice();
 	}
-	if (   Account1.CheckHoldIncomeRate(Inputdata->_vLow[index]) <= 0.8999
+	if (Account1.CheckHoldIncomeRate(Inputdata->_vLow[index]) <= 0.8999
 		|| Account2.CheckHoldIncomeRate(Inputdata->_vLow[index]) <= 0.8999
-		|| Inputdata->_vTableAllIndex[_ePriceChangeRate][index] >= 0.0999
 		|| Inputdata->_vTableAllIndex[_ePriceChangeRate][index] >= 0.0999)
 		BuyPermit = false;
 
-
 	StockNumberType upLine = _eCDP_NH;
 	StockNumberType dwonLine = _eCDP_NL;
-	if (!Account1.IsHoldStock() && BuyPermit
-		&& Inputdata->_vLow[index] <= Inputdata->_vTableAllIndex[dwonLine][index - 1])
-		Account1.BuyStock(Inputdata->_vTableAllIndex[dwonLine][index - 1], Inputdata->_vDate[index]);
-	else if (!Account2.IsHoldStock() && BuyPermit
-		&& Inputdata->_vLow[index] <= Inputdata->_vTableAllIndex[dwonLine][index - 1])
-		Account2.BuyStock(Inputdata->_vTableAllIndex[dwonLine][index - 1], Inputdata->_vDate[index]);
+	StockDataType openData = Inputdata->_vOpen[index - 1];
+	StockDataType CDPData = Inputdata->_vTableAllIndex[_eCDP_CDP][index - 1];
+	StockDataType CDPDown = Inputdata->_vTableAllIndex[dwonLine][index - 1];
+	StockDataType CDPUp = Inputdata->_vTableAllIndex[upLine][index - 1];
 
-	if (Account1.IsHoldStock() && Inputdata->_vHigh[index] >= Inputdata->_vTableAllIndex[upLine][index - 1])
-		Account1.SellStock(Inputdata->_vTableAllIndex[upLine][index - 1], Inputdata->_vDate[index]);
-	else if (Account2.IsHoldStock() && Inputdata->_vHigh[index] >= Inputdata->_vTableAllIndex[upLine][index - 1])
-		Account2.SellStock(Inputdata->_vTableAllIndex[upLine][index - 1], Inputdata->_vDate[index]);
-
+	if (Account1.IsHoldStock() && Inputdata->_vHigh[index] >= CDPUp  )
+		Account1.SellStock(CDPUp, Inputdata->_vDate[index]);
+	else if (Account2.IsHoldStock() && Inputdata->_vHigh[index] >= CDPUp )
+		Account2.SellStock(CDPUp, Inputdata->_vDate[index]);
 
 	if (!BuyPermit && Account1.IsHoldStock())
 		Account1.SellStock((Inputdata->_vClose[index - 1]) , Inputdata->_vDate[index]);
 	if (!BuyPermit && Account2.IsHoldStock())
 		Account2.SellStock((Inputdata->_vClose[index - 1]), Inputdata->_vDate[index]);
+
+	if (!Account1.IsHoldStock() && BuyPermit && Inputdata->_vLow[index] <= CDPDown)
+	{ 
+		Account1.BuyStock(CDPDown, Inputdata->_vDate[index]);
+	}
+	else if (!Account2.IsHoldStock() && BuyPermit && Inputdata->_vLow[index] <= CDPDown)
+	{
+		Account2.BuyStock(CDPDown, Inputdata->_vDate[index]);
+	}
 }
 
 void OCHLSectionCount::clear()

@@ -4,6 +4,7 @@
 #include "ComTime.h"
 CIndicatorsCalculator::CIndicatorsCalculator():
 hMacd(12, 26, 9),
+hMACDKDJ(27,9,9),
 hKDJ(9, 3, 3),
 hma(5, 10, 20, 60)
 {
@@ -19,6 +20,7 @@ bool CIndicatorsCalculator::GetAllNumbers(StockDataTable& stockdatas)
 	stockCode = stockdatas._strStockCode;
 	//一天的价格
 	SinCyclePriceData thisDayPrice;
+	SinCyclePriceData MACD_Diff;
 	//输入运算的日期，价格，成交量
 	vector<string>::const_iterator dayIte = stockdatas._vTimeDay.begin();
 	VStockData::const_iterator closeite = stockdatas._vClose.begin();
@@ -36,6 +38,11 @@ bool CIndicatorsCalculator::GetAllNumbers(StockDataTable& stockdatas)
 		//1.3计算指标
 #ifndef UNBUILT_MACD
 		hMacd.GetNextMacd(thisDayPrice, currentIndicators._MacdData);
+		MACD_Diff._Close = currentIndicators._MacdData.dif;
+		MACD_Diff._High = currentIndicators._MacdData.dif;
+		MACD_Diff._Low = currentIndicators._MacdData.dif;
+		MACD_Diff._Open = currentIndicators._MacdData.dif;
+		hMACDKDJ.GetNextKDJ(MACD_Diff, currentIndicators._Macd_Kdj);
 #endif
 #ifndef UNBUILT_MACD
 		hemv.GetNextEmv(thisDayPrice, currentIndicators._Emv);
@@ -98,6 +105,9 @@ void CIndicatorsCalculator::PushBackIndex(const SigDayTechIndex& AllIndex, Stock
 	datas._vTableAllIndex[_eMACD_MA26].push_back(AllIndex._MacdData.m26);
 	datas._vTableAllIndex[_eMACD_DIFF].push_back(AllIndex._MacdData.dif);
 	datas._vTableAllIndex[_eMACD_DEA].push_back(AllIndex._MacdData.dea);
+	datas._vTableAllIndex[_eMACD_K].push_back(AllIndex._Macd_Kdj.K_OF_KDJ);
+	datas._vTableAllIndex[_eMACD_D].push_back(AllIndex._Macd_Kdj.D_OF_KDJ);
+	datas._vTableAllIndex[_eMACD_J].push_back(AllIndex._Macd_Kdj.J_OF_KDJ);
 #endif
 #ifndef UNBUILT_DMA
 	datas._vTableAllIndex[_eDMA_D].push_back(AllIndex._DMAData._DDD);
@@ -191,7 +201,7 @@ void CIndicatorsCalculator::Inition()
 	SQLTool.IniMysqlTool();
 }
 
-bool CIndicatorsCalculator::SaveTempIndicators(string& _stockName, BasisCycleType cycle, CDate _date)
+bool CIndicatorsCalculator::SaveTempIndicators(string& _stockName, CycleType cycle, CDate _date)
 {
 	DataTypeToSave IndicatorsType;
 	vector<StockDataType> datasToSave;
@@ -207,7 +217,7 @@ bool CIndicatorsCalculator::SaveTempIndicators(string& _stockName, BasisCycleTyp
 	return true;
 }
 
-bool CIndicatorsCalculator::GetTempIndicators(StockDataTable& mValue,const string& _stockName, BasisCycleType cycle, const CDate& _date)
+bool CIndicatorsCalculator::GetTempIndicators(StockDataTable& mValue,const string& _stockName, CycleType cycle, const CDate& _date)
 {
 	CComTime Timeer;
 	DataTypeToSave IndicatorsType;

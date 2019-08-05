@@ -75,12 +75,12 @@ public:
 	//从MYSQL中读出所有股票的实时数据
 	void RefreshAllStockDate_RealTime();
 	//
-	bool GetIndicators_Realtime(const string& _stockName, BasisCycleType dataCycle);
+	bool GetIndicators_Realtime(const string& _stockName, CycleType dataCycle);
 	//
 	CDate GetLastDate();
 private:
 	//返回实时的价格数据中目前股票的数据
-	bool GetStockPriceData_RealTime(const string& stockData, BasisCycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData);
+	bool GetStockPriceData_RealTime(const string& stockData, CycleType dataCycle,map<RealDataIndex, SinCyclePriceData>& returnData);
 	//计算指标
 	bool Cal30MinuteIndicators();
 	//计算指标
@@ -102,7 +102,7 @@ private:
 	//////////////////////////////////////////////////////////////////////////
 	bool ResizeData(CDate beginData);
 	//获得周期对应的时间
-	CDate GetCycleTime(BasisCycleType dataCycle);
+	CDate GetCycleTime(CycleType dataCycle);
 	StockDataTable mResourceValue;
 	StockDataTable mWeekValue;
 	StockDataTable mMonthValue;

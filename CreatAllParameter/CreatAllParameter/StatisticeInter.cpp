@@ -13,6 +13,8 @@
 #include "FreqStatistice.h"
 #include "NumbersToSql.h"
 #include "RateStatistics.h"
+#include "SearchLastDayState.h"
+
 
 CRITICAL_SECTION filterDataMeancs;
 
@@ -134,6 +136,13 @@ bool CStatisticeInter::ReturnRateStatistics(CIndicatorsInterface& daynumber, CIn
 	return true;
 }
 
+bool CStatisticeInter::LastDayInter(CIndicatorsInterface& daynumber, CIndicatorsInterface& shnumber)
+{
+	SearchLastDayState lastTool;
+	lastTool.Inter(daynumber, shnumber);
+	return true;
+}
+
 void CheckCurrentStockDataAndGetName(
 	StockDataTable& AnaNumber,
 	StockDataTable& mounthnumber,
@@ -173,9 +182,6 @@ CRealTimeAna::~CRealTimeAna(){}
 bool CRealTimeAna::AnalysisRealTimeData(StockDataTable& Indicators)
 {
 	LOG(INFO) << "Run AnalysisRealTimeData to lookup target stock code.";
-	vector<NumberEvent> _numberdata;
-	NumberEvent tempNumberEvent;
-	realTimeDataToAna RealTimeData;
 	vector<StockDataType>& macdData = Indicators._vTableAllIndex[_eMACD_BAR];
 	vector<StockDataType>& DEAData = Indicators._vTableAllIndex[_eMACD_DEA];
 	vector<StockDataType>& DiffData = Indicators._vTableAllIndex[_eMACD_DIFF];
@@ -183,25 +189,21 @@ bool CRealTimeAna::AnalysisRealTimeData(StockDataTable& Indicators)
 	vector<StockDataType>& KDJ_DData = Indicators._vTableAllIndex[_eKDJ_D];//KÒªÇóÉÏÉý
 	vector<string>& timeData = Indicators._vTimeDay;
 
-	if (	   macdData.size() != DEAData.size() 
-		|| DiffData.size() != KDJ_KData.size()
-		|| DiffData.size() != KDJ_DData.size()
-		|| macdData.size() != DiffData.size()
-		|| macdData.size() <= 1)
+	if (	   macdData.size() != DEAData.size() || DiffData.size() != KDJ_KData.size()
+		|| DiffData.size() != KDJ_DData.size()	|| macdData.size() != DiffData.size()	|| macdData.size() <= 1)
 	{
 		LOG(INFO) << "Real time data size" << macdData.size() << DEAData.size() << DiffData.size() << KDJ_KData.size() << KDJ_DData.size();
 		LOG(ERROR) << Indicators._strStockCode << " AnalysisReal timedata data size error." ;
 		return false;
 	}
 	unsigned int lastIndex = macdData.size() - 1;
-	if (DiffData[lastIndex] > DiffData[lastIndex - 1]
-		&& KDJ_DData[lastIndex] > KDJ_DData[lastIndex-1]
-		&& KDJ_KData[lastIndex] < 25)
+	if (CheckLastIIndicators(Indicators))
 	{
+		LOG(INFO) << "CRealTimeAna Get Stock code:" << Indicators._strStockCode << " Time:" << Indicators._vDate[lastIndex].GetDateTime();
 		CNumbersToSql SQLTool;
 		SQLTool.IniMysqlTool();
-		LOG(INFO) << "Get Stock code:" << Indicators._strStockCode << " Time:" << Indicators._vDate[lastIndex].GetDateTime() << " Stock Fund Count" << SQLTool.CheckStockFundCount(Indicators._strStockCode);
-		cout << "Get Stock code:" << Indicators._strStockCode << " Time:" << Indicators._vDate[lastIndex].GetDateTime() << endl;
+		LOG(INFO) << "Statistics Number of Stock Funds" << SQLTool.CheckStockFundCount(Indicators._strStockCode);
+		cout << "CRealTimeAna Get Stock code:" << Indicators._strStockCode << " Time:" << Indicators._vDate[lastIndex].GetDateTime() << endl;
 	}
 	else
 		LOG(INFO) << "Unuseful Stock code:" << Indicators._strStockCode << " size:" << DiffData.size();
@@ -220,6 +222,18 @@ void CRealTimeAna::ShowCurrentCode()
 void CRealTimeAna::ShowYesterdayCode()
 {
 
+}
+
+bool CRealTimeAna::CheckLastIIndicators(StockDataTable& Indicators)
+{
+	vector<StockDataType>& macdData = Indicators._vTableAllIndex[_eMACD_BAR];
+	vector<StockDataType>& DEAData = Indicators._vTableAllIndex[_eMACD_DEA];
+	vector<StockDataType>& DiffData = Indicators._vTableAllIndex[_eMACD_DIFF];
+	vector<StockDataType>& DMI_DINData = Indicators._vTableAllIndex[_eDMI_DIN];//
+	vector<StockDataType>& DMI_DIPData = Indicators._vTableAllIndex[_eDMI_DIP];//
+	vector<StockDataType>& DMI_ADXData = Indicators._vTableAllIndex[_eDMI_ADX];//
+	vector<string>& timeData = Indicators._vTimeDay;
+	return true;
 }
 
 

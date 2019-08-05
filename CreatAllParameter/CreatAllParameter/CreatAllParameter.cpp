@@ -7,19 +7,19 @@
 #include "StockAccountNum.h"
 #include "MainLoop.h"
 #include "NumbersToSql.h"
-
+#include "SaveResult.h"
 
 int _tmain(int argc, _TCHAR* argv[])
 {
-// 	CNumbersToSql tool;
-// 	tool.testFunstion();
+// 	CSaveCodeList ttt;
+// 	ttt.SaveCode();
 	CLog initionLog;
 	CMainLoop mainloop;
 // 	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\test");
 //  	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\StockData_D_Current");
 //	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\StockData_30_Current");
 // 	mainloop.CreateThreadToAnaHistory_Mintue("D:\\StockFile\\StockData_30_Current");
- 	mainloop.CreateThreadToAnaHistory_Daily("D:\\StockFile\\StockData_D_Current");
+   	mainloop.CreateThreadToAnaHistory_Daily("D:\\StockFile\\StockData_D");
 // 	mainloop.CreateThreadToAnaHistory_Daily("D:\\StockFile\\test");
 // 	mainloop.AnaCurrentRealTimeData("D:\\StockFile\\whole\\", "today.csv");
 // 	mainloop.AnaCurrentRealTimeData("D:\\StockFile\\StockData_30");

@@ -21,7 +21,7 @@ private:
 	//
 	void GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, const StockDataTable& daynumber) const;
 	//
-	bool SaveOneGroupFreqData(const string& stockCoed, Group _GroupType, CHistoryGroup& GroupTool);
+	bool SaveOneGroupFreqData(const string& stockCoed, CSigDayGroup _GroupType, CSigDayGrouping& GroupTool);
 	//
 	void SaveAllGroupFreqData();
 	//
@@ -47,9 +47,9 @@ private:
 	unsigned int FroMonInd;
 	unsigned int FrWeekInd;
 
-	CHistoryGroup GroupTool;
+	CSigDayGrouping GroupTool;
 	CProcessGrouping PGroupTool;
-	map<Group, MeanVar> meanVarMiddle;
+	map<CSigDayGroup, MeanVar> meanVarMiddle;
 	DayPrice oneDayPrice;//用于暂存日价格数据
 };
 

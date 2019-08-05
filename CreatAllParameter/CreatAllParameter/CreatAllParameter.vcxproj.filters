@@ -234,6 +234,15 @@
     <ClInclude Include="RateStatistics.h">
       <Filter>Statistics</Filter>
     </ClInclude>
+    <ClInclude Include="ManipulaMethod.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="SaveResult.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
+    <ClInclude Include="SearchLastDayState.h">
+      <Filter>Statistics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -402,6 +411,15 @@
       <Filter>Number\SingleNumber</Filter>
     </ClCompile>
     <ClCompile Include="RateStatistics.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="ManipulaMethod.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="SaveResult.cpp">
+      <Filter>Statistics</Filter>
+    </ClCompile>
+    <ClCompile Include="SearchLastDayState.cpp">
       <Filter>Statistics</Filter>
     </ClCompile>
   </ItemGroup>

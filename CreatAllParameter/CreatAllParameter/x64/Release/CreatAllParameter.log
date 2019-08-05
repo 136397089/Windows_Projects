@@ -1,5 +1,19 @@
-﻿生成启动时间为 2019/5/4 16:58:54。
+﻿生成启动时间为 2019/7/26 17:56:10。
+     1>项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”在节点 2 上(Build 个目标)。
+     1>ClCompile:
+         D:\Program Files\VC\bin\x86_amd64\CL.exe /c /I.\eigen3 /Zi /nologo /W3 /WX- /sdl /O2 /Oi /GL /D WIN32 /D NDEBUG /D _CONSOLE /D _LIB /D _MBCS /Gm- /EHsc /MD /GS /Gy /fp:precise /Zc:wchar_t /Zc:forScope /Yu"stdafx.h" /Fp"x64\Release\CreatAllParameter.pch" /Fo"x64\Release\\" /Fd"x64\Release\vc120.pdb" /Gd /TP /errorReport:prompt ARBRCRVRPSY.cpp SaveResult.cpp SearchLastDayState.cpp BullMarkBearMark.cpp
+         ARBRCRVRPSY.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+     1>ARBRCRVRPSY.cpp(27): warning C4244: “参数”: 从“double”转换到“unsigned int”，可能丢失数据
+         SaveResult.cpp
+     1>D:\Program Files\VC\atlmfc\include\afx.h(24): fatal error C1189: #error :  Building MFC application with /MD[d] (CRT dll version) requires MFC shared dll version. Please #define _AFXDLL or do not use /MD[d]
+         SearchLastDayState.cpp
+         BullMarkBearMark.cpp
+     1>d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1158): warning C4251: “google::LogMessage::LogStream::streambuf_”: class“google::base_logging::LogStreamBuf”需要有 dll 接口由 class“google::LogMessage::LogStream”的客户端使用
+                 d:\myprojects\win_project\windows_projects\creatallparameter\creatallparameter\glog/logging.h(1088) : 参见“google::base_logging::LogStreamBuf”的声明
+     1>已完成生成项目“D:\MyProjects\win_project\Windows_Projects\CreatAllParameter\CreatAllParameter\CreatAllParameter.vcxproj”(Build 个目标)的操作 - 失败。
 
-生成成功。
+生成失败。
 
-已用时间 00:00:00.00
+已用时间 00:00:01.31

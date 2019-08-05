@@ -62,6 +62,7 @@
     <PlatformToolset>v120</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>MultiByte</CharacterSet>
+    <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -193,19 +194,20 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <PrecompiledHeader>Use</PrecompiledHeader>
-      <Optimization>MaxSpeed</Optimization>
+      <Optimization>Full</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>.\Eigen</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
-      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies);python36.lib;</AdditionalDependencies>
+      <AdditionalDependencies>kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -239,6 +241,7 @@
     <ClInclude Include="EMV.h" />
     <ClInclude Include="FinaceData.h" />
     <ClInclude Include="Group.h" />
+    <ClInclude Include="ManipulaMethod.h" />
     <ClInclude Include="MeanVariance.h" />
     <ClInclude Include="Morphological.h" />
     <ClInclude Include="MovingAverage.h" />
@@ -246,6 +249,8 @@
     <ClInclude Include="NumbersToSql.h" />
     <ClInclude Include="RateStatistics.h" />
     <ClInclude Include="RSICal.h" />
+    <ClInclude Include="SaveResult.h" />
+    <ClInclude Include="SearchLastDayState.h" />
     <ClInclude Include="StateMachineInter.h" />
     <ClInclude Include="StockDataTable.h" />
     <ClInclude Include="BullMarkBearMark.h" />
@@ -301,6 +306,7 @@
     <ClCompile Include="EMV.cpp" />
     <ClCompile Include="FinaceData.cpp" />
     <ClCompile Include="Group.cpp" />
+    <ClCompile Include="ManipulaMethod.cpp" />
     <ClCompile Include="MeanVariance.cpp" />
     <ClCompile Include="Morphological.cpp" />
     <ClCompile Include="MovingAverage.cpp" />
@@ -308,6 +314,8 @@
     <ClCompile Include="NumbersToSql.cpp" />
     <ClCompile Include="RateStatistics.cpp" />
     <ClCompile Include="RSICal.cpp" />
+    <ClCompile Include="SaveResult.cpp" />
+    <ClCompile Include="SearchLastDayState.cpp" />
     <ClCompile Include="StateMachineInter.cpp" />
     <ClCompile Include="StockDataTable.cpp" />
     <ClCompile Include="BullMarkBearMark.cpp" />

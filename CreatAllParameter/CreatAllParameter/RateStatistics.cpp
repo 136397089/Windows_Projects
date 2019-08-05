@@ -31,8 +31,6 @@ bool CRateStatistics::AnalysisData(CIndicatorsInterface& daynumber, CIndicatorsI
 			continue;
 		srand((unsigned)time(NULL));
 		GetOneDayPrice(oneDayPrice, CurrentIndex, *_AnaNumber);
-// 		if (oneDayPrice._closeData / oneDayPrice._frontClose >= 1.098	|| oneDayPrice._closeData / oneDayPrice._frontClose <= 0.902)
-// 			continue;//排除当天涨停和跌停的情况
 		FroShInd = _shNumber->GetCloselyFrontTimeIndexByDate(_AnaNumber->_vDate[CurrentIndex]);
 		FroShWeInd = _shWeekNumber->GetCloselyFrontTimeIndexByDate(_AnaNumber->_vDate[CurrentIndex]);
 		FroShMonInd = _shMonNumber->GetCloselyFrontTimeIndexByDate(_AnaNumber->_vDate[CurrentIndex]);
@@ -41,13 +39,18 @@ bool CRateStatistics::AnalysisData(CIndicatorsInterface& daynumber, CIndicatorsI
 
 		SetIndicatorsData();
 		CurrentDataRecordToGroup();
-		PGroupTool.RecordDataFreq(IndtData, oneDayPrice, _eGroup1, true);// AnaNumberStateTool.CheckBeginState());
+		
+		if (CurrentIndex != _AnaNumber->_vTimeDay.size()-1)//如果当前分析的数据是最后一天，将打印最后一天的结果
+			PGroupTool.RecordDataFreq(IndtData ,oneDayPrice, _eGroup1, true,false);// AnaNumberStateTool.CheckBeginState());
+		else 
+			PGroupTool.RecordDataFreq(IndtData, oneDayPrice, _eGroup1, true, true);// AnaNumberStateTool.CheckBeginState());
+
 		GroupTool.RecordDay(IndtData, oneDayPrice._frontdate);
 	}
 	PGroupTool.CalReturnRate();
 
 	return true;
-	SaveAllGroupFreqData();
+	//SaveAllGroupFreqData();
 	return true;
 
 }
@@ -67,7 +70,7 @@ void CRateStatistics::GetOneDayPrice(DayPrice& oneDayPrice, unsigned int index, 
 	oneDayPrice._frontdate.SetDay(AnaNumber._vTimeDay[index - 1]);
 }
 
-bool CRateStatistics::SaveOneGroupFreqData(const string& stockCoed, Group _GroupType, CHistoryGroup& GroupTool)
+bool CRateStatistics::SaveOneGroupFreqData(const string& stockCoed, CSigDayGroup _GroupType, CSigDayGrouping& GroupTool)
 {
 	vector<unsigned int> FreqAndCountData;
 	MeanVar groupMeanVar;
@@ -84,45 +87,36 @@ bool CRateStatistics::SaveOneGroupFreqData(const string& stockCoed, Group _Group
 
 void CRateStatistics::SetIndicatorsData()
 {
-#define DataFun(HOT,P,TP,IND) IndtData.push_back(NumEvt.IniData(HOT,(P)->_vTableAllIndex[(TP)][(IND)]))
-#define DeFun(HOT,P,TP,IND)\
-IndtData.push_back(NumEvt.IniData(HOT,P->_vTableAllIndex[TP][IND] - P->_vTableAllIndex[TP][IND-1]))
+
+#define DataFun(HOT,P,TP,IND,STDA,Cyc)\
+ IndtData.push_back(NumEvt.IniData((HOT),(P)->_vTableAllIndex[(TP)][(IND)]-(STDA),Cyc))
+#define DeFun(HOT,P,TP,IND,Cyc)\
+ IndtData.push_back(NumEvt.IniData(HOT,P->_vTableAllIndex[TP][IND] - P->_vTableAllIndex[TP][IND-1] ,Cyc))
 	NumberEvent NumEvt;
 	IndtData.clear();
 
-	DeFun(DeDayDEA, _AnaNumber, _eMACD_DEA, CurrentIndex - 1);
-	DeFun(DeDayDIFF, _AnaNumber, _eMACD_DIFF, CurrentIndex - 1);
-	DataFun(DayAble, _AnaNumber, _eDataEnable, CurrentIndex - 1);
-	DataFun(DayDIFF, _AnaNumber, _eMACD_DIFF, CurrentIndex - 1);
-	DataFun(DayVRMA, _AnaNumber, _eVRMA, CurrentIndex - 1);
+	DataFun(KDJ_K, _AnaNumber, _eKDJ_K, CurrentIndex - 1, 20, eDay);
+	DeFun(DeKDJ_D, _AnaNumber, _eKDJ_D, CurrentIndex - 1, eDay);
+	DataFun(KDJ_K, _AnaNumber, _eKDJ_K, CurrentIndex - 1, 20, eWeek);
+	DeFun(DeKDJ_D, _AnaNumber, _eKDJ_D, CurrentIndex - 1, eWeek);
+	DataFun(BAR, _AnaNumber, _eMACD_BAR, CurrentIndex - 1, 0, eDay);
+	DeFun(DeDEA, _AnaNumber, _eMACD_DEA, CurrentIndex - 1, eDay);
+	DataFun(BAR, _AnaNumber, _eMACD_BAR, FrWeekInd, 0, eWeek);
+	DataFun(BAR, _Weeknumber, _eMACD_BAR, FrWeekInd, 0, eWeek);
+// 	DeFun(DeDEA, _AnaNumber, _eMACD_DEA, CurrentIndex - 1, eDay);
 
-	DeFun(DeDayKDJ_D,_AnaNumber, _eKDJ_D, CurrentIndex - 1);
-	DeFun(DeDayKDJ_K,_AnaNumber, _eKDJ_K, CurrentIndex - 1);
-	DeFun(DeDayCRMA,_AnaNumber, _eCRMA1, CurrentIndex - 1);
-	DataFun(DayKDJ_K, _AnaNumber, _eKDJ_K, CurrentIndex - 1);
-	DataFun(DayKDJ_J, _AnaNumber, _eKDJ_J, CurrentIndex - 1);
-
-	DeFun(DeWeekKDJ_K, _Weeknumber, _eKDJ_K, FrWeekInd);
-	DeFun(DeWeekKDJ_D, _Weeknumber, _eKDJ_D, FrWeekInd);
-	DeFun(DeWeekDEA, _Weeknumber, _eMACD_DEA, FrWeekInd);
-	DeFun(DeWeekVRMA, _Weeknumber, _eVRMA, FrWeekInd);
-	DataFun(WeekKDJ_K, _Weeknumber, _eKDJ_K, FrWeekInd);
-
-	DeFun(DeMonthDIFF, _Mounthnumber, _eMACD_DIFF, FroMonInd);
-	DeFun(DeMonthDEA, _Mounthnumber, _eMACD_DEA, FroMonInd);
-	DeFun(DeMonthKDJ_K, _Mounthnumber, _eKDJ_K, FroMonInd);
-	DeFun(DeMonthKDJ_D, _Mounthnumber, _eKDJ_D, FroMonInd);
-	DataFun(MonthKDJ_K, _Mounthnumber, _eKDJ_K, FroMonInd);
-
-	DeFun(ShDeDayBAR, _shNumber, _eMACD_BAR, FroShInd);
-	DeFun(ShDeDayKDJ_D, _shNumber, _eKDJ_D, FroShInd);
-	DeFun(ShDeDayKDJ_K, _shNumber, _eKDJ_K, FroShInd);
-	DeFun(ShDeDayMAEMV, _shNumber, _eEMV, FroShInd);
-	DeFun(ShDeDayDIFF, _shNumber, _eMACD_DIFF, FroShInd);
-	DeFun(ShDeDayDEA, _shNumber, _eMACD_DEA, FroShInd);
-
-	DeFun(ShDeWeekDEA, _shWeekNumber, _eMACD_DEA, FroShWeInd);
-
+	DataFun(DIP, _AnaNumber, _eDMI_DIP, CurrentIndex - 1, 35, eDay);
+	DataFun(DIN, _AnaNumber, _eDMI_DIN, CurrentIndex - 1, 35, eDay);
+	DataFun(ADX, _AnaNumber, _eDMI_ADX, CurrentIndex - 1, 40, eDay);
+	DeFun(DeADX, _AnaNumber, _eDMI_ADX, CurrentIndex - 1, eDay);
+	IndtData.push_back(NumEvt.IniData(DeDIPN,
+		_AnaNumber->_vTableAllIndex[_eDMI_DIP][CurrentIndex - 1]
+		- _AnaNumber->_vTableAllIndex[_eDMI_DIN][CurrentIndex - 1], eDay));
+// 
+	DataFun(BAR, _shNumber, _eMACD_BAR, FroShInd, 0, eMarketDay);
+	DeFun(DeDEA, _shNumber, _eMACD_DEA, FroShInd, eMarketDay);
+	DataFun(BAR, _shWeekNumber, _eMACD_BAR, FroShWeInd, 0, eMarketWeek);
+	DeFun(DeDEA, _shWeekNumber, _eMACD_DEA, FroShWeInd, eMarketWeek);
 }
 
 void CRateStatistics::CurrentDataRecordToGroup()
@@ -152,7 +146,7 @@ void CRateStatistics::CurrentDataRecordToGroup()
 
 void CRateStatistics::SaveAllGroupFreqData()
 {
-	Group keyGroup;
+	CSigDayGroup keyGroup;
 	for (unsigned int i = 0; i < GroupTool.vkeyGroupType.size(); i++)
 	{
 		keyGroup = GroupTool.vkeyGroupType[i];
