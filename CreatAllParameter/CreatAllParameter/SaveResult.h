@@ -5,7 +5,7 @@
 #include "DateTool.h"
 
 using namespace std;
-
+#define __MIN(A,B) ((A) <= (B) (A) : ))
 
 class CSaveCodeList
 {

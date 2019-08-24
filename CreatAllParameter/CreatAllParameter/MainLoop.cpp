@@ -131,8 +131,8 @@ bool CMainLoop::ReadFileToAnaHistory_Daily(	const string& fileName,
 	CStatisticeInter statisticeInter;
 
 	statisticeInter.Inition();
-//	statisticeInter.CDPInter(numberTool, shnumber);
-	statisticeInter.LastDayInter(numberTool, shnumber);
+	statisticeInter.CDPInter(numberTool, shnumber);
+//	statisticeInter.LastDayInter(numberTool, shnumber);
 	//  	statisticeInter.ReturnRateStatistics(numberTool, shnumber);
 	// 	SaveDataToFile("D:\\StockFile\\OutPutFile\\" + fileName, numberTool.GetDayValue());
 	LOG(INFO) << fileName << " Finished";

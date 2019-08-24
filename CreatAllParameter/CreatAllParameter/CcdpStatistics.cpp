@@ -241,7 +241,7 @@ void CcdpStatistics::AnaIncomeRate()
 		&& Inputdata->_vTableAllIndex[_eDMI_DIP][index - 1] > 30
 		&& Inputdata->_vTableAllIndex[_eDMI_ADX][index - 1] - Inputdata->_vTableAllIndex[_eDMI_ADX][index - 2] > 0
 		&& Inputdata->_vTableAllIndex[_eMACD_BAR][index - 1] > 0
-// 		&& Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 1] - Inputdata->_vTableAllIndex[_eMACD_DIFF][index - 2]> 0
+		&& Inputdata->_vTableAllIndex[_eKDJ_D][index - 1] < 25
 // 		&& _shNumber->_vTableAllIndex[_eMACD_DIFF][shIndex] - _shNumber->_vTableAllIndex[_eMACD_DIFF][shIndex - 1] > 0
 //		&& _shNumber->_vTableAllIndex[_eMACD_BAR][shIndex] > 0
 		)
